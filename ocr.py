@@ -8,20 +8,45 @@ import sys, keyboard, pyautogui, random, string
 import pygame, win32api, win32con, win32gui
 import matplotlib.pyplot as plt
 import ctypes
+import os
+import pyttsx3
 
 
 CAPTURE_KEY = 'c'
 DSWITCH_KEY = 'º'
 TTS_KEY = ''
 
+class Narrator:
+
+    def __init__(self):
+        self._engine = pyttsx3.init()
+        # FIXME: Temporary 
+        self._engine.setProperty('voice', "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0")
+        rate = self._engine.getProperty('rate')
+        self._engine.setProperty('rate', rate - 25)
+
+    def say(self, text):
+        self._engine.say(text)
+        self._engine.runAndWait()
+
+    def stop(self):
+        self._engine.stop()
+
 
 class Capture:
 
-    def __init__(self, lang="en", gpu=True):
+    def __init__(self, lang="en", narrator=None, gpu=True):
         self.imgs = []
+        self.detections = []
+        self.result = []
         self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
         self.lang = lang
         self.gpu = gpu
+        self.p = 0
+        self.open = True
+        self.color = (88, 205, 54)
+        self.rect_width = 4
+        self.narrator = narrator
 
     def take_screenshot(self):
         myScreenshot = pyautogui.screenshot()
@@ -39,27 +64,44 @@ class Capture:
         reader = easyocr.Reader([self.lang], gpu=self.gpu)
         self.result = reader.readtext(imgf)
 
-    def show_results(self):
-        text_results = list(map(lambda x: x[1], self.result))
-        print(text_results)
-
     def get_disp_size(self):
         user32 = ctypes.windll.user32
         dwidth, dheight = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         return dwidth, dheight
 
     def check_events(self):
+        event = keyboard.read_event()
+
         # If c is pressed, take a screenshot and read the image content
-        if keyboard.KEY_DOWN and keyboard.is_pressed(CAPTURE_KEY):
+        if event.event_type == keyboard.KEY_DOWN and event.name == CAPTURE_KEY:
             self.take_screenshot()
             print("\nScreenshot taken!\n")
             self.load_display()
             self.OCR()
             self.draw_detection()
+            self.narrator.say(self.output_text)
+            self.narrator.stop()
 
-        if keyboard.KEY_DOWN and keyboard.is_pressed('esc'):
+        if event.event_type == keyboard.KEY_DOWN and event.name == 'esc':
             print("\n ==== Stopping... ====\n")
+            self.narrator.engine.say("Quitting")
             sys.exit()
+
+        if event.event_type == keyboard.KEY_DOWN and event.name == DSWITCH_KEY:
+            # Switch between detections
+            self.switch_detection()
+            # Text to speech
+            self.narrator.say(self.output_text)
+
+
+    def switch_detection(self):
+        if self.p < len(self.result) - 1: 
+            self.p += 1
+        else: 
+            self.p = 0
+
+        self.draw_detection()
+
 
     def testing(self):
         pass
@@ -86,22 +128,20 @@ class Capture:
         pygame.display.update()
 
     def draw_detection(self):
-        color = (88, 205, 54)
-        rect_width = 4
-        # Draw a rectangle for every text detection 
-        for detection in self.result:
-            #self.clear_screen()
-            bbox = detection[0]
-            text = detection[1]
-            top = bbox[0][0]
-            left = bbox[0][1]
-            width = bbox[1][0] - bbox[0][0]
-            height = bbox[2][1] - bbox[1][1]
-            pygame.draw.rect(self.screen, color,  pygame.Rect(top, left, 
-                                                                width, height), 
-                            rect_width)
-            pygame.display.update()
-            #keyboard.wait(DSWITCH_KEY) # FIXME: If i use keyboard.wait other keys don't work
+        self.clear_screen()
+        # Draw a rectangle for every text detection
+        detection = self.result[self.p]
+        #self.clear_screen()
+        bbox = detection[0]
+        self.output_text = detection[1]
+        top = bbox[0][0]
+        left = bbox[0][1]
+        width = bbox[1][0] - bbox[0][0]
+        height = bbox[2][1] - bbox[1][1]
+        pygame.draw.rect(self.screen, self.color,  pygame.Rect(top, left, 
+                                                            width, height), 
+                        self.rect_width)
+        pygame.display.update()
 
     def run(self):
         print("\n ==== App is running... ====")
@@ -109,14 +149,14 @@ class Capture:
             self.check_events()
             
 
+
 if __name__ == "__main__":
-    a = Capture()
+    n = Narrator()
+    a = Capture(lang="en", narrator=n, gpu=True)
     a.run()
 
     # ========== TODO ==========
-    # 1. Switch between detections
     # 2. Asynchronous loading_window? line 54-56
-    # 4. Screen reader https://github.com/nateshmbhat/pyttsx3
 
     # ========== FIXME ==========
-    # 1. If i use keyboard.wait other keys don't work
+    # 1. View?
