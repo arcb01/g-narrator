@@ -11,7 +11,7 @@ import ctypes
 
 
 CAPTURE_KEY = 'c'
-DSWITCH_KEY = ''
+DSWITCH_KEY = 'º'
 TTS_KEY = ''
 
 
@@ -81,21 +81,27 @@ class Capture:
         win32gui.SetLayeredWindowAttributes(hwnd, win32api.RGB(*fuchsia), 0, win32con.LWA_COLORKEY)
 
         self.screen.fill(fuchsia)  # Transparent background
+        self.clear_screen = lambda : self.screen.fill(fuchsia)
+
         pygame.display.update()
 
     def draw_detection(self):
         color = (88, 205, 54)
+        rect_width = 4
         # Draw a rectangle for every text detection 
         for detection in self.result:
+            #self.clear_screen()
             bbox = detection[0]
             text = detection[1]
             top = bbox[0][0]
             left = bbox[0][1]
             width = bbox[1][0] - bbox[0][0]
             height = bbox[2][1] - bbox[1][1]
-            pygame.draw.rect(self.screen, color,  pygame.Rect(top, left, width, height), 2)
+            pygame.draw.rect(self.screen, color,  pygame.Rect(top, left, 
+                                                                width, height), 
+                            rect_width)
             pygame.display.update()
-
+            #keyboard.wait(DSWITCH_KEY) # FIXME: If i use keyboard.wait other keys don't work
 
     def run(self):
         print("\n ==== App is running... ====")
@@ -108,8 +114,9 @@ if __name__ == "__main__":
     a.run()
 
     # ========== TODO ==========
-    # 1. Set a system for switching between different detections.
+    # 1. Switch between detections
     # 2. Asynchronous loading_window? line 54-56
-    # 3. Clear the screen after every detection
     # 4. Screen reader https://github.com/nateshmbhat/pyttsx3
 
+    # ========== FIXME ==========
+    # 1. If i use keyboard.wait other keys don't work
