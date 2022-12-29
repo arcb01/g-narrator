@@ -156,7 +156,12 @@ if __name__ == "__main__":
     a.run()
 
     # ========== TODO ==========
+    # 1. Repeat text button
     # 2. Asynchronous loading_window? line 54-56
 
     # ========== FIXME ==========
     # 1. View?
+
+    # ========== FUTURE WORK ==========
+    # 1. Hover over text to read it
+    
