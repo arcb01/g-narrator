@@ -11,8 +11,8 @@ import ctypes
 
 
 CAPTURE_KEY = 'c'
-MOVE_KEY = ''
-READ_KEY = ''
+DSWITCH_KEY = ''
+TTS_KEY = ''
 
 
 class Capture:
@@ -108,6 +108,8 @@ if __name__ == "__main__":
     a.run()
 
     # ========== TODO ==========
-    # 1. Set queueing system, for every detection, and switch between them
+    # 1. Set a system for switching between different detections.
     # 2. Asynchronous loading_window? line 54-56
-    # 2. Screen reader https://github.com/nateshmbhat/pyttsx3
+    # 3. Clear the screen after every detection
+    # 4. Screen reader https://github.com/nateshmbhat/pyttsx3
+
