@@ -17,11 +17,11 @@ READ_KEY = ''
 
 class Capture:
 
-    def __init__(self):
+    def __init__(self, lang="en", gpu=True):
         self.imgs = []
         self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
-        self.lang = "en"
-        self.gpu = True
+        self.lang = lang
+        self.gpu = gpu
 
     def take_screenshot(self):
         myScreenshot = pyautogui.screenshot()
@@ -62,18 +62,7 @@ class Capture:
             sys.exit()
 
     def testing(self):
-        # Takes the output of the ocr
-        # resolution of the img
-        img_h, img_w = self.get_img_size(self.last_img)
-        img = cv2.imread(self.imgs_dir + self.last_img)
-        for detection in self.result:
-            bbox = detection[0]
-            text = detection[1]
-            top = bbox[0][0]
-            left = bbox[0][1]
-            width = bbox[1][0] - bbox[0][0]
-            height = bbox[2][1] - bbox[1][1]
-        return top, left, width, height
+        pass
 
     def load_display(self):
         # https://stackoverflow.com/questions/550001/fully-transparent-windows-in-pygame
