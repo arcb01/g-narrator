@@ -84,7 +84,7 @@ class Capture:
 
         if event.event_type == keyboard.KEY_DOWN and event.name == 'esc':
             print("\n ==== Stopping... ====\n")
-            self.narrator.engine.say("Quitting")
+            self.narrator.say("Quitting")
             sys.exit()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == DSWITCH_KEY:
