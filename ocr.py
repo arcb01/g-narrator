@@ -16,6 +16,7 @@ import pyttsx3
 
 CAPTURE_KEY = 'c'
 DSWITCH_KEY = 'º'
+REPEAT_KEY = 'r'
 
 class Narrator:
 
@@ -23,15 +24,21 @@ class Narrator:
         self._engine = pyttsx3.init()
         # FIXME: Temporary 
         self._engine.setProperty('voice', "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0")
-        rate = self._engine.getProperty('rate')
-        self._engine.setProperty('rate', rate - 30)
+        self.voice_default_rate = 170
 
     def say(self, text):
+        self._engine.setProperty('rate', self.voice_default_rate)
         self._engine.say(text)
         self._engine.runAndWait()
 
     def stop(self):
         self._engine.stop()
+
+    def slower_saying(self, text):
+        self._engine.stop()
+        self._engine.setProperty('rate', self.voice_default_rate * 0.5)
+        self._engine.say(text)
+        self._engine.runAndWait()
 
 
 class Capture:
@@ -127,6 +134,9 @@ class Capture:
             self.draw_detection(nearest_detection)
             self.narrator.say(self.output_text)
             
+        if event.event_type == keyboard.KEY_DOWN and event.name == REPEAT_KEY:
+            # Repeat text a little bit slower
+            self.narrator.slower_saying(self.output_text)
 
     def switch_detection(self):
         if self.p < len(self.result) - 1: 
