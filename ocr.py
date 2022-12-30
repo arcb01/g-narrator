@@ -7,14 +7,15 @@ import numpy as np
 import sys, keyboard, pyautogui, random, string
 import pygame, win32api, win32con, win32gui
 import matplotlib.pyplot as plt
+import matplotlib.path as mplPath
 import ctypes
+from scipy.spatial import distance
 import os
 import pyttsx3
 
 
 CAPTURE_KEY = 'c'
 DSWITCH_KEY = 'º'
-TTS_KEY = ''
 
 class Narrator:
 
@@ -23,7 +24,7 @@ class Narrator:
         # FIXME: Temporary 
         self._engine.setProperty('voice', "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0")
         rate = self._engine.getProperty('rate')
-        self._engine.setProperty('rate', rate - 25)
+        self._engine.setProperty('rate', rate - 30)
 
     def say(self, text):
         self._engine.say(text)
@@ -44,9 +45,10 @@ class Capture:
         self.gpu = gpu
         self.p = 0
         self.open = True
-        self.color = (88, 205, 54)
+        self.color = (170, 255, 0)
         self.rect_width = 4
         self.narrator = narrator
+        pygame.init()
 
     def take_screenshot(self):
         myScreenshot = pyautogui.screenshot()
@@ -62,14 +64,33 @@ class Capture:
         imgf = cv2.imread(self.imgs_dir + self.last_img)
         # OCR
         reader = easyocr.Reader([self.lang], gpu=self.gpu)
-        self.result = reader.readtext(imgf)
+        self.all_results = reader.readtext(imgf)
+        # Dtections with accuracy greater than 60%
+        self.result = list(filter(lambda x: x[2] > 0.3, self.all_results))
 
     def get_disp_size(self):
         user32 = ctypes.windll.user32
         dwidth, dheight = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         return dwidth, dheight
 
+    def closest_node(self, node, nodes):
+        # Convert to list of tuples
+        nodes = [tuple(p) for d in nodes for p in d[0]]
+        closest_index = distance.cdist([node], nodes).argmin()
+        return nodes[closest_index]
+
+    def find_nearest_detection(self, x_mouse_pos, y_mouse_pos):
+        to_rectangle = lambda l : mplPath.Path(np.array(l[0]))
+        result_polygon = list(map(to_rectangle, self.result))
+        closest_mouse_point = self.closest_node((x_mouse_pos, y_mouse_pos), self.result)
+        bool_rect_list = list(map(lambda rect : rect.contains_point(closest_mouse_point), result_polygon))
+        detection_idx = np.where(bool_rect_list)[0][0]
+        detection = self.result[detection_idx]
+        return detection
+
+
     def check_events(self):
+
         event = keyboard.read_event()
 
         # If c is pressed, take a screenshot and read the image content
@@ -93,6 +114,19 @@ class Capture:
             # Text to speech
             self.narrator.say(self.output_text)
 
+        if event.event_type == keyboard.KEY_DOWN and event.name == 'm':
+            self.take_screenshot()
+            self.load_display()
+            self.OCR()
+            # Get tge mouse position
+            x_mouse_pos = pyautogui.position().x
+            y_mouse_pos = pyautogui.position().y
+            # Find nearest detection
+            nearest_detection = self.find_nearest_detection(x_mouse_pos, y_mouse_pos)
+            # Draw detection
+            self.draw_detection(nearest_detection)
+            self.narrator.say(self.output_text)
+            
 
     def switch_detection(self):
         if self.p < len(self.result) - 1: 
@@ -127,10 +161,10 @@ class Capture:
 
         pygame.display.update()
 
-    def draw_detection(self):
+    def draw_detection(self, detection):
         self.clear_screen()
         # Draw a rectangle for every text detection
-        detection = self.result[self.p]
+        #detection = self.result[self.p]
         #self.clear_screen()
         bbox = detection[0]
         self.output_text = detection[1]
@@ -158,9 +192,12 @@ if __name__ == "__main__":
     # ========== TODO ==========
     # 1. Repeat text button
     # 2. Asynchronous loading_window? line 54-56
+    # 3. Avoid showing results with accuracy < 0.70
 
-    # ========== FIXME ==========
+    # ========== BUG ==========
     # 1. View?
+    # 2. Index out of range error
+    # 3. Pressing DSWITCH_KEY too early causes an error
 
     # ========== FUTURE WORK ==========
     # 1. Hover over text to read it
@@ -168,3 +205,5 @@ if __name__ == "__main__":
         # 2.1 https://github.com/JaidedAI/EasyOCR/issues/786
         # 2.2 https://cloudblogs.microsoft.com/opensource/2022/04/19/scaling-up-pytorch-inference-serving-billions-of-daily-nlp-inferences-with-onnx-runtime/
         # 2.3 https://github.com/Kromtar/EasyOCR-ONNX/tree/easyocr_onnx
+
+   
