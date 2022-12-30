@@ -164,4 +164,7 @@ if __name__ == "__main__":
 
     # ========== FUTURE WORK ==========
     # 1. Hover over text to read it
-    
+    # 2: Speed up?
+        # 2.1 https://github.com/JaidedAI/EasyOCR/issues/786
+        # 2.2 https://cloudblogs.microsoft.com/opensource/2022/04/19/scaling-up-pytorch-inference-serving-billions-of-daily-nlp-inferences-with-onnx-runtime/
+        # 2.3 https://github.com/Kromtar/EasyOCR-ONNX/tree/easyocr_onnx
