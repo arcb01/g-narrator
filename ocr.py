@@ -72,8 +72,8 @@ class Capture:
         # OCR
         reader = easyocr.Reader([self.lang], gpu=self.gpu)
         self.all_results = reader.readtext(imgf)
-        # Dtections with accuracy greater than 60%
-        self.result = list(filter(lambda x: x[2] > 0.3, self.all_results))
+        # Avoid low accuracy dtections
+        self.result = list(filter(lambda x: x[2] >= 0.3, self.all_results))
 
     def get_disp_size(self):
         user32 = ctypes.windll.user32
@@ -200,17 +200,18 @@ if __name__ == "__main__":
     a.run()
 
     # ========== TODO ==========
-    # 1. Repeat text button
-    # 2. Asynchronous loading_window? line 54-56
-    # 3. Avoid showing results with accuracy < 0.70
+    # 
 
     # ========== BUG ==========
     # 1. View?
     # 2. Index out of range error
     # 3. Pressing DSWITCH_KEY too early causes an error
 
+    # ========== FIXME ==========
+    # 1. Nearest detection algorithm doesn't work properly
+
     # ========== FUTURE WORK ==========
-    # 1. Hover over text to read it
+    # 1. Asynchronous loading_window? line 54-56
     # 2: Speed up?
         # 2.1 https://github.com/JaidedAI/EasyOCR/issues/786
         # 2.2 https://cloudblogs.microsoft.com/opensource/2022/04/19/scaling-up-pytorch-inference-serving-billions-of-daily-nlp-inferences-with-onnx-runtime/
