@@ -224,7 +224,8 @@ if __name__ == "__main__":
     # 3. Pressing DSWITCH_KEY too early causes an error
 
     # ========== FIXME ==========
-
+    # 1. Fix the narrator variables
+    
     # ========== FUTURE WORK ==========
     # 1. Asynchronous loading_window? line 54-56
     # 2: Speed up?
