@@ -9,9 +9,10 @@ import pygame, win32api, win32con, win32gui
 import matplotlib.pyplot as plt
 import matplotlib.path as mplPath
 import ctypes
-from scipy.spatial import distance
+from scipy.spatial import KDTree
 import os
 import pyttsx3
+from shapely.geometry import Point, Polygon
 
 
 CAPTURE_KEY = 'c'
@@ -72,7 +73,7 @@ class Capture:
         # OCR
         reader = easyocr.Reader([self.lang], gpu=self.gpu)
         self.all_results = reader.readtext(imgf)
-        # Avoid low accuracy dtections
+        # Avoid low accuracy dtectionsmm
         self.result = list(filter(lambda x: x[2] >= 0.3, self.all_results))
 
     def get_disp_size(self):
@@ -80,20 +81,41 @@ class Capture:
         dwidth, dheight = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         return dwidth, dheight
 
-    def closest_node(self, node, nodes):
-        # Convert to list of tuples
-        nodes = [tuple(p) for d in nodes for p in d[0]]
-        closest_index = distance.cdist([node], nodes).argmin()
-        return nodes[closest_index]
+    def get_mouse_pos(self):
+        x_mouse_pos = pyautogui.position().x
+        y_mouse_pos = pyautogui.position().y
+        return x_mouse_pos, y_mouse_pos
 
-    def find_nearest_detection(self, x_mouse_pos, y_mouse_pos):
-        to_rectangle = lambda l : mplPath.Path(np.array(l[0]))
-        result_polygon = list(map(to_rectangle, self.result))
-        closest_mouse_point = self.closest_node((x_mouse_pos, y_mouse_pos), self.result)
-        bool_rect_list = list(map(lambda rect : rect.contains_point(closest_mouse_point), result_polygon))
-        detection_idx = np.where(bool_rect_list)[0][0]
-        detection = self.result[detection_idx]
-        return detection
+    def closest_node(self, node, nodes):
+        rf_nodes = [tuple(p) for d in nodes for p in d[0]]
+        kdtree = KDTree(rf_nodes)
+        d, i = kdtree.query(node)
+        return rf_nodes[i]
+
+    def find_nearest_detection(self, x, y):
+        #pygame.draw.circle(self.screen, (255, 255, 0), (x, y), 5)
+        #pygame.display.update()
+
+        # Convert list of lists to list of tuples
+        reformated_list = []
+        for detection in self.result:
+            rectangle = detection[0]
+            rectangle_reformat = [tuple(p) for p in rectangle]
+            reformated_list.append((rectangle_reformat, detection[1], detection[2]))
+            #rectangle_coords = Polygon(rectangle_reformat)
+            #result_polygon.append(rectangle_coords)
+
+        # Find the point of the closest detection to the mouse position
+        closest_point_to_mouse = self.closest_node((x, y), reformated_list)
+        rect_coords = list(map(lambda x : x[0], reformated_list))
+        # Check Where is this point in the list of detections
+        for i, rectangle in enumerate(rect_coords):
+            for point in rectangle:
+                if point[0] == closest_point_to_mouse[0] and \
+                    point[1] == closest_point_to_mouse[1]:
+                    index = i
+        closest_detect = self.result[index]
+        return closest_detect
 
 
     def check_events(self):
@@ -122,16 +144,15 @@ class Capture:
             self.narrator.say(self.output_text)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == 'm':
+            x, y = self.get_mouse_pos()
             self.take_screenshot()
             self.load_display()
             self.OCR()
-            # Get tge mouse position
-            x_mouse_pos = pyautogui.position().x
-            y_mouse_pos = pyautogui.position().y
-            # Find nearest detection
-            nearest_detection = self.find_nearest_detection(x_mouse_pos, y_mouse_pos)
+            # Find nearest detection from the mouse position
+            nearest_detection = self.find_nearest_detection(x, y)
             # Draw detection
             self.draw_detection(nearest_detection)
+            # Text to speech
             self.narrator.say(self.output_text)
             
         if event.event_type == keyboard.KEY_DOWN and event.name == REPEAT_KEY:
@@ -172,10 +193,12 @@ class Capture:
         pygame.display.update()
 
     def draw_detection(self, detection):
-        self.clear_screen()
+        
         # Draw a rectangle for every text detection
         #detection = self.result[self.p]
         #self.clear_screen()
+        #for detection in self.result:
+            #self.clear_screen()
         bbox = detection[0]
         self.output_text = detection[1]
         top = bbox[0][0]
@@ -200,7 +223,8 @@ if __name__ == "__main__":
     a.run()
 
     # ========== TODO ==========
-    # 
+    # Nearest detection can be improved?
+
 
     # ========== BUG ==========
     # 1. View?
@@ -208,7 +232,6 @@ if __name__ == "__main__":
     # 3. Pressing DSWITCH_KEY too early causes an error
 
     # ========== FIXME ==========
-    # 1. Nearest detection algorithm doesn't work properly
 
     # ========== FUTURE WORK ==========
     # 1. Asynchronous loading_window? line 54-56
