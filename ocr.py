@@ -73,7 +73,7 @@ class Capture:
         # OCR
         reader = easyocr.Reader([self.lang], gpu=self.gpu)
         self.all_results = reader.readtext(imgf)
-        # Avoid low accuracy dtectionsmm
+        # Avoid low accuracy detections
         self.result = list(filter(lambda x: x[2] >= 0.3, self.all_results))
 
     def get_disp_size(self):
@@ -87,34 +87,25 @@ class Capture:
         return x_mouse_pos, y_mouse_pos
 
     def closest_node(self, node, nodes):
-        rf_nodes = [tuple(p) for d in nodes for p in d[0]]
-        kdtree = KDTree(rf_nodes)
+        kdtree = KDTree(nodes)
         d, i = kdtree.query(node)
-        return rf_nodes[i]
+        return nodes[i]
 
     def find_nearest_detection(self, x, y):
-        #pygame.draw.circle(self.screen, (255, 255, 0), (x, y), 5)
-        #pygame.display.update()
 
         # Convert list of lists to list of tuples
-        reformated_list = []
-        for detection in self.result:
-            rectangle = detection[0]
-            rectangle_reformat = [tuple(p) for p in rectangle]
-            reformated_list.append((rectangle_reformat, detection[1], detection[2]))
-            #rectangle_coords = Polygon(rectangle_reformat)
-            #result_polygon.append(rectangle_coords)
-
-        # Find the point of the closest detection to the mouse position
-        closest_point_to_mouse = self.closest_node((x, y), reformated_list)
-        rect_coords = list(map(lambda x : x[0], reformated_list))
+        det_rect = [tuple(p) for det in self.result for p in det[0]]
+        # Find the closest point of the detection (rectangle) to the mouse position
+        closest_point_to_mouse = self.closest_node((x, y), det_rect)
         # Check Where is this point in the list of detections
-        for i, rectangle in enumerate(rect_coords):
+        for i, detection in enumerate(self.result):
+            rectangle = detection[0]
             for point in rectangle:
                 if point[0] == closest_point_to_mouse[0] and \
                     point[1] == closest_point_to_mouse[1]:
                     index = i
         closest_detect = self.result[index]
+
         return closest_detect
 
 
@@ -223,11 +214,12 @@ if __name__ == "__main__":
     a.run()
 
     # ========== TODO ==========
-    # Nearest detection can be improved?
-
+    # 1. Most efficient way to nearest detection?
+    # 2. Only take screenshot if the last image has changed.
+    # Dont take screenshot if the mouse is the same, just switch detections
+    # 3. Join sentences?
 
     # ========== BUG ==========
-    # 1. View?
     # 2. Index out of range error
     # 3. Pressing DSWITCH_KEY too early causes an error
 
