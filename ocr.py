@@ -232,4 +232,6 @@ if __name__ == "__main__":
         # 2.2 https://cloudblogs.microsoft.com/opensource/2022/04/19/scaling-up-pytorch-inference-serving-billions-of-daily-nlp-inferences-with-onnx-runtime/
         # 2.3 https://github.com/Kromtar/EasyOCR-ONNX/tree/easyocr_onnx
 
-   
+   # ========== Other ==========
+   #1. OCR2
+   # https://github.com/nathanaday/RealTime-OCR
