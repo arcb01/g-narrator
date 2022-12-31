@@ -67,7 +67,8 @@ class Capture:
     def OCR(self):
         print("Reading the image content. Please wait...\n")
         # Get last img
-        self.last_img = self.imgs.pop()
+        #self.last_img = self.imgs.pop()
+        self.last_img = self.imgs[-1]
         # Read img
         imgf = cv2.imread(self.imgs_dir + self.last_img)
         # OCR
@@ -92,7 +93,6 @@ class Capture:
         return nodes[i]
 
     def find_nearest_detection(self, x, y):
-
         # Convert list of lists to list of tuples
         det_rect = [tuple(p) for det in self.result for p in det[0]]
         # Find the closest point of the detection (rectangle) to the mouse position
@@ -105,9 +105,7 @@ class Capture:
                     point[1] == closest_point_to_mouse[1]:
                     index = i
         closest_detect = self.result[index]
-
         return closest_detect
-
 
     def check_events(self):
 
@@ -136,9 +134,11 @@ class Capture:
 
         if event.event_type == keyboard.KEY_DOWN and event.name == 'm':
             x, y = self.get_mouse_pos()
+
             self.take_screenshot()
             self.load_display()
             self.OCR()
+            
             # Find nearest detection from the mouse position
             nearest_detection = self.find_nearest_detection(x, y)
             # Draw detection
@@ -157,7 +157,6 @@ class Capture:
             self.p = 0
 
         self.draw_detection()
-
 
     def testing(self):
         pass
@@ -214,7 +213,6 @@ if __name__ == "__main__":
     a.run()
 
     # ========== TODO ==========
-    # 1. Most efficient way to nearest detection?
     # 2. Only take screenshot if the last image has changed.
     # Dont take screenshot if the mouse is the same, just switch detections
     # 3. Join sentences?
@@ -225,7 +223,7 @@ if __name__ == "__main__":
 
     # ========== FIXME ==========
     # 1. Fix the narrator variables
-    
+
     # ========== FUTURE WORK ==========
     # 1. Asynchronous loading_window? line 54-56
     # 2: Speed up?
