@@ -3,7 +3,7 @@ import pygame, win32api, win32con, win32gui
 import ctypes
 
 from TTS import Narrator
-from OCR import OCR
+from ocr import OCR
 
 
 READ_CONTENT = 'm'
@@ -64,6 +64,8 @@ class App:
             # Repeat text a little bit slower
             self.narrator.slower_saying(self.output_text)
 
+        if event.event_type == keyboard.KEY_DOWN and event.name == 'a':
+            print("a")
 
     def load_display(self):
         # https://stackoverflow.com/questions/550001/fully-transparent-windows-in-pygame
