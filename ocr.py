@@ -18,12 +18,12 @@ class OCR:
         self.results_db = []
         self.status = True
         self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
-
+        self.file_nom = "OCR_pic_"
+    
     def take_screenshot(self):
         start = time.time()
         myScreenshot = pyautogui.screenshot()
         h = str(random.getrandbits(128))
-        self.file_nom = "OCR_pic_"
         filename = self.file_nom + h + ".png"
         myScreenshot.save(self.imgs_dir + filename)
         self.imgs.append(filename)
