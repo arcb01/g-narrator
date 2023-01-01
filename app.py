@@ -1,7 +1,7 @@
-
 import sys, keyboard, pyautogui
 import pygame, win32api, win32con, win32gui
 import ctypes
+
 from TTS import Narrator
 from OCR import OCR
 

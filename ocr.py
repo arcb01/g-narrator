@@ -1,11 +1,8 @@
-
 import pyautogui
 import random
-import string
 import cv2
 import easyocr
 from scipy.spatial import KDTree
-import numpy as np
 from sewar.full_ref import uqi
 import time
 import os, glob
