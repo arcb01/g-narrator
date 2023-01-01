@@ -126,6 +126,7 @@ if __name__ == "__main__":
 
     # ========== FIXME ==========
     # 1. Fix the narrator variables
+    # 2. DIsplay issues with the calling order
 
     # ========== FUTURE WORK ==========
     # 2: Only way of speeding up is speeding up EasyOCR.
