@@ -37,13 +37,21 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name == 'esc':
             print("\n ==== Stopping... ====\n")
             self.narrator.say("Quitting")
+            # Delete all images
+            self.OCR.delete_imgs()
             sys.exit()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == READ_CONTENT:
             x, y = self.get_mouse_pos()
+            switch = False
 
             self.load_display()
-            self.OCR.start()
+
+            # Start OCR
+            if self.OCR.check_start():
+                self.OCR.start()
+            else:
+                pass
             
             # Find nearest detection from the mouse position
             nearest_detection = self.OCR.find_nearest_detection(x, y)
@@ -80,8 +88,6 @@ class App:
 
     def draw_detection(self, detection):
         
-        # Draw a rectangle for every text detection
-        #detection = self.result[self.p]
         #self.clear_screen()
         #for detection in self.result:
             #self.clear_screen()
@@ -96,37 +102,31 @@ class App:
                         self.rect_width)
         pygame.display.update()
 
+
     def run(self):
         print("\n ==== App is running... ====")
         while True:
             self.check_events()
             
-
-
+            
 if __name__ == "__main__":
+
     n = Narrator()
     o = OCR()
     a = App(n, o)
     a.run()
 
     # ========== TODO ==========
-    # 2. Only take screenshot if the last image has changed.
-    # Dont take screenshot if the mouse is the same, just switch detections
     # 3. Join sentences?
 
     # ========== BUG ==========
-    # 2. Index out of range error
-    # 3. Pressing DSWITCH_KEY too early causes an error
+    # 4. Pressing m too consistantly causes the program to bug out
 
     # ========== FIXME ==========
     # 1. Fix the narrator variables
 
     # ========== FUTURE WORK ==========
-    # 1. Asynchronous loading_window? line 54-56
-    # 2: Speed up?
-        # 2.1 https://github.com/JaidedAI/EasyOCR/issues/786
-        # 2.2 https://cloudblogs.microsoft.com/opensource/2022/04/19/scaling-up-pytorch-inference-serving-billions-of-daily-nlp-inferences-with-onnx-runtime/
-        # 2.3 https://github.com/Kromtar/EasyOCR-ONNX/tree/easyocr_onnx
+    # 2: Only way of speeding up is speeding up EasyOCR.
 
    # ========== Other ==========
    #1. OCR2
