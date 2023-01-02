@@ -169,18 +169,22 @@ if __name__ == "__main__":
     a = App(tts, ocr)
     a.run()
 
+
     # ========== TODO ==========
-    # 3. Join sentences?
+    # 
 
     # ========== BUG ==========
     # 4. Pressing m too consistantly causes the program to bug out
 
     # ========== FIXME ==========
-    # 2. DIsplay issues with the calling order
+    # 2. Display issues with the calling order
 
     # ========== FUTURE WORK ==========
-    # 2: Only way of speeding up is speeding up EasyOCR.
+    # 1. Add a GUI
+    # 2. Only way of speeding up is speeding up EasyOCR or replacing it.
+    #   OCR Alternatives:
+            # 1. https://github.com/PaddlePaddle/PaddleOCR
+    # 3. Language understanding for bulding sentences
 
-   # ========== Other ==========
-   #1. OCR2
-   # https://github.com/nathanaday/RealTime-OCR
+   # ========== References ==========
+   # 1. https://github.com/nathanaday/RealTime-OCR
