@@ -9,6 +9,28 @@ import os, glob
 
 
 class OCR:
+    """
+    Class that captures the screen and performs OCR
+
+    `Attributes:`
+        lang: language in which the OCR will be performed
+        gpu: use GPU or not (recommended to use GPU)
+        imgs: List containing the filenames of the screenshots
+        result: List of tuples (bbox, text, prob)
+        results_db: Temporary list to store the results
+        imgs_dir: Directory where screenshots will be stored
+        file_nom: Nomenclature of the screenshots
+        acc: Don't consider detections with accuracy lower than this value
+
+    `Methods:`
+        change_accuracy(): Modify the accuracy threshold for detections
+        take_screenshot(): Take a screenshot and save it in imgs_dir
+        start(): Start OCR detection and save results
+        closest_node(): Returns the closest point of the detection to the mouse position
+        find_nearest_detection(x, y): For a given mouse position, find the closest detection
+        delete_imgs(): Deletes all screenshots when the program finishes running
+        check_start(): Checks for repeated screenshots
+    """
 
     def __init__(self, lang="en", gpu=True):
         self.lang = lang
@@ -16,12 +38,24 @@ class OCR:
         self.imgs = []
         self.result = []
         self.results_db = []
-        self.status = True
         self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
         self.file_nom = "OCR_pic_"
+        self.acc = 0.3 
     
+    def change_accuracy(self, acc: float):
+        """"
+        Change the accuracy threshold for detections
+        Only detections with accuracy higher than this value will be considered
+        :param acc: Accuracy threshold
+        """
+
+        self.acc = acc
+
     def take_screenshot(self):
-        start = time.time()
+        """
+        Function that takes a screenshot and save it in imgs_dir
+        """
+
         myScreenshot = pyautogui.screenshot()
         h = str(random.getrandbits(128))
         filename = self.file_nom + h + ".png"
@@ -29,6 +63,10 @@ class OCR:
         self.imgs.append(filename)
     
     def start(self):
+        """
+        Start OCR detection and save results
+        """
+
         # Take screenshot
         self.take_screenshot()
         print("Reading the image content. Please wait...\n")
@@ -41,22 +79,42 @@ class OCR:
         reader = easyocr.Reader([self.lang], gpu=self.gpu)
         self.all_results = reader.readtext(imgf)
         # Avoid low accuracy detections
-        self.result = list(filter(lambda x: x[2] >= 0.3, self.all_results))
+        self.result = list(filter(lambda x: x[2] >= self.acc, self.all_results))
         # Save results
         self.results_db.append((img, self.result))
 
-    def closest_node(self, node, nodes):
+    def get_all_detections(self):
+        """
+        Returns the list of all detections
+        """
+
+        return self.result
+
+    def closest_node(self, node: tuple, nodes: list):
+        """
+        Given a node, in this case the mouse position, this function
+        returns the closest point of the detection to it.
+        :param node: Tuple containing the x and y coordinates of the mouse position
+        :param nodes: List of tuples containing the x and y coordinates for 
+                    all points of every detection
+        """
+
         kdtree = KDTree(nodes)
         d, i = kdtree.query(node)
         return nodes[i]
 
-    def find_nearest_detection(self, x, y):
-        
+    def find_nearest_detection(self, x: int, y: int):
+        """
+        Given a mouse position, this function returns the closest detection
+        :param x: x coordinate of the mouse position
+        :param y: y coordinate of the mouse position
+        """
+
         # Convert list of lists to list of tuples
         det_rect = [tuple(p) for det in self.result for p in det[0]]
         # Find the closest point of the detection (rectangle) to the mouse position
         closest_point_to_mouse = self.closest_node((x, y), det_rect)
-        # Check Where is this point in the list of detections
+        # Check to which detection this point corresponds
         for i, detection in enumerate(self.result):
             rectangle = detection[0]
             for point in rectangle:
@@ -67,11 +125,20 @@ class OCR:
         return closest_detect
     
     def delete_imgs(self):
+        """
+        Deletes all screenshots taken
+        """
+
         for filename in glob.glob(self.imgs_dir + f"{self.file_nom}*"):
             os.remove(filename) 
 
     def check_start(self):
-        # Don't start OCR if the last 2 images are the same
+        """
+        This function checks if the last 2 screenshots are almost identical.
+        If so, it returns False, which means that OCR will not be performed.
+        This is done to gain time, since OCR is a very slow process.
+        """
+
         if len(self.results_db) > 1:
             img1 = cv2.imread(self.imgs_dir + self.results_db[-1][0])
             img2 = cv2.imread(self.imgs_dir + self.results_db[-2][0])
