@@ -172,8 +172,8 @@ if __name__ == "__main__":
 
     # ========== TODO ==========
     # Paragraph detection
-    #   1. New OCR?
-    #   2. New detection algorithm?
+    #   1. New OCR? New detection algorithm?
+    #   2. Test all cases with paragraph=True. See results
 
 
     # ========== BUG ==========
