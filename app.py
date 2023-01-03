@@ -7,7 +7,7 @@ from ocr import OCR
 
 
 READ_CONTENT = 'm'
-QUICK_READ = 'q'
+QUICK_READ = 'º'
 REPEAT_KEY = 'r'
 QUIT_KEY = 'esc'
 
@@ -171,7 +171,10 @@ if __name__ == "__main__":
 
 
     # ========== TODO ==========
-    # 
+    # Paragraph detection
+    #   1. New OCR?
+    #   2. New detection algorithm?
+
 
     # ========== BUG ==========
     # 4. Pressing m too consistantly causes the program to bug out
@@ -184,6 +187,8 @@ if __name__ == "__main__":
     # 2. Only way of speeding up is speeding up EasyOCR or replacing it.
     #   OCR Alternatives:
             # 1. https://github.com/PaddlePaddle/PaddleOCR
+            # 2. https://github.com/mindee/doctr
+
     # 3. Language understanding for bulding sentences
 
    # ========== References ==========
