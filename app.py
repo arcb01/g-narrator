@@ -196,12 +196,13 @@ if __name__ == "__main__":
     # User interaction when pointing mode is not possible:
     # If changes:
         # update comments text
+    # 2. Read everything + FIXME: key events
 
     # ========== BUG ==========
     # 4. Pressing m too consistantly causes the program to bug out
 
     # ========== FIXME ==========
-    # 2. Display issues with the calling order
+    # 1. Display issues with the calling order
 
     # ========== FUTURE WORK ==========
     # 1. Add a GUI
