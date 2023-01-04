@@ -20,10 +20,8 @@ class OCR:
         results_db: Temporary list to store the results
         imgs_dir: Directory where screenshots will be stored
         file_nom: Nomenclature of the screenshots
-        acc: Don't consider detections with accuracy lower than this value
 
     `Methods:`
-        change_accuracy(): Modify the accuracy threshold for detections
         take_screenshot(): Take a screenshot and save it in imgs_dir
         start(): Start OCR detection and save results
         closest_node(): Returns the closest point of the detection to the mouse position
@@ -40,16 +38,7 @@ class OCR:
         self.results_db = []
         self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
         self.file_nom = "OCR_pic_"
-        self.acc = 0.3 
-    
-    def change_accuracy(self, acc: float):
-        """"
-        Change the accuracy threshold for detections
-        Only detections with accuracy higher than this value will be considered
-        :param acc: Accuracy threshold
-        """
 
-        self.acc = acc
 
     def take_screenshot(self):
         """
@@ -77,9 +66,7 @@ class OCR:
         imgf = cv2.imread(self.imgs_dir + img)
         # OCR
         reader = easyocr.Reader([self.lang], gpu=self.gpu)
-        self.all_results = reader.readtext(imgf)
-        # Avoid low accuracy detections
-        self.result = list(filter(lambda x: x[2] >= self.acc, self.all_results))
+        self.result = reader.readtext(imgf, paragraph=True)
         # Save results
         self.results_db.append((img, self.result))
 
