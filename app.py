@@ -192,11 +192,13 @@ if __name__ == "__main__":
     a.run()
 
 
-    # ========== TODO ==========
-    # User interaction when pointing mode is not possible:
-    # If changes:
-        # update comments text
-    # 2. Read everything + FIXME: key events
+    # App will have 3 modes:
+    # 1. TODO: Quick Read everything + FIXME: Events
+    # 2. DONE: Point and read
+    # 3. TODO: Read by sections
+        # 3.1 TODO: Section delimiter
+        # 3.2 TODO: Subsections
+
 
     # ========== BUG ==========
     # 4. Pressing m too consistantly causes the program to bug out
