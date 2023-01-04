@@ -91,10 +91,10 @@ class App:
             # Load display
             self.load_display()
             # Start OCR
-            if self.OCR.check_start():
-                self.OCR.start()
-            else:
-                pass
+            #if self.OCR.check_start():
+            self.OCR.start()
+            #else:
+                #pass
             # Find nearest detection from the mouse position
             nearest_detection = self.OCR.find_nearest_detection(x, y)
             # Draw detection
@@ -177,7 +177,7 @@ class App:
             
 if __name__ == "__main__":
 
-    lang = "en"
+    lang = "es"
     en_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
     es_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ES-ES_HELENA_11.0"
 
@@ -192,12 +192,8 @@ if __name__ == "__main__":
     a.run()
 
 
-    # App will have 3 modes:
-    # 1. TODO: Quick Read everything + FIXME: Events
-    # 2. DONE: Point and read
-    # 3. TODO: Read by sections
-        # 3.1 TODO: Section delimiter
-        # 3.2 TODO: Subsections
+    # ========== TODO ==========
+    # 1. Play the game and see what is needed
 
 
     # ========== BUG ==========
