@@ -58,10 +58,22 @@ class App:
         y_mouse_pos = pyautogui.position().y
         return x_mouse_pos, y_mouse_pos
 
+    def quit(self):
+        print("\n ==== Stopping... ====\n")
 
-    def read_all_elements(self):      
-        pass
-        
+        self.narrator.say("Quitting Narrator")
+        # Delete all images and quit
+        self.OCR.delete_imgs()
+        sys.exit()
+
+    def read_everything(self):   
+
+        # TODO: Read everything
+
+        for detection in self.OCR.result:
+            self.draw_detection(detection)
+            self.narrator.say(detection[1])
+            
 
     def check_events(self):
         """
@@ -71,13 +83,7 @@ class App:
         event = keyboard.read_event()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == QUIT_KEY:
-            print("\n ==== Stopping... ====\n")
-
-            self.narrator.say("Quitting")
-
-            # Delete all images and quit
-            self.OCR.delete_imgs()
-            sys.exit()
+            self.quit()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == READ_CONTENT:
             # Get mouse position
@@ -106,7 +112,7 @@ class App:
             # Start OCR
             self.OCR.start()
             # Read all detections
-            self.read_all_elements()
+            self.read_everything()
 
 
 
@@ -147,6 +153,11 @@ class App:
         left = bbox[0][1]
         width = bbox[1][0] - bbox[0][0]
         height = bbox[2][1] - bbox[1][1]
+
+        #s = pygame.Surface((width,height), pygame.SRCALPHA, 32)   # per-pixel alpha
+        #s.fill((255, 0, 128, 80))                         # notice the alpha value in the color
+        #self.screen.blit(s, (top, left))
+
         pygame.draw.rect(self.screen, self.bbox_color,  pygame.Rect(top, left, 
                                                             width, height), 
                         self.rect_width)
@@ -182,8 +193,9 @@ if __name__ == "__main__":
 
 
     # ========== TODO ==========
-    # Read all elements
-
+    # User interaction when pointing mode is not possible:
+    # If changes:
+        # update comments text
 
     # ========== BUG ==========
     # 4. Pressing m too consistantly causes the program to bug out
