@@ -58,6 +58,11 @@ class App:
         y_mouse_pos = pyautogui.position().y
         return x_mouse_pos, y_mouse_pos
 
+
+    def read_all_elements(self):      
+        pass
+        
+
     def check_events(self):
         """
         Captures any keyboard events
@@ -100,12 +105,10 @@ class App:
             self.load_display()
             # Start OCR
             self.OCR.start()
-            # Get all detections
-            for detection in self.OCR.get_all_detections():
-                # Draw detection
-                self.draw_detection(detection)
-                # Text to speech
-                self.narrator.say(self.output_text)
+            # Read all detections
+            self.read_all_elements()
+
+
 
     def load_display(self):
         """
@@ -179,9 +182,7 @@ if __name__ == "__main__":
 
 
     # ========== TODO ==========
-    # Paragraph detection
-    #   1. New OCR? New detection algorithm?
-    #   2. Test all cases with paragraph=True. See results
+    # Read all elements
 
 
     # ========== BUG ==========

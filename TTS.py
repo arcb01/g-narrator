@@ -15,7 +15,7 @@ class Narrator:
         slower_saying(): Repeats the text at a slower rate
     """
 
-    def __init__(self, voice, voice_default_rate = 170):
+    def __init__(self, voice, voice_default_rate = 160):
         self._engine = pyttsx3.init()
         self._engine.setProperty('voice', str(voice))
         self.voice_default_rate = voice_default_rate

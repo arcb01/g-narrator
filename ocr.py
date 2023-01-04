@@ -130,7 +130,7 @@ class OCR:
             img1 = cv2.imread(self.imgs_dir + self.results_db[-1][0])
             img2 = cv2.imread(self.imgs_dir + self.results_db[-2][0])
             sim_score = uqi(img1, img2)
-            if sim_score > 0.95:
+            if sim_score > 0.97:
                 return False
             else:
                 return True
