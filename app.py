@@ -21,6 +21,7 @@ class App:
         rect_width: width of the bounding box
         narrator: An object of the Narrator class that is used to read the text
         OCR: An object of the OCR class that is used to detect text
+        clock: Pygame clock object
 
     `Methods:`
         get_disp_size(): Get the width and height of the display
@@ -36,6 +37,7 @@ class App:
         self.rect_width = 4
         self.narrator = narrator
         self.OCR = OCR
+        self.clock = pygame.time.Clock()
         pygame.init()
 
     def get_disp_size(self):
@@ -98,8 +100,6 @@ class App:
             self.load_display()
             # Start OCR
             self.OCR.start()
-            # Increase accuracy
-            self.OCR.change_accuracy(0.8)
             # Get all detections
             for detection in self.OCR.get_all_detections():
                 # Draw detection
@@ -157,15 +157,23 @@ class App:
 
         print("\n ==== App is running... ====")
         while True:
+            self.clock.tick(60)
             self.check_events()
             
             
 if __name__ == "__main__":
 
-    voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
+    lang = "en"
+    en_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
+    es_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ES-ES_HELENA_11.0"
+
+    if lang == "en":
+        voice = en_voice
+    elif lang == "es":
+        voice = es_voice
 
     tts = Narrator(voice=voice)
-    ocr = OCR()
+    ocr = OCR(lang=lang)
     a = App(tts, ocr)
     a.run()
 
