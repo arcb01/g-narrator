@@ -8,10 +8,11 @@ from utils import *
 
 # Key bindings
 START_READING = 'º'
+SWITCH_DETECTION = 'n'
 REPEAT_KEY = 'r'
-READ_NEAREST = 'q'
-READ_OUT_LOUD = 'enter'
-QUIT_KEY = 'esc'
+READ_NEAREST = 'h'
+READ_OUT_LOUD = '-'
+QUIT_KEY = 'q'
 
 
 class App:
@@ -42,7 +43,7 @@ class App:
         self.OCR = OCR
         self.clock = pygame.time.Clock()
         self.switch_detection = False
-        self.det_idx = 0
+        self.engaging = False
         self.dimmed_color = (65, 94, 0)
         self.highlighted_color = (170, 255, 0)
         pygame.init()
@@ -55,6 +56,10 @@ class App:
         # Delete all images and quit
         self.OCR.delete_imgs()
         sys.exit()
+
+
+    def end_of_list(self):
+        return True if self.det_idx == len(self.OCR.get_all_detections()) - 1 else False
 
 
     def check_events(self):
@@ -89,31 +94,38 @@ class App:
             self.narrator.slower_saying(self.output_text)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == START_READING:
-            if self.switch_detection:
+            self.load_display()
+            self.det_idx = 0
+            self.engaging = True
+            # Start OCR
+            self.OCR.start()
+            if len(self.OCR.get_all_detections()) > 0:
+                # Draw all possible OCR detections
+                for detection in self.OCR.get_all_detections():
+                    self.draw_detection(detection, color=self.dimmed_color)
+                # Highlight first detection
+                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+            else:
+                self.screen.fill((255, 0, 128))
+
+        if event.event_type == keyboard.KEY_DOWN and event.name == SWITCH_DETECTION:
+            if not self.end_of_list():
                 self.det_idx  += 1
                 # Apply highlighted color to current detection
-                self.draw_detection(self.OCR.result[self.det_idx], color=self.highlighted_color)
+                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
                 # Apply dimmed color to previous detection
-                self.draw_detection(self.OCR.result[self.det_idx - 1], color=self.dimmed_color)
-                # Back to start if end of list
-                if self.det_idx == len(self.OCR.result) - 1:
-                    self.det_idx = 0
+                self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.dimmed_color)
             else:
-                # Load display
-                self.load_display()
-                # Start OCR
-                self.OCR.start()
-                # Draw all possible OCR detections
-                for detection in self.OCR.result:
-                    self.draw_detection(detection, color=self.dimmed_color)
-                self.switch_detection = True
-                # Highlight first detection
-                self.draw_detection(self.OCR.result[self.det_idx], color=self.highlighted_color)
+                # Apply dimmed color to previous detection
+                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
+                self.det_idx = 0
+                # Apply highlighted color to current detection
+                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+
 
         if event.event_type == keyboard.KEY_DOWN and event.name == READ_OUT_LOUD:
-            if self.det_idx:
-                # Read text of current detection
-                self.narrator.say(self.OCR.result[self.det_idx][1])
+            # Read text of current detection
+            self.narrator.say(self.OCR.get_all_detections()[self.det_idx][1])
 
 
     def load_display(self):
@@ -135,7 +147,8 @@ class App:
         # Set window transparency bbox_color
         win32gui.SetLayeredWindowAttributes(hwnd, win32api.RGB(*fuchsia), 0, win32con.LWA_COLORKEY)
 
-        self.screen.fill(fuchsia)  # Transparent background
+        if not self.engaging:
+            self.screen.fill(fuchsia)  # Transparent background
         self.clear_screen = lambda : self.screen.fill(fuchsia)
 
         pygame.display.update()
@@ -171,8 +184,11 @@ class App:
 
         print("\n ==== App is running... ====")
         while True:
-            self.clock.tick(60)
+            #self.load_display()
             self.check_events()
+
+            self.clock.tick(60)
+            
             
             
 if __name__ == "__main__":
@@ -197,11 +213,13 @@ if __name__ == "__main__":
 
 
     # ========== BUG ==========
-    # 4. Pressing m too consistantly causes the program to bug out
+    # 
 
     # ========== FIXME ==========
     # 1. Able to press esc at any time to exit. Fails while tts is reading something
     # 2. Check what key binding errors before presseing the start button (º)
+    # 3. Inside OCR, don't allow unredable text like ('', '-', ... etc)
+    # 4. When pressing reading button twice, screen blacks out 
 
     # ========== FUTURE WORK ==========
     # 1. Add a GUI
