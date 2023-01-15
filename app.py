@@ -93,21 +93,7 @@ class App:
             self.narrator.slower_saying(self.output_text)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == START_READING:
-            self.clear_screen()
-            self.load_display()
-            toplist = []
-            winlist = []
-
-            def enum_callback(hwnd, results):
-                winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
-
-            win32gui.EnumWindows(enum_callback, toplist)
-            window = [(hwnd, title) for hwnd, title in winlist if 'pygame' in title.lower()]
-            window_id = window[0]
-            #win32gui.SetForegroundWindow(window_id[0])
-            shell = win32com.client.Dispatch("WScript.Shell")
-            shell.SendKeys('%')
-            win32gui.SetForegroundWindow(window_id[0])
+            self.load_display(bring_to_foreground=True)
             self.det_idx = 0
             self.engaging = True
             # Start OCR
@@ -139,7 +125,7 @@ class App:
             self.narrator.say(self.OCR.get_all_detections()[self.det_idx][1])
 
 
-    def load_display(self):
+    def load_display(self, bring_to_foreground=False):
         """
         Loads the display window
         """
@@ -147,18 +133,34 @@ class App:
         pygame.init()
         w, h = get_disp_size()
         self.screen = pygame.display.set_mode((w, h)) # For borderless, use pygame.NOFRAME
-        self.fuchsia = (255, 0, 128)  # Transparency bbox_color
+        fuchsia = (255, 0, 128)  # Transparency bbox_color
         # Lock window to top
-        #win32gui.SetWindowPos(pygame.display.get_wm_info()['window'], win32con.HWND_TOPMOST, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+        # win32gui.SetWindowPos(pygame.display.get_wm_info()['window'], win32con.HWND_TOPMOST, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
         # Create layered window
         hwnd = pygame.display.get_wm_info()["window"]
         win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
                             win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_LAYERED)
         # Set window transparency bbox_color
-        win32gui.SetLayeredWindowAttributes(hwnd, win32api.RGB(*self.fuchsia), 0, win32con.LWA_COLORKEY)
+        win32gui.SetLayeredWindowAttributes(hwnd, win32api.RGB(*fuchsia), 0, win32con.LWA_COLORKEY)
 
-        self.screen.fill(self.fuchsia)  # Transparent background
-        self.clear_screen = lambda : self.screen.fill(self.fuchsia)
+        self.screen.fill(fuchsia)  # Transparent background
+        self.clear_screen = lambda : self.screen.fill(fuchsia)
+
+        if bring_to_foreground:
+            # Bring window to foregorund (to be able to see the bboxes)
+            toplist = []
+            winlist = []
+
+            def enum_callback(hwnd, results):
+                winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
+
+            win32gui.EnumWindows(enum_callback, toplist)
+            window = [(hwnd, title) for hwnd, title in winlist if 'pygame' in title.lower()]
+            window_id = window[0]
+            shell = win32com.client.Dispatch("WScript.Shell")
+            shell.SendKeys('%')
+            win32gui.SetForegroundWindow(window_id[0])
+        
         pygame.display.update()
 
 
@@ -192,10 +194,10 @@ class App:
         """
 
         print("\n ==== App is running... ====")
-        self.load_display()
         while True:
             self.check_events()
             self.clock.tick(60)
+
             pygame.display.flip()
             
             
@@ -224,13 +226,11 @@ if __name__ == "__main__":
 
 
     # ========== BUG ==========
-    # 
+    # When clicking º for second time, bboxes flashes
 
     # ========== FIXME ==========
     # 1. Able to press esc at any time to exit. Fails while tts is reading something
     # 2. Check what key binding errors before presseing the start button (º)
-    # 3. Inside OCR, don't allow unredable text like ('', '-', ... etc)
-    # 4. When pressing reading button twice, screen blacks out 
 
     # ========== FUTURE WORK ==========
     # 1. Add a GUI
