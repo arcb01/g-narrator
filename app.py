@@ -1,6 +1,6 @@
 import sys, keyboard, pyautogui
 import pygame, win32api, win32con, win32gui
-import ctypes
+import win32gui, win32com.client
 
 from TTS import Narrator
 from ocr import OCR
@@ -94,6 +94,20 @@ class App:
 
         if event.event_type == keyboard.KEY_DOWN and event.name == START_READING:
             self.clear_screen()
+            self.load_display()
+            toplist = []
+            winlist = []
+
+            def enum_callback(hwnd, results):
+                winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
+
+            win32gui.EnumWindows(enum_callback, toplist)
+            window = [(hwnd, title) for hwnd, title in winlist if 'pygame' in title.lower()]
+            window_id = window[0]
+            #win32gui.SetForegroundWindow(window_id[0])
+            shell = win32com.client.Dispatch("WScript.Shell")
+            shell.SendKeys('%')
+            win32gui.SetForegroundWindow(window_id[0])
             self.det_idx = 0
             self.engaging = True
             # Start OCR
@@ -104,8 +118,6 @@ class App:
                     self.draw_detection(detection, color=self.dimmed_color)
                 # Highlight first detection
                 self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
-            else:
-                self.screen.fill((255, 0, 128))
 
         if event.event_type == keyboard.KEY_DOWN and event.name == SWITCH_DETECTION:
             if not self.end_of_list():
@@ -187,7 +199,9 @@ class App:
             pygame.display.flip()
             
             
-            
+
+        
+        
 if __name__ == "__main__":
 
     lang = "es"
