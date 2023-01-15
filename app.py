@@ -46,7 +46,6 @@ class App:
         self.engaging = False
         self.dimmed_color = (65, 94, 0)
         self.highlighted_color = (170, 255, 0)
-        pygame.init()
 
 
     def quit(self):
@@ -94,7 +93,7 @@ class App:
             self.narrator.slower_saying(self.output_text)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == START_READING:
-            self.load_display()
+            self.clear_screen()
             self.det_idx = 0
             self.engaging = True
             # Start OCR
@@ -133,25 +132,23 @@ class App:
         Loads the display window
         """
         # https://stackoverflow.com/questions/550001/fully-transparent-windows-in-pygame
-
         pygame.init()
         w, h = get_disp_size()
         self.screen = pygame.display.set_mode((w, h)) # For borderless, use pygame.NOFRAME
-        fuchsia = (255, 0, 128)  # Transparency bbox_color
+        self.fuchsia = (255, 0, 128)  # Transparency bbox_color
         # Lock window to top
-        win32gui.SetWindowPos(pygame.display.get_wm_info()['window'], win32con.HWND_TOPMOST, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+        #win32gui.SetWindowPos(pygame.display.get_wm_info()['window'], win32con.HWND_TOPMOST, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
         # Create layered window
         hwnd = pygame.display.get_wm_info()["window"]
         win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
                             win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_LAYERED)
         # Set window transparency bbox_color
-        win32gui.SetLayeredWindowAttributes(hwnd, win32api.RGB(*fuchsia), 0, win32con.LWA_COLORKEY)
+        win32gui.SetLayeredWindowAttributes(hwnd, win32api.RGB(*self.fuchsia), 0, win32con.LWA_COLORKEY)
 
-        if not self.engaging:
-            self.screen.fill(fuchsia)  # Transparent background
-        self.clear_screen = lambda : self.screen.fill(fuchsia)
-
+        self.screen.fill(self.fuchsia)  # Transparent background
+        self.clear_screen = lambda : self.screen.fill(self.fuchsia)
         pygame.display.update()
+
 
     def draw_detection(self, detection : list, color : tuple = (170, 255, 0)):
         """
@@ -183,11 +180,11 @@ class App:
         """
 
         print("\n ==== App is running... ====")
+        self.load_display()
         while True:
-            #self.load_display()
             self.check_events()
-
             self.clock.tick(60)
+            pygame.display.flip()
             
             
             
