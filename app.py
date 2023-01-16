@@ -29,7 +29,6 @@ class App:
         highlighted_color: Color that highlights the current bounding box
         dimmed_color: Color of the unselected bounding boxes
 
-
     `Methods:`
         check_events(): Checks for keyboard events
         load_display(): Loads the display window
@@ -38,6 +37,8 @@ class App:
     """
 
     def __init__(self, narrator: object, OCR: object):
+        self.app_name = "Gaming Narrator"
+        self.app_logo = pygame.image.load('./assets/logo.png')
         self.rect_width = 4
         self.narrator = narrator
         self.OCR = OCR
@@ -59,7 +60,6 @@ class App:
 
     def end_of_list(self):
         return True if self.det_idx == len(self.OCR.get_all_detections()) - 1 else False
-
 
     def check_events(self):
         """
@@ -87,15 +87,11 @@ class App:
             self.draw_detection(nearest_detection)
             # Text to speech
             self.narrator.say(self.output_text)
-            
-        if event.event_type == keyboard.KEY_DOWN and event.name == REPEAT_KEY:
-            # Repeat text a little bit slower
-            self.narrator.slower_saying(self.output_text)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == START_READING:
-            self.load_display(bring_to_foreground=True)
             self.det_idx = 0
             self.engaging = True
+            self.load_display(bring_to_foreground=True)
             # Start OCR
             self.OCR.start()
             if len(self.OCR.get_all_detections()) > 0:
@@ -106,6 +102,8 @@ class App:
                 self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == SWITCH_DETECTION:
+            assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
+
             if not self.end_of_list():
                 self.det_idx  += 1
                 # Apply highlighted color to current detection
@@ -121,20 +119,30 @@ class App:
 
 
         if event.event_type == keyboard.KEY_DOWN and event.name == READ_OUT_LOUD:
+            assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
             # Read text of current detection
-            self.narrator.say(self.OCR.get_all_detections()[self.det_idx][1])
+            text = self.OCR.get_all_detections()[self.det_idx][1]
+            self.narrator.say(text)
 
+        if event.event_type == keyboard.KEY_DOWN and event.name == REPEAT_KEY:
+            assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
+            # Repeat text a little bit slower
+            text = self.OCR.get_all_detections()[self.det_idx][1]
+            self.narrator.slower_saying(text)
 
     def load_display(self, bring_to_foreground=False):
         """
         Loads the display window
         """
         # https://stackoverflow.com/questions/550001/fully-transparent-windows-in-pygame
+
         pygame.init()
         w, h = get_disp_size()
         self.screen = pygame.display.set_mode((w, h)) # For borderless, use pygame.NOFRAME
+        pygame.display.set_caption(self.app_name)
+        pygame.display.set_icon(self.app_logo)
         fuchsia = (255, 0, 128)  # Transparency bbox_color
-        # Lock window to top
+        # Lock window on top
         # win32gui.SetWindowPos(pygame.display.get_wm_info()['window'], win32con.HWND_TOPMOST, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
         # Create layered window
         hwnd = pygame.display.get_wm_info()["window"]
@@ -155,7 +163,7 @@ class App:
                 winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
 
             win32gui.EnumWindows(enum_callback, toplist)
-            window = [(hwnd, title) for hwnd, title in winlist if 'pygame' in title.lower()]
+            window = [(hwnd, title) for hwnd, title in winlist if self.app_name == title]
             window_id = window[0]
             shell = win32com.client.Dispatch("WScript.Shell")
             shell.SendKeys('%')
@@ -168,6 +176,7 @@ class App:
         """
         For a given detection, draw a bounding box around the text
         :param detection: a list containing the bounding box vertices, text, and confidence
+        :param color: the color of the bounding box
         """
     
         #self.clear_screen()
@@ -234,12 +243,12 @@ if __name__ == "__main__":
 
     # ========== FUTURE WORK ==========
     # 1. Add a GUI
-    # 2. Only way of speeding up is speeding up EasyOCR or replacing it.
+    # 2. Improve Narrator voices
+    # 3. Only way of speeding up is speeding up EasyOCR or replacing it.
     #   OCR Alternatives:
             # 1. https://github.com/PaddlePaddle/PaddleOCR
             # 2. https://github.com/mindee/doctr
 
-    # 3. Language understanding for bulding sentences
 
    # ========== References ==========
    # 1. https://github.com/nathanaday/RealTime-OCR
