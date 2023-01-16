@@ -231,16 +231,15 @@ if __name__ == "__main__":
 
 
     # ========== TODO ==========
-    # 1. Play the game and see what is needed
+    # 1. Try check_events with pygame
     # 2. Documentation
 
+    # ========== FIXME ==========
+    # 1. App doesn't support game fullscreen mode
+    # 2. Able to press esc at any time to exit. Fails while tts is reading something
 
     # ========== BUG ==========
     # When clicking º for second time, bboxes flashes
-
-    # ========== FIXME ==========
-    # 1. Issues with fullscreen mode
-    # 1. Able to press esc at any time to exit. Fails while tts is reading something
 
     # ========== FUTURE WORK ==========
     # 1. Add a GUI
