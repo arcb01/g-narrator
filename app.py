@@ -47,7 +47,7 @@ class App:
         self.engaging = False
         self.dimmed_color = (65, 94, 0)
         self.highlighted_color = (170, 255, 0)
-
+        pygame.init()
 
     def quit(self):
         print("\n ==== Stopping... ====\n")
@@ -207,7 +207,7 @@ class App:
             self.check_events()
             self.clock.tick(60)
 
-            pygame.display.flip()
+#            pygame.display.flip()
             
             
 
@@ -232,14 +232,15 @@ if __name__ == "__main__":
 
     # ========== TODO ==========
     # 1. Play the game and see what is needed
+    # 2. Documentation
 
 
     # ========== BUG ==========
     # When clicking º for second time, bboxes flashes
 
     # ========== FIXME ==========
+    # 1. Issues with fullscreen mode
     # 1. Able to press esc at any time to exit. Fails while tts is reading something
-    # 2. Check what key binding errors before presseing the start button (º)
 
     # ========== FUTURE WORK ==========
     # 1. Add a GUI
