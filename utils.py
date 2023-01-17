@@ -1,5 +1,6 @@
 import ctypes
 import pyautogui
+import pygame
 
 
 def get_disp_size():
@@ -21,3 +22,23 @@ def get_mouse_pos():
     y_mouse_pos = pyautogui.position().y
 
     return x_mouse_pos, y_mouse_pos
+
+def loading_screen(screen):
+    """
+    Loading screen while OCR is running
+    """
+
+    font = pygame.font.SysFont("couriernew", 90)
+    text = []
+    text.append((font.render("Reading screen", 0, (0, 255, 0)), (25, 25)))
+    for t in text:
+        screen.blit(t[0], t[1])
+    pygame.display.update()
+
+def clear_screen(screen):
+    """
+    Clears the screen
+    """
+    transparent = (255, 0, 128)
+    screen.fill(transparent)
+    pygame.display.update()

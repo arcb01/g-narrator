@@ -64,16 +64,6 @@ class App:
             sys.exit()
             """
 
-    def loading_screen(self):
-        """
-        """
-        font = pygame.font.SysFont("couriernew", 90)
-        text = []
-        text.append((font.render("Reading screen", 0, (0, 255, 0)), (25, 25)))
-        for t in text:
-            self.screen.blit(t[0], t[1])
-        pygame.display.update()
-
     def end_of_list(self):
         return True if self.det_idx == len(self.OCR.get_all_detections()) - 1 else False
 
@@ -108,10 +98,9 @@ class App:
             self.det_idx = 0
             self.engaging = True
             self.load_display()
-            self.loading_screen() # Loading screen while OCR is running
             # Start OCR
+            self.OCR.send_screen(self.screen) # For adding a loading screen.
             self.OCR.start()
-            self.clear_screen()
             if len(self.OCR.get_all_detections()) > 0:
                 # Draw all possible OCR detections
                 for detection in self.OCR.get_all_detections():
@@ -234,16 +223,14 @@ if __name__ == "__main__":
 
 
     # ========== TODO ==========
-    # 1. Try check_events with pygame
-    # 2. Documentation
+    # 1. Documentation
 
     # ========== FIXME ==========
-    # 1. App doesn't support game fullscreen mode
-    # 2. Loading screen should be asynch.
+    # 1. Fullscreen issues with some apps
     # 2. Able to press esc at any time to exit. Fails while tts is reading something
 
     # ========== BUG ==========
-    # When clicking º for second time, bboxes flashes
+    # While display loaded, Clicking on the top part of the screen, app crashes
 
     # ========== FUTURE WORK ==========
     # 1. Add a GUI

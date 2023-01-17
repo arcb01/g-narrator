@@ -6,6 +6,7 @@ from scipy.spatial import KDTree
 from sewar.full_ref import uqi
 import time
 import os, glob
+from utils import loading_screen, clear_screen, get_mouse_pos, get_disp_size
 
 
 class OCR:
@@ -51,6 +52,12 @@ class OCR:
         myScreenshot.save(self.imgs_dir + filename)
         self.imgs.append(filename)
     
+    def send_screen(self, screen):
+        """
+        Receives the screen from the main app
+        """
+        self.app_screen = screen
+
     def start(self):
         """
         Start OCR detection and save results
@@ -58,7 +65,8 @@ class OCR:
 
         # Take screenshot
         self.take_screenshot()
-        print("Reading the image content. Please wait...\n")
+        # Loading screen
+        loading_screen(self.app_screen)
         # Get last img
         #self.last_img = self.imgs.pop()
         img = self.imgs[-1]
@@ -69,6 +77,8 @@ class OCR:
         self.result = reader.readtext(imgf, paragraph=True)
         # Save results
         self.results_db.append((img, self.result))
+        # Clear loading screen
+        clear_screen(self.app_screen)
 
     def get_all_detections(self):
         """
