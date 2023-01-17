@@ -64,6 +64,15 @@ class App:
             sys.exit()
             """
 
+    def loading_screen(self):
+        """
+        """
+        font = pygame.font.SysFont("couriernew", 90)
+        text = []
+        text.append((font.render("Reading screen", 0, (0, 255, 0)), (25, 25)))
+        for t in text:
+            self.screen.blit(t[0], t[1])
+        pygame.display.update()
 
     def end_of_list(self):
         return True if self.det_idx == len(self.OCR.get_all_detections()) - 1 else False
@@ -99,8 +108,10 @@ class App:
             self.det_idx = 0
             self.engaging = True
             self.load_display()
+            self.loading_screen() # Loading screen while OCR is running
             # Start OCR
             self.OCR.start()
+            self.clear_screen()
             if len(self.OCR.get_all_detections()) > 0:
                 # Draw all possible OCR detections
                 for detection in self.OCR.get_all_detections():
