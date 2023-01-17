@@ -12,7 +12,7 @@ SWITCH_DETECTION = 'n'
 REPEAT_KEY = 'r'
 READ_NEAREST = 'h'
 READ_OUT_LOUD = '-'
-QUIT_KEY = 'q'
+QUIT_KEY = 'esc'
 
 
 class App:
@@ -50,12 +50,19 @@ class App:
         pygame.init()
 
     def quit(self):
-        print("\n ==== Stopping... ====\n")
 
-        self.narrator.say("Quitting Narrator")
-        # Delete all images and quit
-        self.OCR.delete_imgs()
-        sys.exit()
+        try:
+            self.clear_screen()
+            pygame.display.update()
+        except:
+            pass
+
+            """
+            self.narrator.say("Quitting Narrator")
+            # Delete all images and quit
+            self.OCR.delete_imgs()
+            sys.exit()
+            """
 
 
     def end_of_list(self):
@@ -91,7 +98,7 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name == START_READING:
             self.det_idx = 0
             self.engaging = True
-            self.load_display(bring_to_foreground=True)
+            self.load_display()
             # Start OCR
             self.OCR.start()
             if len(self.OCR.get_all_detections()) > 0:
@@ -130,7 +137,7 @@ class App:
             text = self.OCR.get_all_detections()[self.det_idx][1]
             self.narrator.slower_saying(text)
 
-    def load_display(self, bring_to_foreground=False):
+    def load_display(self):
         """
         Loads the display window
         """
@@ -143,7 +150,7 @@ class App:
         pygame.display.set_icon(self.app_logo)
         fuchsia = (255, 0, 128)  # Transparency bbox_color
         # Lock window on top
-        # win32gui.SetWindowPos(pygame.display.get_wm_info()['window'], win32con.HWND_TOPMOST, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
+        win32gui.SetWindowPos(pygame.display.get_wm_info()['window'], win32con.HWND_TOPMOST, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
         # Create layered window
         hwnd = pygame.display.get_wm_info()["window"]
         win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
@@ -154,21 +161,6 @@ class App:
         self.screen.fill(fuchsia)  # Transparent background
         self.clear_screen = lambda : self.screen.fill(fuchsia)
 
-        if bring_to_foreground:
-            # Bring window to foregorund (to be able to see the bboxes)
-            toplist = []
-            winlist = []
-
-            def enum_callback(hwnd, results):
-                winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
-
-            win32gui.EnumWindows(enum_callback, toplist)
-            window = [(hwnd, title) for hwnd, title in winlist if self.app_name == title]
-            window_id = window[0]
-            shell = win32com.client.Dispatch("WScript.Shell")
-            shell.SendKeys('%')
-            win32gui.SetForegroundWindow(window_id[0])
-        
         pygame.display.update()
 
 
@@ -244,11 +236,11 @@ if __name__ == "__main__":
     # ========== FUTURE WORK ==========
     # 1. Add a GUI
     # 2. Improve Narrator voices
-    # 3. Only way of speeding up is speeding up EasyOCR or replacing it.
-    #   OCR Alternatives:
+    # 3. Ways of speeding up.
+    #    Using OCR Alternatives:
             # 1. https://github.com/PaddlePaddle/PaddleOCR
             # 2. https://github.com/mindee/doctr
-
+    #    PyTorch 2.0
 
    # ========== References ==========
    # 1. https://github.com/nathanaday/RealTime-OCR
