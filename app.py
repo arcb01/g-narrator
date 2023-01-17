@@ -239,6 +239,7 @@ if __name__ == "__main__":
 
     # ========== FIXME ==========
     # 1. App doesn't support game fullscreen mode
+    # 2. Loading screen should be asynch.
     # 2. Able to press esc at any time to exit. Fails while tts is reading something
 
     # ========== BUG ==========
