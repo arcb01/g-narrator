@@ -51,13 +51,14 @@ class App:
         pygame.init()
 
     def quit(self):
-
         try:
-            self.narrator.say("Clearing screen.")
-            self.clear_screen()
-            pygame.display.update()
-            # Delete all images 
-            self.OCR.delete_imgs()
+            if len(self.OCR.get_all_detections()) > 0:
+                self.OCR.empty_results()
+                self.narrator.say("Clearing screen.")
+                self.clear_screen()
+                pygame.display.update()
+                # Delete all images 
+                self.OCR.delete_imgs()
         except:
             pass
 

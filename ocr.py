@@ -36,7 +36,7 @@ class OCR:
         self.gpu = gpu
         self.imgs = []
         self.result = []
-        self.results_db = []
+        #self.results_db = [] # NOTE: Not implemented
         self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
         self.file_nom = "OCR_pic_"
 
@@ -76,7 +76,8 @@ class OCR:
         reader = easyocr.Reader([self.lang], gpu=self.gpu)
         self.result = reader.readtext(imgf, paragraph=True)
         # Save results
-        self.results_db.append((img, self.result))
+        # NOTE: not implemented 
+        # self.results_db.append((img, self.result))
         # Clear loading screen
         clear_screen(self.app_screen)
 
@@ -86,6 +87,13 @@ class OCR:
         """
 
         return self.result
+
+    def empty_results(self):
+        """
+        Empty the list of results
+        """
+
+        self.result = []
 
     def closest_node(self, node: tuple, nodes: list):
         """
@@ -130,11 +138,13 @@ class OCR:
             os.remove(filename) 
 
     def check_start(self):
+        # NOTE: Don't implement
+        pass
         """
         This function checks if the last 2 screenshots are almost identical.
         If so, it returns False, which means that OCR will not be performed.
         This is done to gain time, since OCR is a very slow process.
-        """
+
 
         if len(self.results_db) > 1:
             img1 = cv2.imread(self.imgs_dir + self.results_db[-1][0])
@@ -146,3 +156,4 @@ class OCR:
                 return True
         else:
             return True
+        """
