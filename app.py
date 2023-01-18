@@ -6,9 +6,10 @@ from TTS import Narrator
 from ocr import OCR
 from utils import *
 
-# Key bindings
+# ======== Key bindings ========
 START_READING = 'º'
-SWITCH_DETECTION = 'n'
+SWITCH_DET_FORWARD = "flecha derecha"
+SWITCH_DET_BACKWARD = "flecha izquierda"
 REPEAT_KEY = 'r'
 READ_NEAREST = 'h'
 READ_OUT_LOUD = '-'
@@ -108,22 +109,32 @@ class App:
                 # Highlight first detection
                 self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == SWITCH_DETECTION:
+
+        if event.event_type == keyboard.KEY_DOWN and event.name in [SWITCH_DET_FORWARD, SWITCH_DET_BACKWARD]:
             assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
 
-            if not self.end_of_list():
-                self.det_idx  += 1
-                # Apply highlighted color to current detection
-                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
-                # Apply dimmed color to previous detection
-                self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.dimmed_color)
-            else:
-                # Apply dimmed color to previous detection
-                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
-                self.det_idx = 0
-                # Apply highlighted color to current detection
-                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+            if event.name == SWITCH_DET_BACKWARD:
+                if not self.end_of_list():
+                    if self.det_idx > 0:
+                        # Apply dimmed color to current detection
+                        self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
+                        # Apply highlighted color to previous detection
+                        self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.highlighted_color)
+                        self.det_idx  -= 1
 
+            elif event.name == SWITCH_DET_FORWARD:
+                if not self.end_of_list():
+                    self.det_idx  += 1
+                    # Apply highlighted color to current detection
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+                    # Apply dimmed color to previous detection
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.dimmed_color)
+                else:
+                    # Apply dimmed color to previous detection
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
+                    self.det_idx = 0
+                    # Apply highlighted color to current detection
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == READ_OUT_LOUD:
             assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
