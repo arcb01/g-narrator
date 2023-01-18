@@ -6,7 +6,7 @@ from scipy.spatial import KDTree
 from sewar.full_ref import uqi
 import time
 import os, glob
-from utils import loading_screen, clear_screen, get_mouse_pos, get_disp_size
+from utils.utils import loading_screen, clear_screen, get_mouse_pos, get_disp_size
 
 
 class OCR:

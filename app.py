@@ -4,7 +4,7 @@ import win32gui, win32com.client
 
 from TTS import Narrator
 from ocr import OCR
-from utils import *
+from utils.utils import *
 
 # ======== Key bindings ========
 START_READING = 'º'
