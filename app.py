@@ -235,6 +235,8 @@ if __name__ == "__main__":
 
     # ========== TODO ==========
     # 1. Documentation
+    # 2. Change to a smaller window resolution (for manipulation porpuses) when app is not reading
+    #    the whole screen. 
 
     # ========== FIXME ==========
     # 1. Fullscreen issues with some apps
