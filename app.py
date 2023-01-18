@@ -53,17 +53,13 @@ class App:
     def quit(self):
 
         try:
+            self.narrator.say("Clearing screen.")
             self.clear_screen()
             pygame.display.update()
+            # Delete all images 
+            self.OCR.delete_imgs()
         except:
             pass
-
-            """
-            self.narrator.say("Quitting Narrator")
-            # Delete all images and quit
-            self.OCR.delete_imgs()
-            sys.exit()
-            """
 
     def end_of_list(self):
         return True if self.det_idx == len(self.OCR.get_all_detections()) - 1 else False
@@ -241,6 +237,7 @@ if __name__ == "__main__":
     # ========== FIXME ==========
     # 1. Fullscreen issues with some apps
     # 2. Able to press esc at any time to exit. Fails while tts is reading something
+    # 3. Run and wait loop voice handling   
 
     # ========== BUG ==========
     # While display loaded, Clicking on the top part of the screen, app crashes
