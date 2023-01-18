@@ -246,7 +246,7 @@ if __name__ == "__main__":
     # While display loaded, Clicking on the top part of the screen, app crashes
 
     # ========== FUTURE WORK ==========
-    # 1. Add a GUI
+    # 1. Add a GUI (key binding selector, etc.)
     # 2. Improve Narrator voices
     # 3. Ways of speeding up.
     #    Using OCR Alternatives:
