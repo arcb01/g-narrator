@@ -94,40 +94,6 @@ class OCR:
         """
 
         self.result = []
-
-    def closest_node(self, node: tuple, nodes: list):
-        """
-        Given a node, in this case the mouse position, this function
-        returns the closest point of the detection to it.
-        :param node: Tuple containing the x and y coordinates of the mouse position
-        :param nodes: List of tuples containing the x and y coordinates for 
-                    all points of every detection
-        """
-
-        kdtree = KDTree(nodes)
-        d, i = kdtree.query(node)
-        return nodes[i]
-
-    def find_nearest_detection(self, x: int, y: int):
-        """
-        Given a mouse position, this function returns the closest detection
-        :param x: x coordinate of the mouse position
-        :param y: y coordinate of the mouse position
-        """
-
-        # Convert list of lists to list of tuples
-        det_rect = [tuple(p) for det in self.result for p in det[0]]
-        # Find the closest point of the detection (rectangle) to the mouse position
-        closest_point_to_mouse = self.closest_node((x, y), det_rect)
-        # Check to which detection this point corresponds
-        for i, detection in enumerate(self.result):
-            rectangle = detection[0]
-            for point in rectangle:
-                if point[0] == closest_point_to_mouse[0] and \
-                    point[1] == closest_point_to_mouse[1]:
-                    index = i
-        closest_detect = self.result[index]
-        return closest_detect
     
     def delete_imgs(self):
         """
@@ -136,24 +102,3 @@ class OCR:
 
         for filename in glob.glob(self.imgs_dir + f"{self.file_nom}*"):
             os.remove(filename) 
-
-    def check_start(self):
-        # NOTE: Don't implement
-        pass
-        """
-        This function checks if the last 2 screenshots are almost identical.
-        If so, it returns False, which means that OCR will not be performed.
-        This is done to gain time, since OCR is a very slow process.
-
-
-        if len(self.results_db) > 1:
-            img1 = cv2.imread(self.imgs_dir + self.results_db[-1][0])
-            img2 = cv2.imread(self.imgs_dir + self.results_db[-2][0])
-            sim_score = uqi(img1, img2)
-            if sim_score > 0.97:
-                return False
-            else:
-                return True
-        else:
-            return True
-        """
