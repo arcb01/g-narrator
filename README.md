@@ -11,4 +11,4 @@ In many videogames, the use of the mouse for controlling the camera is often use
 To solve this problem, I created this application to help me read what's on the screen using text-to-speech.
 
 Notes:
-This application can serve as inspiration for encouraging game developers to include this kind of accessibility feature inside their games. 
+This application could serve as inspiration for encouraging game developers to include this kind of accessibility feature inside their games. 
