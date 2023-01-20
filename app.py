@@ -65,6 +65,37 @@ class App:
     def end_of_list(self):
         return True if self.det_idx == len(self.OCR.get_all_detections()) - 1 else False
 
+    def read_screen(self):
+        """
+        *************Reads the screen 
+        """
+
+        self.det_idx = 0
+        self.engaging = True
+        self.load_display()
+        # Start OCR
+        self.OCR.send_screen(self.screen) # For adding a loading screen.
+        self.OCR.start()
+        if len(self.OCR.get_all_detections()) > 0:
+            # Draw all possible OCR detections
+            for detection in self.OCR.get_all_detections():
+                self.draw_detection(detection, color=self.dimmed_color)
+            # Highlight first detection
+            self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+
+    def read_out_loud(self, slow=False):
+        """
+        *********Reads the current detection out loud
+        """
+        
+        assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
+        # Read text of current detection
+        text = self.OCR.get_all_detections()[self.det_idx][1]
+        if not slow:
+            self.narrator.say(text)
+        else:
+            self.narrator.slower_saying(text)
+
     def check_events(self):
         """
         Captures any keyboard events
@@ -80,19 +111,7 @@ class App:
             # NOTE: This is not implemented yet
 
         if event.event_type == keyboard.KEY_DOWN and event.name == START_READING:
-            self.det_idx = 0
-            self.engaging = True
-            self.load_display()
-            # Start OCR
-            self.OCR.send_screen(self.screen) # For adding a loading screen.
-            self.OCR.start()
-            if len(self.OCR.get_all_detections()) > 0:
-                # Draw all possible OCR detections
-                for detection in self.OCR.get_all_detections():
-                    self.draw_detection(detection, color=self.dimmed_color)
-                # Highlight first detection
-                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
-
+            self.read_screen()
 
         if event.event_type == keyboard.KEY_DOWN and event.name in [SWITCH_DET_FORWARD, SWITCH_DET_BACKWARD]:
             assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
@@ -121,16 +140,10 @@ class App:
                     self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == READ_OUT_LOUD:
-            assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
-            # Read text of current detection
-            text = self.OCR.get_all_detections()[self.det_idx][1]
-            self.narrator.say(text)
+            self.read_out_loud()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == REPEAT_KEY:
-            assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
-            # Repeat text a little bit slower
-            text = self.OCR.get_all_detections()[self.det_idx][1]
-            self.narrator.slower_saying(text)
+            self.read_out_loud(slow=True)
 
     def load_display(self):
         """
