@@ -232,16 +232,13 @@ if __name__ == "__main__":
 
     # ========== TODO ==========
     # 1. Documentation
-    # 2. Change to a smaller window resolution (for manipulation porpuses) when app is not reading
-    #    the whole screen. 
 
     # ========== FIXME ==========
     # 1. Fullscreen issues with some apps
-    # 2. Able to press esc at any time to exit. Fails while tts is reading something
-    # 3. Run and wait loop voice handling   
+    # 4. NEAREST DETECTION func interaction doesn't work well
 
     # ========== BUG ==========
-    # While display loaded, Clicking on the top part of the screen, app crashes
+    # Sometimes While display loaded, Clicking on the top part of the screen, app crashes
 
     # ========== FUTURE WORK ==========
     # 1. Add a GUI (key binding selector, etc.)
