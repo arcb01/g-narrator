@@ -34,6 +34,10 @@ class App:
         check_events(): Checks for keyboard events
         load_display(): Loads the display window
         draw_detection(detection): For a given detection, draw a bounding box around the text
+        quit(): Clears the screen and deletes all screenshots taken
+        end_of_list(): Checks if the current detection is the last one
+        read_screen(): Main reading function. 
+        read_out_loud(slow: bool): TTS
         run(): Main loop of the application
     """
 
@@ -67,17 +71,18 @@ class App:
 
     def read_screen(self):
         """
-        *************Reads the screen 
+        Main function that reads the screen content using OCR.
         """
 
         self.det_idx = 0
         self.engaging = True
+        # Load pygame window 
         self.load_display()
         # Start OCR
-        self.OCR.send_screen(self.screen) # For adding a loading screen.
+        self.OCR.send_screen(self.screen) # Used for adding a loading screen.
         self.OCR.start()
         if len(self.OCR.get_all_detections()) > 0:
-            # Draw all possible OCR detections
+            # For every detection found, draw a colored bounding box around it.
             for detection in self.OCR.get_all_detections():
                 self.draw_detection(detection, color=self.dimmed_color)
             # Highlight first detection
@@ -85,11 +90,12 @@ class App:
 
     def read_out_loud(self, slow=False):
         """
-        *********Reads the current detection out loud
+        Text to speech function that reads out loud the text inside the 
+        selected detection.
+        :param slow: If True, the text will be read out loud slowly.
         """
         
         assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
-        # Read text of current detection
         text = self.OCR.get_all_detections()[self.det_idx][1]
         if not slow:
             self.narrator.say(text)
@@ -147,8 +153,8 @@ class App:
     def load_display(self):
         """
         Loads the display window
+        Reference: https://stackoverflow.com/questions/550001/fully-transparent-windows-in-pygame
         """
-        # https://stackoverflow.com/questions/550001/fully-transparent-windows-in-pygame
 
         pygame.init()
         w, h = get_disp_size()
@@ -186,10 +192,6 @@ class App:
         width = bbox[1][0] - bbox[0][0]
         height = bbox[2][1] - bbox[1][1]
 
-        #s = pygame.Surface((width,height), pygame.SRCALPHA, 32)   # per-pixel alpha
-        #s.fill((255, 0, 128, 80))                         # notice the alpha value in the color
-        #self.screen.blit(s, (top, left))
-
         pygame.draw.rect(self.screen, color,  pygame.Rect(top, left, 
                                                             width, height), 
                         self.rect_width)
@@ -205,11 +207,6 @@ class App:
         while True:
             self.check_events()
             self.clock.tick(60)
-
-#            pygame.display.flip()
-            
-            
-
         
         
 if __name__ == "__main__":
