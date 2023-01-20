@@ -18,17 +18,13 @@ class OCR:
         gpu: use GPU or not (recommended to use GPU)
         imgs: List containing the filenames of the screenshots
         result: List of tuples (bbox, text, prob)
-        results_db: Temporary list to store the results
         imgs_dir: Directory where screenshots will be stored
         file_nom: Nomenclature of the screenshots
 
     `Methods:`
         take_screenshot(): Take a screenshot and save it in imgs_dir
         start(): Start OCR detection and save results
-        closest_node(): Returns the closest point of the detection to the mouse position
-        find_nearest_detection(x, y): For a given mouse position, find the closest detection
         delete_imgs(): Deletes all screenshots when the program finishes running
-        check_start(): Checks for repeated screenshots
     """
 
     def __init__(self, lang="en", gpu=True):
@@ -36,7 +32,6 @@ class OCR:
         self.gpu = gpu
         self.imgs = []
         self.result = []
-        #self.results_db = [] # NOTE: Not implemented
         self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
         self.file_nom = "OCR_pic_"
 
@@ -75,9 +70,6 @@ class OCR:
         # OCR
         reader = easyocr.Reader([self.lang], gpu=self.gpu)
         self.result = reader.readtext(imgf, paragraph=True)
-        # Save results
-        # NOTE: not implemented 
-        # self.results_db.append((img, self.result))
         # Clear loading screen
         clear_screen(self.app_screen)
 
