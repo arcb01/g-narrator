@@ -35,3 +35,5 @@ for k in keys_db.keys():
 
 
 pprint.pprint(keys_db)
+
+# TODO: Save results in json file

@@ -231,7 +231,6 @@ if __name__ == "__main__":
 
     # ========== FIXME ==========
     # 1. Fullscreen issues with some apps
-    # 4. NEAREST DETECTION func interaction doesn't work well
 
     # ========== BUG ==========
     # Sometimes While display loaded, Clicking on the top part of the screen, app crashes
