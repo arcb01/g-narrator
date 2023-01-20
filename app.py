@@ -116,8 +116,8 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name in [SWITCH_DET_FORWARD, SWITCH_DET_BACKWARD]:
             assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
 
-            if event.name == SWITCH_DET_BACKWARD:
-                if not self.end_of_list():
+            if not self.end_of_list():
+                if event.name == SWITCH_DET_BACKWARD:
                     if self.det_idx > 0:
                         # Apply dimmed color to current detection
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
@@ -125,19 +125,18 @@ class App:
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.highlighted_color)
                         self.det_idx  -= 1
 
-            elif event.name == SWITCH_DET_FORWARD:
-                if not self.end_of_list():
-                    self.det_idx  += 1
+                elif event.name == SWITCH_DET_FORWARD:
                     # Apply highlighted color to current detection
                     self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
                     # Apply dimmed color to previous detection
                     self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.dimmed_color)
-                else:
-                    # Apply dimmed color to previous detection
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
-                    self.det_idx = 0
-                    # Apply highlighted color to current detection
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+                    self.det_idx  += 1
+            else:
+                # Apply dimmed color to previous detection
+                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
+                self.det_idx = 0
+                # Apply highlighted color to current detection
+                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == READ_OUT_LOUD:
             self.read_out_loud()
