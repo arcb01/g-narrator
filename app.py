@@ -237,6 +237,7 @@ if __name__ == "__main__":
 
     # ========== FUTURE WORK ==========
     # 1. Add a GUI (key binding selector, etc.)
+        # https://www.youtube.com/watch?v=N8W1mK_jixw
     # 2. Improve Narrator voices
     # 3. Ways of speeding up.
     #    Using OCR Alternatives:
