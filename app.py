@@ -238,6 +238,9 @@ if __name__ == "__main__":
     # ========== FUTURE WORK ==========
     # 1. Add a GUI (key binding selector, etc.)
         # https://www.youtube.com/watch?v=N8W1mK_jixw
+        # Colors:
+            # https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557
+            # https://coolors.co/palette/022b3a-1f7a8c-bfdbf7-e1e5f2-ffffff
     # 2. Improve Narrator voices
     # 3. Ways of speeding up.
     #    Using OCR Alternatives:
