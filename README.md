@@ -6,6 +6,6 @@ This is the main reason why I wanted to build an application to help me read wha
 When it comes to usage, it can be used by everyone. However, people having some kind of visual imparement will benefit the most from using it. Furthurmore, this application could also serve as inspiration for encouraging game developers to include this kind of accessibility feature inside their games. 
 
 ## Requirements
-Cuerrently, the application is **only available for Windows**, since the majority of video games are played in this OS. 
+Cuerrently, the application is **only available for Windows**, since the majority of videogames are played in this OS. 
 
 ## How to use?
