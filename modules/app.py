@@ -1,20 +1,10 @@
 import sys, keyboard, pyautogui
 import pygame, win32api, win32con, win32gui
-import win32gui, win32com.client
+import win32gui, win32com.client, json
 
-from TTS import Narrator
-from ocr import OCR
-from utils.utils import *
-
-# ======== Key bindings ========
-START_READING = 'º'
-SWITCH_DET_FORWARD = "flecha derecha"
-SWITCH_DET_BACKWARD = "flecha izquierda"
-REPEAT_KEY = 'r'
-READ_NEAREST = 'h'
-READ_OUT_LOUD = '-'
-QUIT_KEY = 'esc'
-
+from modules.ocr import OCR
+from modules.TTS import Narrator
+from .utils.utils import get_disp_size
 
 class App:
     """
@@ -39,6 +29,7 @@ class App:
         read_screen(): Main reading function. 
         read_out_loud(slow: bool): TTS
         run(): Main loop of the application
+        set_keys(): Sets key bindings
     """
 
     def __init__(self, narrator: object, OCR: object):
@@ -52,7 +43,24 @@ class App:
         self.engaging = False
         self.dimmed_color = (65, 94, 0)
         self.highlighted_color = (170, 255, 0)
+        self.set_keys()
         pygame.init()
+
+    def set_keys(self):
+        """
+        Set key bindings
+        """
+
+        # Read json file containing key bindings
+        with open('./config/keys.json') as json_file:
+            k = json.load(json_file)
+            self.CAPTURE = k["CAPTURE"]
+            self.SWITCH_DET_FORWARD = k["SWITCH_FORWARD"]
+            self.SWITCH_DET_BACKWARD = k["SWITCH_BACKWARD"]
+            self.REPEAT_KEY = k["REPEAT"]
+            self.READ_NEAREST = k["READ_NEAREST"]
+            self.READ_OUT_LOUD = k["READ_OUT_LOUD"]
+            self.QUIT_KEY = k["QUIT"]
 
     def quit(self):
         try:
@@ -97,6 +105,7 @@ class App:
         
         assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
         text = self.OCR.get_all_detections()[self.det_idx][1]
+        
         if not slow:
             self.narrator.say(text)
         else:
@@ -109,21 +118,21 @@ class App:
 
         event = keyboard.read_event()
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == QUIT_KEY:
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.QUIT_KEY:
             self.quit()
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == READ_NEAREST:
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST:
             pass
             # NOTE: This is not implemented yet
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == START_READING:
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
             self.read_screen()
 
-        if event.event_type == keyboard.KEY_DOWN and event.name in [SWITCH_DET_FORWARD, SWITCH_DET_BACKWARD]:
+        if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
             assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
 
             if not self.end_of_list():
-                if event.name == SWITCH_DET_BACKWARD:
+                if event.name == self.WITCH_DET_BACKWARD:
                     if self.det_idx > 0:
                         # Apply dimmed color to current detection
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
@@ -131,7 +140,7 @@ class App:
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.highlighted_color)
                         self.det_idx  -= 1
 
-                elif event.name == SWITCH_DET_FORWARD:
+                elif event.name == self.SWITCH_DET_FORWARD:
                     # Apply highlighted color to current detection
                     self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
                     # Apply dimmed color to previous detection
@@ -144,10 +153,11 @@ class App:
                 # Apply highlighted color to current detection
                 self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == READ_OUT_LOUD:
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
             self.read_out_loud()
+            # TODO: Add a slow reading option if the user holds the key for a while
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == REPEAT_KEY:
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.REPEAT_KEY:
             self.read_out_loud(slow=True)
 
     def load_display(self):
@@ -197,7 +207,6 @@ class App:
                         self.rect_width)
         pygame.display.update()
 
-
     def run(self):
         """
         Main loop of the application
@@ -207,11 +216,10 @@ class App:
         while True:
             self.check_events()
             self.clock.tick(60)
-        
-        
-if __name__ == "__main__":
 
-    lang = "es"
+
+def lang_settings(lang : str):
+    lang = "en"
     en_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
     es_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ES-ES_HELENA_11.0"
 
@@ -222,9 +230,8 @@ if __name__ == "__main__":
 
     tts = Narrator(voice=voice)
     ocr = OCR(lang=lang)
-    a = App(tts, ocr)
-    a.run()
 
+    return tts, ocr
 
     # ========== TODO ==========
     # 1. Documentation
@@ -250,3 +257,4 @@ if __name__ == "__main__":
 
    # ========== References ==========
    # 1. https://github.com/nathanaday/RealTime-OCR
+
