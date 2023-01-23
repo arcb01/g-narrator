@@ -132,9 +132,9 @@ class App:
             assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
 
             if not self.end_of_list():
-                if event.name == self.WITCH_DET_BACKWARD:
+                if event.name == self.SWITCH_DET_BACKWARD:
                     if self.det_idx > 0:
-                        # Apply dimmed color to current detection
+                        # Apply highlighted color to current detection
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
                         # Apply highlighted color to previous detection
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.highlighted_color)
@@ -142,9 +142,9 @@ class App:
 
                 elif event.name == self.SWITCH_DET_FORWARD:
                     # Apply highlighted color to current detection
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
                     # Apply dimmed color to previous detection
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.dimmed_color)
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx + 1], color=self.highlighted_color)
                     self.det_idx  += 1
             else:
                 # Apply dimmed color to previous detection

@@ -41,13 +41,10 @@ class Narrator(QWidget):
         self.show()       
 
     def start_app(self):
-        time.sleep(1)
-        self.showMinimized()
+        #time.sleep(1)
+        #self.showMinimized()
         self.hide_stop()
-        # Run app
-        tts, ocr = lang_settings("en")
-        a = App(tts, ocr)
-        a.run()
+
 
 
     # Widgets
@@ -75,6 +72,7 @@ class Narrator(QWidget):
         if self.stop_hided == True:
             self.b_stop.show()
             self.stop_hided = False
+
 
 
 class Tutorial(QWidget):

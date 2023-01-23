@@ -4,6 +4,6 @@
     "SWITCH_BACKWARD": "flecha izquierda",
     "REPEAT": "r",
     "READ_NEAREST": "n",
-    "READ_OUT_LOUD": "r",
+    "READ_OUT_LOUD": "-",
     "QUIT": "esc"
 }
