@@ -1,5 +1,4 @@
 
-
 from modules.app import App, lang_settings
 
 if __name__ == '__main__':
@@ -7,4 +6,4 @@ if __name__ == '__main__':
     tts, ocr = lang_settings("en")
     # 2. Run App
     a = App(tts, ocr)
-    a.run()
+    a.run() 

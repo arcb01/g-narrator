@@ -123,7 +123,7 @@ class App:
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST:
             pass
-            # NOTE: This is not implemented yet
+            # NOTE: This is not implemented yet. Code in alternative branch.
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
             self.read_screen()
