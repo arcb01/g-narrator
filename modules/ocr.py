@@ -2,9 +2,6 @@ import pyautogui
 import random
 import cv2
 import easyocr
-from scipy.spatial import KDTree
-from sewar.full_ref import uqi
-import time
 import os, glob
 from .utils.utils import loading_screen, clear_screen
 
