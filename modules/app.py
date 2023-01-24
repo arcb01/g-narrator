@@ -224,29 +224,3 @@ def lang_settings(lang : str):
     ocr = OCR(lang=lang)
 
     return tts, ocr
-
-    # ========== TODO ==========
-    # 1. Documentation
-
-    # ========== FIXME ==========
-    # 1. Fullscreen issues with some apps
-
-    # ========== BUG ==========
-    # Sometimes While display loaded, Clicking on the top part of the screen, app crashes
-
-    # ========== FUTURE WORK ==========
-    # 1. Add a GUI (key binding selector, etc.)
-        # https://www.youtube.com/watch?v=N8W1mK_jixw
-        # Colors:
-            # https://coolors.co/palette/e63946-f1faee-a8dadc-457b9d-1d3557
-            # https://coolors.co/palette/022b3a-1f7a8c-bfdbf7-e1e5f2-ffffff
-    # 2. Improve Narrator voices
-    # 3. Ways of speeding up.
-    #    Using OCR Alternatives:
-            # 1. https://github.com/PaddlePaddle/PaddleOCR
-            # 2. https://github.com/mindee/doctr
-    #    PyTorch 2.0
-
-   # ========== References ==========
-   # 1. https://github.com/nathanaday/RealTime-OCR
-
