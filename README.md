@@ -15,6 +15,7 @@ https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-
 
 
 ## Requirements
-Cuerrently, the application is **only available for Windows**, since the majority of videogames are played in this OS. 
+Currently, the application is **only available for Windows**, since the majority of videogames are played in this OS. Besides that, supported languages for this app are English and Spaniash.
+
 
 ## How to use?
