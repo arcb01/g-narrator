@@ -14,6 +14,7 @@ In the following video it is shown how the application works:
 
 https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-b365-ccd43e37dae7.mp4
 
+> GPU use is recomended for much faster OCR inference time (Reading screen proces)
 
 ## Requirements & installation
 - **OS**: Currently, the application is only available for Windows, since the majority of videogames are played in this OS. 
