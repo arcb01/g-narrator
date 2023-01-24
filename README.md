@@ -9,7 +9,7 @@ When it comes to usage, it can be used by everyone. However, people having some 
 In the following video it is shown how the application works:
 1. It starts by scanning the content of the screen.
 2. Once scanned, the user can switch between all detected text bounding boxes.
-3. Press the read out loud key to hear the text inside the selected bounding box. 
+3. When the read out loud key is pressed the text inside the selected bounding box is read. 
 
 https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-b365-ccd43e37dae7.mp4
 
