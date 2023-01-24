@@ -15,13 +15,13 @@ In the following video it is shown how the application works:
 https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-b365-ccd43e37dae7.mp4
 
 
-## Requirements
+## Requirements & installation
 - **OS**: Currently, the application is only available for Windows, since the majority of videogames are played in this OS. 
 
 - **Suported languages**: English and Spaniash
 
 ## How to use?
-Coming soon!
+Explain keys usage
 
 ## Known issues (Work in progress)
 - Fullscreen issues with some games.
