@@ -21,7 +21,22 @@ https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-
 - **Suported languages**: English and Spaniash
 
 ## How to use?
-Explain keys usage
+Frist and foremost, custom key bindings must be defined. To do so, edit the file `config/keys.json`. Here there's a description of what's the role of each key.
+Keys descriptions:
+
+`"CAPTURE":` This key will take a screenshot
+
+`"SWITCH_FORWARD":` Move to the next detection 
+
+ `"SWITCH_BACKWARD":` Move to previous detection
+ 
+ `"REPEAT":` Repeat text at a slower pase 
+ 
+ `"READ_OUT_LOUD":` Text-to-speech 
+ 
+ `"QUIT":` Exit key. It will clear the screen aswell
+
+> NOTE: Key binding names must be in the same language as your OS.
 
 ## Known issues (Work in progress)
 - Fullscreen issues with some games.
