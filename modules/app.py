@@ -41,7 +41,7 @@ class App:
         self.clock = pygame.time.Clock()
         self.switch_detection = False
         self.engaging = False
-        self.dimmed_color = (65, 94, 0)
+        self.dimmed_color = (70, 96, 0)
         self.highlighted_color = (170, 255, 0)
         self.set_keys()
         pygame.init()
@@ -105,7 +105,7 @@ class App:
         
         assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
         text = self.OCR.get_all_detections()[self.det_idx][1]
-        
+
         if not slow:
             self.narrator.say(text)
         else:
@@ -134,28 +134,21 @@ class App:
             if not self.end_of_list():
                 if event.name == self.SWITCH_DET_BACKWARD:
                     if self.det_idx > 0:
-                        # Apply highlighted color to current detection
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
-                        # Apply highlighted color to previous detection
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.highlighted_color)
                         self.det_idx  -= 1
 
                 elif event.name == self.SWITCH_DET_FORWARD:
-                    # Apply highlighted color to current detection
                     self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
-                    # Apply dimmed color to previous detection
                     self.draw_detection(self.OCR.get_all_detections()[self.det_idx + 1], color=self.highlighted_color)
                     self.det_idx  += 1
             else:
-                # Apply dimmed color to previous detection
                 self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
                 self.det_idx = 0
-                # Apply highlighted color to current detection
                 self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
             self.read_out_loud()
-            # TODO: Add a slow reading option if the user holds the key for a while
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.REPEAT_KEY:
             self.read_out_loud(slow=True)
@@ -163,7 +156,6 @@ class App:
     def load_display(self):
         """
         Loads the display window
-        Reference: https://stackoverflow.com/questions/550001/fully-transparent-windows-in-pygame
         """
 
         pygame.init()
@@ -201,7 +193,6 @@ class App:
         left = bbox[0][1]
         width = bbox[1][0] - bbox[0][0]
         height = bbox[2][1] - bbox[1][1]
-
         pygame.draw.rect(self.screen, color,  pygame.Rect(top, left, 
                                                             width, height), 
                         self.rect_width)
@@ -211,7 +202,8 @@ class App:
         """
         Main loop of the application
         """
-
+        
+        self.OCR.delete_imgs() # Clear folder
         print("\n ==== App is running... ====")
         while True:
             self.check_events()
