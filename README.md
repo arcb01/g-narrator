@@ -21,6 +21,7 @@ https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-
 - **Suported languages**: English and Spaniash
 
 ## How to use?
+Coming soon!
 
 ## Known issues (Work in progress)
 - Fullscreen issues with some games.
