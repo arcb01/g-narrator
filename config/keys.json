@@ -1,9 +1,9 @@
 {
-    "CAPTURE": "\u00ba",
+    "CAPTURE": "\u00ba", 
     "SWITCH_FORWARD": "flecha derecha",
     "SWITCH_BACKWARD": "flecha izquierda",
     "REPEAT": "r",
-    "READ_NEAREST": "n",
+    "READ_NEAREST": "",
     "READ_OUT_LOUD": "-",
     "QUIT": "esc"
 }

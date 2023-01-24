@@ -210,8 +210,8 @@ class App:
             self.clock.tick(60)
 
 
-def lang_settings(lang : str):
-    lang = "en"
+def settings(lang : str, gpu : bool, voice_speed : int):
+
     en_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
     es_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ES-ES_HELENA_11.0"
 
@@ -220,7 +220,7 @@ def lang_settings(lang : str):
     elif lang == "es":
         voice = es_voice
 
-    tts = Narrator(voice=voice)
-    ocr = OCR(lang=lang)
+    tts = Narrator(voice=voice, voice_speed=voice_speed)
+    ocr = OCR(lang=lang, gpu=gpu)
 
     return tts, ocr

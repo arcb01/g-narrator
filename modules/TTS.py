@@ -7,7 +7,7 @@ class Narrator:
 
     `Attributes:`
         engine: pyttsx3 engine
-        voice_default_rate: Playback speed of the voice
+        voice_speed: Playback speed of the voice
 
     `Methods:`
         say(): Playsback the text
@@ -15,10 +15,10 @@ class Narrator:
         slower_saying(): Repeats the text at a slower rate
     """
 
-    def __init__(self, voice, voice_default_rate = 160):
+    def __init__(self, voice, voice_speed = 160):
         self._engine = pyttsx3.init()
         self._engine.setProperty('voice', str(voice))
-        self.voice_default_rate = voice_default_rate
+        self.voice_speed = voice_speed
 
     def say(self, text: str):
         """
@@ -26,7 +26,7 @@ class Narrator:
         :param text: Text to be read
         """
 
-        self._engine.setProperty('rate', self.voice_default_rate)
+        self._engine.setProperty('rate', self.voice_speed)
         self._engine.say(text)
         self._engine.runAndWait()
 
@@ -44,6 +44,6 @@ class Narrator:
         """
 
         self._engine.stop()
-        self._engine.setProperty('rate', self.voice_default_rate * 0.5)
+        self._engine.setProperty('rate', self.voice_speed * 0.5)
         self._engine.say(text)
         self._engine.runAndWait()
