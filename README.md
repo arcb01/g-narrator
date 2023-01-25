@@ -17,9 +17,17 @@ https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-
 > GPU use is recomended for much faster OCR inference time (Reading screen proces)
 
 ## Requirements & installation
+### Requirements
 - **OS**: Currently, the application is only available for Windows, since the majority of videogames are played in this OS. 
 
 - **Suported languages**: English and Spaniash
+
+- **Python version**: 3.9+
+### Installation
+1. Create an environment using conda or pip. 
+2. Install `requirements.txt` 
+3. Run the `run.py` file
+4. Let the app run in the background.
 
 ## How to use?
 Frist and foremost, custom key bindings must be defined. To do so, edit the file `config/keys.json`. Here there's a description of what's the role of each key.
@@ -39,6 +47,9 @@ Keys descriptions:
 
 > NOTE: Key binding names must be in the same language as your OS.
 
+Once all keys have been set, you can run the app in the background and start using it.
+
+
 ## Known issues (Work in progress)
 - Fullscreen issues with some games.
 - Sometimes while display is loaded, clicking on the top part of the screen, app crashes
@@ -48,3 +59,4 @@ Keys descriptions:
 - [ ] Key binder UI
 - [ ] More realistic TTS voices
 - [ ] Speeding up OCR
+- [ ] Installer version
