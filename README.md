@@ -4,7 +4,7 @@ In many videogames, the use of the mouse for controlling the camera is often use
 This is the main reason why I wanted to build an application to help me read what's on the screen by using text-to-speech.
 
 ## Usage
-When it comes to usage, it can be used by everyone. However, people having some kind of visual imparement will benefit the most from using it. Furthurmore, this application could also serve as inspiration for encouraging game developers to include this kind of accessibility feature inside their games. 
+When it comes to usage, this app can be used by everyone. However, people having some kind of visual imparement will benefit the most from using it. Furthurmore, this application could also serve as inspiration for encouraging game developers to include this kind of accessibility feature inside their games. 
 
 ## Application demo
 In the following video it is shown how the application works:
