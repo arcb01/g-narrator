@@ -59,4 +59,4 @@ Once all keys have been set, you can run the app in the background and start usi
 - [ ] Key binder UI
 - [ ] More realistic TTS voices
 - [ ] Speeding up OCR
-- [ ] Installer version
+- [ ] Installer version & exe file
