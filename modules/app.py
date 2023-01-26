@@ -1,10 +1,15 @@
+from os import environ
 import sys, keyboard, pyautogui
-import pygame, win32api, win32con, win32gui
 import win32gui, win32com.client, json
+import win32api, win32con, win32gui
+# Remove pygame welcome message
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+import pygame
 
 from modules.ocr import OCR
 from modules.TTS import Narrator
 from .utils.utils import get_disp_size
+
 
 class App:
     """
