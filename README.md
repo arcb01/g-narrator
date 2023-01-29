@@ -1,4 +1,4 @@
-# A screen reading tool for videogames
+# An accessibility tool for videogames 
 
 In many videogames, the use of the mouse for controlling the camera is often used. On the other hand, the magnifier app which makes the elements on the screen appear larger, also makes use of the movement of the mouse to move around the screen. These two behaviors collide between each other if they wanna be performed simultaneously. In other words, while playing a videogame one is not able to use the magnifier app and move the mouse around the screen. 
 This is the main reason why I wanted to build an application to help me read what's on the screen by using text-to-speech.
@@ -60,3 +60,4 @@ Once all keys have been set, you can run the app in the background and start usi
 - [ ] More realistic TTS voices
 - [ ] Speeding up OCR
 - [ ] Installer version & exe file
+- [ ] Zooming into the detection while it's beeing read
