@@ -19,6 +19,7 @@ class OCR:
         file_nom: Nomenclature of the screenshots
 
     `Methods:`
+        images_dir(): Makes sure that the imgs directory exists
         take_screenshot(): Take a screenshot and save it in imgs_dir
         start(): Start OCR detection and save results
         delete_imgs(): Deletes all screenshots when the program finishes running
@@ -31,13 +32,20 @@ class OCR:
         self.result = []
         self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
         self.file_nom = "OCR_pic_"
+        self.images_dir()
 
-
+    def images_dir(self):
+        """
+        Makes sure that the imgs directory exists
+        """
+            
+        if not os.path.exists(self.imgs_dir):
+            os.makedirs(self.imgs_dir)
+        
     def take_screenshot(self):
         """
         Function that takes a screenshot and save it in imgs_dir
         """
-
         myScreenshot = pyautogui.screenshot()
         h = str(random.getrandbits(128))
         filename = self.file_nom + h + ".png"
