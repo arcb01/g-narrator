@@ -47,11 +47,11 @@ Keys descriptions:
 
 > NOTE: Key binding names must be in the same language as your OS.
 
+<ins>**REMEMBER:** The game you want to play must be set to **borderless**. Otherwise, the application will not work</ins>
+
 Once all keys have been set, you can run the app in the background and start using it.
 
-
 ## Known issues (Work in progress)
-- Fullscreen issues with some games.
 - Sometimes while display is loaded, clicking on the top part of the screen, app crashes
 
 ## Future work
