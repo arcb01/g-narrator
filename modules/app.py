@@ -138,19 +138,28 @@ class App:
 
             if not self.end_of_list():
                 if event.name == self.SWITCH_DET_BACKWARD:
-                    if self.det_idx > 0:
+                    if self.det_idx == 0: # The first bbox
+                        self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
+                        self.det_idx = len(self.OCR.get_all_detections()) - 1
+                        self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+                    elif self.det_idx > 0: # Not the first bbox
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
                         self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.highlighted_color)
                         self.det_idx  -= 1
-
                 elif event.name == self.SWITCH_DET_FORWARD:
                     self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
                     self.draw_detection(self.OCR.get_all_detections()[self.det_idx + 1], color=self.highlighted_color)
                     self.det_idx  += 1
             else:
-                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
-                self.det_idx = 0
-                self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+                if event.name == self.SWITCH_DET_FORWARD:
+                    # Loop back to start
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
+                    self.det_idx = 0
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+                else:
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
+                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.highlighted_color)
+                    self.det_idx  -= 1
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
             self.read_out_loud()
