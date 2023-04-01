@@ -59,6 +59,5 @@ Once all keys have been set, you can run the app in the background and start usi
 - [ ] Key binder UI
 - [ ] More realistic TTS voices
 - [ ] Speeding up OCR (Pytorch 2.0)
-- [ ] Installer version & exe file
-- [ ] Exe file
+- [ ] Windows installer version
 - [ ] Zooming into the detection while it's being read
