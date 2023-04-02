@@ -52,7 +52,7 @@ Keys descriptions:
 Once all keys have been set, you can run the app in the background and start using it.
 
 ## Known issues (Work in progress)
-- Sometimes while display is loaded, clicking on the top part of the screen, app crashes
+- App sometimes crashes when display is loaded and clicking on the top part of the screen.
 
 ## Future work
 - [ ] Update documentation
