@@ -57,7 +57,7 @@ Once all keys have been set, you can run the app in the background and start usi
 ## Future work
 - [ ] Update documentation
 - [ ] Key binder UI
-- [ ] More realistic TTS voices
+- [x] More realistic TTS voices
 - [ ] ~Speeding up OCR with Pytorch 2.0~ NOTE: `torch.compile` not supported on Windows yet.
 - [ ] Windows installer version
 - [ ] Zooming into the detection while it's being read
