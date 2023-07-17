@@ -154,6 +154,7 @@ cython_debug/
 
 # my-files
 envi/
+envi2/
 Prueba/
 imgs/
 my_links.md
