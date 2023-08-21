@@ -24,10 +24,7 @@ https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-
 
 - **Python version**: 3.9+
 ### Installation
-1. Create an environment using conda or pip. 
-2. Install `requirements.txt` 
-3. Run the `run.py` file
-4. Let the app run in the background.
+- Run the `gaming_narrator.bat` and let the installation follow.
 
 ## How to use?
 Frist and foremost, custom key bindings must be defined. To do so, edit the file `config/keys.json`. Here there's a description of what's the role of each key.
@@ -59,5 +56,5 @@ Once all keys have been set, you can run the app in the background and start usi
 - [ ] Key binder UI
 - [x] More realistic TTS voices
 - [ ] ~Speeding up OCR with Pytorch 2.0~ NOTE: `torch.compile` not supported on Windows yet.
-- [ ] Windows installer version
+- [X] Windows installer version
 - [ ] Zooming into the detection while it's being read
