@@ -6,9 +6,9 @@ import win32api, win32con, win32gui
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 
-from modules.ocr import OCR
-from modules.TTS import Narrator
-from .utils.utils import get_disp_size
+from ocr import OCR
+from TTS import Narrator
+from utils.utils import get_disp_size, app_print
 
 
 class App:
@@ -218,7 +218,9 @@ class App:
         """
         
         self.OCR.delete_imgs() # Clear folder
-        print("\n ==== App is running... ====")
+        
+        app_print()
+
         while True:
             self.check_events()
             self.clock.tick(60)

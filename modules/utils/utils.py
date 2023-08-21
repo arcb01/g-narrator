@@ -42,3 +42,23 @@ def clear_screen(screen):
     transparent = (255, 0, 128)
     screen.fill(transparent)
     pygame.display.update()
+
+
+def app_print():
+    """
+    Prints that the app is running
+    """
+
+    message = "Gaming Narrator is now running"
+    symbol = "▒"
+    width = 60
+    padding = (width - len(message)) // 2
+
+    decorative_line = symbol * width
+    formatted_message = f"{symbol * padding} {message} {symbol * padding}"
+    
+    print(decorative_line)
+    print(formatted_message)
+    print(decorative_line)
+
+

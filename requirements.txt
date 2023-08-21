@@ -34,7 +34,8 @@ scipy==1.10.0
 shapely==2.0.0
 six==1.16.0
 tifffile==2023.1.23.1
-torch==1.13.1
-torchvision==0.14.1
+--extra-index-url https://download.pytorch.org/whl/cu117
+torch
+torchvision
 typing_extensions==4.4.0
 urllib3==1.26.14
