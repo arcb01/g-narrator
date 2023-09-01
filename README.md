@@ -50,6 +50,7 @@ Once all keys have been set, you can run the app in the background and start usi
 
 ## Known issues (Work in progress)
 - App sometimes crashes when display is loaded and clicking on the edges of the screen.
+- This app would be ideal if it worked in real-time. The issue is that it exsits a trade-off between accuracy and speed. 
 
 ## Future work
 - [ ] Update documentation
