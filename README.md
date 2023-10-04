@@ -57,4 +57,6 @@ Once all keys have been set, you can run the app in the background and start usi
 - [X] Windows installer version
 - [ ] GUI
 - [ ] Zooming into the detection while it's being read
-- [ ] ~Speeding up OCR with Pytorch 2.0~ NOTE: `torch.compile` not supported on Windows yet.
+- Speed up inferenceing:
+  - [X] Pytorch 2.0 -- **ABORTED**: `torch.compile` not supported on Windows yet.
+  - [ ] TensorRT ([source1](https://medium.com/@zergtant/accelerating-model-inference-with-tensorrt-tips-and-best-practices-for-pytorch-users-7cd4c30c97bc) + [source2](https://github.com/JaidedAI/EasyOCR/issues/786))
