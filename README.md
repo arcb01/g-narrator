@@ -1,7 +1,8 @@
 # Gaming Narrator
 
 In many videogames, the use of the mouse for controlling the camera is often used. On the other hand, the magnifier app which makes the elements on the screen appear larger, also makes use of the movement of the mouse to move around the screen. These two behaviors collide between each other if they wanna be performed simultaneously. In other words, while playing a videogame one is not able to use the magnifier app and move the mouse around the screen. 
-This is the main reason why I wanted to build an application to help me read what's on the screen by using text-to-speech.
+Adiotionally, tools like, for example, Windows Narrator do not work in these scenarios. 
+This project is proposed as an easy-to-use and functional alternative that can work in any kind of scenario. 
 
 ## Usage
 When it comes to usage, this app can be used by everyone. However, people having some kind of visual imparement will benefit the most from using it. Furthurmore, this application could also serve as inspiration for encouraging game developers to include this kind of accessibility feature inside their games. 
@@ -62,4 +63,5 @@ Once all keys have been set, you can run the app in the background and start usi
   - [ ] Alternative OCR [[1]](https://github.com/mindee/doctr)
 - [X] Windows installer version
 - [ ] GUI
+- [ ] AI features
 - [ ] Zooming into the detection while it's being read
