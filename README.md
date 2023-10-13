@@ -65,3 +65,4 @@ Once all keys have been set, you can run the app in the background and start usi
 - [ ] GUI
 - [ ] AI features
 - [ ] Zooming into the detection while it's being read
+- [ ] Hover mode (for times when available)
