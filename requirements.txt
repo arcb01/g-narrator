@@ -6,6 +6,7 @@ click==8.1.7
 colorama==0.4.6
 comtypes==1.1.14
 coverage==7.3.2
+chardet==5.2.0
 dill==0.3.7
 easyocr==1.6.2
 exceptiongroup==1.1.3
