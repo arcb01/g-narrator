@@ -91,9 +91,9 @@ class App:
         self.engaging = True
         # Load pygame window 
         self.load_display()
-        # Start OCR
+        # OCR 
         self.OCR.send_screen(self.screen) # Used for adding a loading screen.
-        self.OCR.start()
+        self.OCR.read()
         if len(self.OCR.get_all_detections()) > 0:
             # For every detection found, draw a colored bounding box around it.
             for detection in self.OCR.get_all_detections():
