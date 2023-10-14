@@ -1,4 +1,23 @@
-# Gaming Narrator
+<h1 align="center">
+ <img
+  width="180"
+  alt="Eye logo"
+  src="./garrator/assets/logo.png">
+    <br/>
+    GNarrator
+</h1>
+
+<h4 align="center">
+A screen reading accessibility tool for videogames
+</h4>
+ 
+<p align="center">
+ <strong>
+   <a href="">Demo</a>
+  •
+  <a href="">How to use</a>
+ </strong>
+</p>
 
 In many videogames, the use of the mouse for controlling the camera is often used. On the other hand, the magnifier app which makes the elements on the screen appear larger, also makes use of the movement of the mouse to move around the screen. These two behaviors collide between each other if they wanna be performed simultaneously. In other words, while playing a videogame one is not able to use the magnifier app and move the mouse around the screen. 
 Adiotionally, tools like, for example, Windows Narrator do not work in these scenarios. 
@@ -51,19 +70,18 @@ Once all keys have been set, you can run the app in the background and start usi
 
 ## Known issues (Work in progress)
 - App sometimes crashes when display is loaded and clicking on the edges of the screen.
-- This app would be ideal if it worked in real-time. The issue is that it exsits a trade-off between accuracy and speed. 
-
+- In cases when GPU is not available, inference times are really slow.
+  
 ## Future work
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
-- Speed up inferenceing:
-  - [X] Pytorch 2.0 -- ***ABORTED**: `torch.compile` did not work for this case.*
-  - [x] TensorRT -- ***ABORTED**: No improvements were observed with this technique.*
-  - [ ] Alternative OCR [[1]](https://github.com/mindee/doctr)
+- Testing (github actions)
+  - [ ] Improve linting score
+  - [ ] Add more tests
+  - [ ] Improve pytest coverage score
 - [X] Windows installer version
 - [ ] GUI
 - [ ] AI features
 - [ ] Zooming into the detection while it's being read
 - [ ] Hover mode (for times when available)
-- [ ] OCR unit test (github actions)
