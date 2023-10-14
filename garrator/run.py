@@ -1,4 +1,5 @@
-from app import App, settings
+#from app import App, settings
+from garrator.modules.app import App, settings
 
 if __name__ == '__main__':
     LANGUAGE = "en"     # Language for TTS

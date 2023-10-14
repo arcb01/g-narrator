@@ -3,8 +3,8 @@ import random
 import cv2
 import easyocr
 import os, glob
-from utils.utils import loading_screen, clear_screen
-
+#from garrator.modules.utils.utils import loading_screen, clear_screen
+from .utils.utils import loading_screen, clear_screen
 
 class OCR:
     """
