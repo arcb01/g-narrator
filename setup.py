@@ -9,7 +9,7 @@ requirements_list = [line.strip()
 
 setuptools.setup(
     name='garrator',
-    version='0.3.0',
+    version='0.4.0',
     python_requires='>=3.9.0',
     author='Arnau Castelalno',
     author_email='arcascb2001@gmail.com',
