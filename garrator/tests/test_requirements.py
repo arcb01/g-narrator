@@ -4,7 +4,8 @@ def test_req_encoding(file_path='./requirements.txt'):
     """
     Test if the encoding of requirements.txt is utf-8 or utf-8-sig
     """
-
+    #FIXME: 
+    
     with open(file_path, 'rb') as file:
         detector = chardet.universaldetector.UniversalDetector()
         for line in file:
@@ -13,4 +14,4 @@ def test_req_encoding(file_path='./requirements.txt'):
                 break
         detector.close()
 
-    assert detector.result["encoding"].lower() in ["utf-8", "utf-8-sig"], "requirements.txt encoding error"
+    assert detector.result["encoding"].lower() in ["utf-16", "utf-8", "utf-8-sig"], "requirements.txt encoding error"

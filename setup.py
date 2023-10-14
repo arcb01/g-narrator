@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements_list = [line.strip() 
-                     for line in open('requirements.txt', encoding="utf-8-sig") 
+                     for line in open('requirements.txt', encoding="utf-16") 
                      if line.strip()]
 
 setuptools.setup(
