@@ -7,7 +7,7 @@
 
 - **Python version**: 3.9+
 ### Installation
-- Run the `gaming_narrator.bat` and let the installation follow.
+- Run the `installation.bat` and let the installation follow.
 
 ## How to use?
 Frist and foremost, custom key bindings must be defined. To do so, edit the file `config/keys.json`. Here there's a description of what's the role of each key.
