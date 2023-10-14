@@ -15,7 +15,7 @@ A screen reading accessibility tool for videogames
  <strong>
    <a href="">Demo</a>
   •
-  <a href="">How to use</a>
+  <a href="./docs/usage.md">How to use</a>
  </strong>
 </p>
 
