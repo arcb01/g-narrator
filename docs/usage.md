@@ -36,7 +36,7 @@ Once all keys have been set, you can run the app in the background and start usi
 - In cases when GPU is not available, inference times are really slow.
   
 ## Future work
-- [X] Installing script
+- [X] Installation script
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
