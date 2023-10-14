@@ -13,9 +13,7 @@ A screen reading accessibility tool for videogames
  
 <p align="center">
  <strong>
-   <a href="">Demo</a>
-  •
-  <a href="./docs/usage.md">How to use</a>
+  <a href="./docs/usage.md">Getting Started</a>
  </strong>
 </p>
 
@@ -33,55 +31,3 @@ In the following video it is shown how the application works:
 3. When the read out loud key is pressed the text inside the selected bounding box is read. 
 
 https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-b365-ccd43e37dae7.mp4
-
-> GPU use is recomended for much faster OCR inference time (Reading screen proces)
-
-## Requirements & installation
-### Requirements
-- **OS**: Currently, the application is only available for Windows, since the majority of videogames are played in this OS. 
-
-- **Suported languages**: English and Spaniash
-
-- **Python version**: 3.9+
-### Installation
-- Run the `gaming_narrator.bat` and let the installation follow.
-
-## How to use?
-Frist and foremost, custom key bindings must be defined. To do so, edit the file `config/keys.json`. Here there's a description of what's the role of each key.
-Keys descriptions:
-
-`"CAPTURE":` This key will take a screenshot
-
-`"SWITCH_FORWARD":` Move to the next detection 
-
- `"SWITCH_BACKWARD":` Move to previous detection
- 
- `"REPEAT":` Repeat text at a slower pase 
- 
- `"READ_OUT_LOUD":` Text-to-speech 
- 
- `"QUIT":` Exit key. It will clear the screen aswell
-
-> NOTE: Key binding names must be in the same language as your OS.
-
-<ins>**REMEMBER:** The game you want to play must be set to **borderless**. Otherwise, the application will not work</ins>
-
-Once all keys have been set, you can run the app in the background and start using it.
-
-## Known issues (Work in progress)
-- App sometimes crashes when display is loaded and clicking on the edges of the screen.
-- In cases when GPU is not available, inference times are really slow.
-  
-## Future work
-- More realistic TTS voices
-  - [x] Elevenlabs
-  - [ ] Hugging Face TTS model
-- Testing (github actions)
-  - [ ] Improve linting score
-  - [ ] Add more tests
-  - [ ] Improve pytest coverage score
-- [X] Windows installer version
-- [ ] GUI
-- [ ] AI features
-- [ ] Zooming into the detection while it's being read
-- [ ] Hover mode (for times when available)
