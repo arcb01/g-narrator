@@ -1,4 +1,23 @@
-# Gaming Narrator
+<h1 align="center">
+ <img
+  width="180"
+  alt="Eye logo"
+  src="./garrator/assets/logo.png">
+    <br/>
+    GNarrator
+</h1>
+
+<h4 align="center">
+A screen reading accessibility tool for videogames
+</h4>
+ 
+<p align="center">
+ <strong>
+   <a href="">Demo</a>
+  •
+  <a href="">How to use</a>
+ </strong>
+</p>
 
 In many videogames, the use of the mouse for controlling the camera is often used. On the other hand, the magnifier app which makes the elements on the screen appear larger, also makes use of the movement of the mouse to move around the screen. These two behaviors collide between each other if they wanna be performed simultaneously. In other words, while playing a videogame one is not able to use the magnifier app and move the mouse around the screen. 
 Adiotionally, tools like, for example, Windows Narrator do not work in these scenarios. 
