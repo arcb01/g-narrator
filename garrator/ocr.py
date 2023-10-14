@@ -2,7 +2,7 @@ import pyautogui
 import random
 import cv2
 import easyocr
-import os, glob
+import os
 from pathlib import Path
 
 #from utils.utils import loading_screen, clear_screen

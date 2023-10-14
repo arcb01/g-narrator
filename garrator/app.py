@@ -1,15 +1,18 @@
 from os import environ
-import sys, keyboard, pyautogui
-import win32gui, win32com.client, json
+import keyboard
+import win32gui, json
 import win32api, win32con, win32gui
 from pathlib import Path
 # Remove pygame welcome message
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 
-from ocr import OCR
-from TTS import Narrator
-from utils.utils import get_disp_size, app_print
+#from ocr import OCR
+from garrator.ocr import OCR
+from garrator.TTS import Narrator
+from garrator.utils.utils import get_disp_size, app_print
+#from TTS import Narrator
+#from utils.utils import get_disp_size, app_print
 
 
 
@@ -243,3 +246,13 @@ def settings(lang : str, gpu : bool, voice_speed : int):
     ocr = OCR(lang=lang, gpu=gpu)
 
     return tts, ocr
+
+
+""" if __name__ == "__main__":
+    LANGUAGE = "en"     # Language for TTS
+    GPU = True          # Use GPU for OCR
+    VOICE_SPEED = 150   # Voice speed for TTS
+
+    tts, ocr = settings(LANGUAGE, GPU, VOICE_SPEED)
+    a = App(tts, ocr)
+    a.run() """
