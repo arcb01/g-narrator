@@ -1,11 +1,13 @@
-#from app import App, settings
-from garrator.modules.app import App, settings
+from app import App, settings
 
-if __name__ == '__main__':
+def main():
     LANGUAGE = "en"     # Language for TTS
     GPU = True          # Use GPU for OCR
     VOICE_SPEED = 150   # Voice speed for TTS
 
     tts, ocr = settings(LANGUAGE, GPU, VOICE_SPEED)
     a = App(tts, ocr)
-    a.run() 
+    a.run()
+    
+if __name__ == '__main__':
+    main()

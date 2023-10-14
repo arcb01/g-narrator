@@ -1,4 +1,4 @@
-from garrator.modules.ocr import OCR
+from garrator.ocr import OCR
 
 def test_ocr_init():
     """

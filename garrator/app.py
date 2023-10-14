@@ -2,6 +2,7 @@ from os import environ
 import sys, keyboard, pyautogui
 import win32gui, win32com.client, json
 import win32api, win32con, win32gui
+from pathlib import Path
 # Remove pygame welcome message
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
@@ -9,6 +10,7 @@ import pygame
 from ocr import OCR
 from TTS import Narrator
 from utils.utils import get_disp_size, app_print
+
 
 
 class App:
@@ -38,8 +40,9 @@ class App:
     """
 
     def __init__(self, narrator: object, OCR: object):
-        self.app_name = "Gaming Narrator"
-        self.app_logo = pygame.image.load('./assets/logo.png')
+        self.app_name = "Garrator"
+        self.path = Path("./garrator/")
+        self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
         self.rect_width = 4
         self.narrator = narrator
         self.OCR = OCR
@@ -57,7 +60,7 @@ class App:
         """
 
         # Read json file containing key bindings
-        with open('./config/keys.json') as json_file:
+        with open(self.path / "config" / "keys.json") as json_file:
             k = json.load(json_file)
             self.CAPTURE = k["CAPTURE"]
             self.SWITCH_DET_FORWARD = k["SWITCH_FORWARD"]

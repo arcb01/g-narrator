@@ -3,8 +3,10 @@ import random
 import cv2
 import easyocr
 import os, glob
-#from garrator.modules.utils.utils import loading_screen, clear_screen
-from .utils.utils import loading_screen, clear_screen
+from pathlib import Path
+
+#from utils.utils import loading_screen, clear_screen
+from garrator.utils.utils import loading_screen, clear_screen
 
 class OCR:
     """
@@ -30,9 +32,10 @@ class OCR:
         self.gpu = gpu
         self.imgs = []
         self.result = []
-        self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
-        self.file_nom = "OCR_pic_"
+        self.imgs_path = Path("./garrator/.tmp_imgs/")
         self.images_dir()
+        self.file_nom = "OCR_pic_"
+        
         self.start()
 
     def images_dir(self):
@@ -40,8 +43,8 @@ class OCR:
         Makes sure that the imgs directory exists
         """
             
-        if not os.path.exists(self.imgs_dir):
-            os.makedirs(self.imgs_dir)
+        if not os.path.exists(self.imgs_path):
+            os.makedirs(self.imgs_path)
         
     def take_screenshot(self):
         """
@@ -50,7 +53,7 @@ class OCR:
         myScreenshot = pyautogui.screenshot()
         h = str(random.getrandbits(128))
         filename = self.file_nom + h + ".png"
-        myScreenshot.save(self.imgs_dir + filename)
+        myScreenshot.save(self.imgs_path / filename)
         self.imgs.append(filename)
     
     def send_screen(self, screen):
@@ -80,7 +83,7 @@ class OCR:
         #self.last_img = self.imgs.pop()
         img = self.imgs[-1]
         # Read img
-        imgf = cv2.imread(self.imgs_dir + img)
+        imgf = cv2.imread((self.imgs_path / img).__str__())
         self.result = self.reader.readtext(imgf, paragraph=True)
         # Clear loading screen
         clear_screen(self.app_screen)
@@ -104,5 +107,8 @@ class OCR:
         Deletes all screenshots taken
         """
 
-        for filename in glob.glob(self.imgs_dir + f"{self.file_nom}*"):
-            os.remove(filename) 
+        # empty self.imgs_path directory 
+
+        for item in self.imgs_path.iterdir():
+            if item.is_file():
+                item.unlink()  # Remove file 
