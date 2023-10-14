@@ -43,7 +43,8 @@ Once all keys have been set, you can run the app in the background and start usi
   - [ ] Improve linting score
   - [ ] Add more tests
   - [ ] Improve pytest coverage score
-- [X] Windows installer version
+- [X] Installing script
+- [ ] Windows installer version (.msi)
 - [ ] GUI
 - [ ] AI features
 - [ ] Zooming into the detection while it's being read
