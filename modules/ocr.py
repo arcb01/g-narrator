@@ -33,6 +33,7 @@ class OCR:
         self.imgs_dir = "./imgs/" # NOTE: Directory where images are stored
         self.file_nom = "OCR_pic_"
         self.images_dir()
+        self.start()
 
     def images_dir(self):
         """
@@ -63,6 +64,10 @@ class OCR:
         Start OCR detection and save results
         """
 
+        self.reader = easyocr.Reader([self.lang], gpu=self.gpu)
+        
+
+    def read(self):
         # Take screenshot
         self.take_screenshot()
         # Loading screen
@@ -72,9 +77,7 @@ class OCR:
         img = self.imgs[-1]
         # Read img
         imgf = cv2.imread(self.imgs_dir + img)
-        # OCR
-        reader = easyocr.Reader([self.lang], gpu=self.gpu)
-        self.result = reader.readtext(imgf, paragraph=True)
+        self.result = self.reader.readtext(imgf, paragraph=True)
         # Clear loading screen
         clear_screen(self.app_screen)
 
