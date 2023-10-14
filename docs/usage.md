@@ -7,7 +7,7 @@
 
 - **Python version**: 3.9+
 ### Installation
-- Run the `installation.bat` and let the installation follow.
+- Run the `run.bat` and let the installation follow.
 
 ## How to use?
 Frist and foremost, custom key bindings must be defined. To do so, edit the file `config/keys.json`. Here there's a description of what's the role of each key.
@@ -36,7 +36,8 @@ Once all keys have been set, you can run the app in the background and start usi
 - In cases when GPU is not available, inference times are really slow.
   
 ## Future work
-- [ ] Installation script not working properly when loading env
+- [x] Installation script
+- [ ] Fix requirements encoding issue
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
