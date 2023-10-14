@@ -31,6 +31,7 @@ jobs:
       run: |
         black *.py
     - name: Testing
+      # add --cov-fail-under=80
       run: |
-        pytest -vv --cov=garrator ./garrator/tests/
+        pytest
 
