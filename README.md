@@ -51,19 +51,18 @@ Once all keys have been set, you can run the app in the background and start usi
 
 ## Known issues (Work in progress)
 - App sometimes crashes when display is loaded and clicking on the edges of the screen.
-- This app would be ideal if it worked in real-time. The issue is that it exsits a trade-off between accuracy and speed. 
-
+- In cases when GPU is not available, inference times are really slow.
+  
 ## Future work
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
-- Speed up inferenceing:
-  - [X] Pytorch 2.0 -- ***ABORTED**: `torch.compile` did not work for this case.*
-  - [x] TensorRT -- ***ABORTED**: No improvements were observed with this technique.*
-  - [ ] Alternative OCR [[1]](https://github.com/mindee/doctr)
+- Testing (github actions)
+  - [ ] Improve linting score
+  - [ ] Add more tests
+  - [ ] Improve pytest coverage score
 - [X] Windows installer version
 - [ ] GUI
 - [ ] AI features
 - [ ] Zooming into the detection while it's being read
 - [ ] Hover mode (for times when available)
-- [ ] OCR unit test (github actions)
