@@ -22,7 +22,7 @@ Adiotionally, tools like, for example, Windows Narrator do not work in these sce
 This project is proposed as an easy-to-use and functional alternative that can work in any kind of scenario. 
 
 ## Usage
-When it comes to usage, this app can be used by everyone. However, people having some kind of visual imparement will benefit the most from using it. Furthurmore, this application could also serve as inspiration for encouraging game developers to include this kind of accessibility feature inside their games. 
+Thiss application is intended for visually impaired users. Furthurmore, this application could also serve as inspiration for encouraging game developers to include this kind of accessibility feature inside their games. 
 
 ## Application demo
 In the following video it is shown how the application works:
