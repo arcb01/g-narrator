@@ -36,6 +36,7 @@ Once all keys have been set, you can run the app in the background and start usi
 - In cases when GPU is not available, inference times are really slow.
   
 ## Future work
+- [X] Installing script
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
@@ -43,9 +44,9 @@ Once all keys have been set, you can run the app in the background and start usi
   - [ ] Improve linting score
   - [ ] Add more tests
   - [ ] Improve pytest coverage score
-- [X] Installing script
 - [ ] Windows installer version (.msi)
 - [ ] GUI
+  - [ ] Key binder
 - [ ] AI features
 - [ ] Zooming into the detection while it's being read
 - [ ] Hover mode (for times when available)
