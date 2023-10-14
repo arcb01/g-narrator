@@ -61,13 +61,17 @@ class OCR:
 
     def start(self):
         """
-        Start OCR detection and save results
+        Load the OCR engine into memory
         """
 
         self.reader = easyocr.Reader([self.lang], gpu=self.gpu)
         
 
     def read(self):
+        """
+        Start OCR engine and save results
+        """
+
         # Take screenshot
         self.take_screenshot()
         # Loading screen
