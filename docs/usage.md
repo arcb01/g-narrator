@@ -1,3 +1,4 @@
+# Getting Started
 ## Requirements & installation
 ### Requirements
 - **OS**: Currently, the application is only available for Windows, since the majority of videogames are played in this OS. 
