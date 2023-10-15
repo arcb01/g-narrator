@@ -48,7 +48,7 @@ def clear_screen(screen):
 def closest_nodes(node: tuple, nodes: list):
     """
     Given a node, in this case the mouse position, this function
-    returns the indices of the k nearest points from all detections.
+    returns the k nearest points from all detections.
     :param node: Tuple containing the x and y coordinates of the mouse position
     :param nodes: List of tuples containing the x and y coordinates for 
                 all points of every detection
