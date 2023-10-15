@@ -22,7 +22,7 @@ jobs:
         python-version: "3.10"
     - name: Install application
       run: |
-        .\run.bat
+        .\installation.bat
     - name: Lint the code
       run: |
         pylint --disable=R,C --fail-under=7 ./garrator/
