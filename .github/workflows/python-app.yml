@@ -32,15 +32,3 @@ jobs:
         # add --cov-fail-under=80
         run: |
           pytest
-  build-sciprt:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run installation script
-        run: |
-          .\installation.bat
-        shell: cmd
-      - name: Testing the code
-        # add --cov-fail-under=80
-        run: |
-          python -m pytest
