@@ -22,15 +22,16 @@ jobs:
         python-version: "3.10"
     - name: Install application
       run: |
-        .\installation.bat
+        python -m pip install --upgrade pip
+        python setup.py install
     - name: Lint the code
       run: |
-        python -m pylint --disable=R,C --fail-under=7 ./garrator/
+        pylint --disable=R,C --fail-under=7 ./garrator/
     - name: Formating the code
       run: |
-        python -m black *.py
+        black *.py
     - name: Testing
       # add --cov-fail-under=80
       run: |
-        python -m pytest
+        pytest
 
