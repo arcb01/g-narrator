@@ -43,4 +43,4 @@ jobs:
       - name: Testing the code
         # add --cov-fail-under=80
         run: |
-          pytest
+          python -m pytest
