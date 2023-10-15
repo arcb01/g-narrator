@@ -4,9 +4,8 @@ import cv2
 import easyocr
 import os
 from pathlib import Path
-
 #from utils.utils import loading_screen, clear_screen
-from garrator.utils.utils import loading_screen, clear_screen
+from garrator.utils.utils import loading_screen, clear_screen, closest_node
 
 class OCR:
     """
@@ -31,7 +30,7 @@ class OCR:
         self.lang = lang
         self.gpu = gpu
         self.imgs = []
-        self.result = []
+        self.detections = []
         self.imgs_path = Path("./garrator/.tmp_imgs/")
         self.images_dir()
         self.file_nom = "OCR_pic_"
@@ -84,23 +83,50 @@ class OCR:
         img = self.imgs[-1]
         # Read img
         imgf = cv2.imread((self.imgs_path / img).__str__())
-        self.result = self.reader.readtext(imgf, paragraph=True)
+        self.detections = self.reader.readtext(imgf, paragraph=True)
         # Clear loading screen
         clear_screen(self.app_screen)
 
-    def get_all_detections(self):
+    @property
+    def get_detections(self):
         """
         Returns the list of all detections
         """
 
-        return self.result
+        return self.detections
+
+    def find_nearest_detections(self, x: int, y: int):
+        """
+        Given a mouse position, this function returns the top 3 closest detections
+        :param x: x coordinate of the mouse position
+        :param y: y coordinate of the mouse position
+        :return: NOTE: This function updates the self.detections list
+        """
+
+        # TODO: Get the top 3 closest detections to the mouse position
+        # WIll return a self.detections with the top 3 detections
+
+        # Convert list of lists to list of tuples
+        det_rect = [tuple(p) for det in self.detections for p in det[0]]
+        # Find the closest point of the detection (rectangle) to the mouse position
+        closest_point_to_mouse = closest_node((x, y), det_rect)
+        # Check to which detection this point corresponds
+        
+        for i, detection in enumerate(self.detections):
+            rectangle = detection[0]
+            for point in rectangle:
+                if point[0] == closest_point_to_mouse[0] and \
+                    point[1] == closest_point_to_mouse[1]:
+                    index = i
+
+        self.detections = self.detections[index]
 
     def empty_results(self):
         """
         Empty the list of results
         """
 
-        self.result = []
+        self.detections = []
     
     def delete_imgs(self):
         """
