@@ -3,9 +3,15 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-requirements_list = [line.strip() 
-                     for line in open('requirements.txt', encoding="utf-16") 
+for e in ["utf-8", "utf-8-sig", "utf16"]:
+    try:
+        requirements_list = [line.strip() 
+                     for line in open('requirements.txt', encoding=e) 
                      if line.strip()]
+        break
+    except:
+        pass
+
 
 setuptools.setup(
     name='garrator',
