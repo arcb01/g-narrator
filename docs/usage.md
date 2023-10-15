@@ -32,12 +32,14 @@ Keys descriptions:
 Once all keys have been set, you can run the app in the background and start using it.
 
 ## Known issues (Work in progress)
-- App sometimes crashes when display is loaded and clicking on the edges of the screen.
 - In cases when GPU is not available, inference times are really slow.
+### Bugs
+- App sometimes crashes when display is loaded and clicking on the edges of the screen.
   
 ## Future work
 - [x] Installation script
 - [x] Running script
+- [x] Nearest detection mode (experimental)
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
@@ -51,6 +53,6 @@ Once all keys have been set, you can run the app in the background and start usi
   - [ ] Key binder
 - [ ] AI features
 - [ ] Zooming into the detection while it's being read
-- [ ] Hover mode (for times when available)
 - [ ] Add new demo video
 - [ ] Better looking reading screen
+- [ ] Improve coloring and sizing
