@@ -4,7 +4,6 @@ import cv2
 import easyocr
 import os
 from pathlib import Path
-#from utils.utils import loading_screen, clear_screen
 from garrator.utils.utils import loading_screen, clear_screen, closest_nodes
 
 class OCR:
@@ -100,8 +99,6 @@ class OCR:
         :param mouse_pos: (x,y) coordinate of the mouse position
         :return: NOTE: This function updates the self.detections list
         """
-        # FIXME: It should return the top k nearest detections, but only returns the nearest one
-        #        This might be due to the point finding algorithm
 
         # Convert list of lists to list of tuples
         det_rect = [tuple(p) for det in self.detections for p in det[0]]

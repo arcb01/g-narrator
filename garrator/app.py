@@ -107,7 +107,7 @@ class App:
         if read_nearest:
             # TODO: Read only a section of the screen. For now read all screen
             self.OCR.read()
-            # FIXME: Find the top 3 nearest detections to the mouse position            
+            # Find the top k nearest detections to the mouse position            
             self.OCR.find_nearest_detections(get_mouse_pos())
         else:
             # Read all screen
