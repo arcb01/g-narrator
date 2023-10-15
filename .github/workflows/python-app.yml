@@ -25,12 +25,12 @@ jobs:
         .\installation.bat
     - name: Lint the code
       run: |
-        pylint --disable=R,C --fail-under=7 ./garrator/
+        python -m pylint --disable=R,C --fail-under=7 ./garrator/
     - name: Formating the code
       run: |
-        black *.py
+        python -m black *.py
     - name: Testing
       # add --cov-fail-under=80
       run: |
-        pytest
+        python -m pytest
 
