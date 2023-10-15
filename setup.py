@@ -15,7 +15,7 @@ for e in ["utf-8", "utf-8-sig", "utf16"]:
 
 setuptools.setup(
     name='garrator',
-    version='0.4.24',
+    version='0.4.25',
     python_requires='>=3.9.0',
     author='Arnau Castelalno',
     author_email='arcascb2001@gmail.com',
