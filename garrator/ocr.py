@@ -4,9 +4,7 @@ import cv2
 import easyocr
 import os
 from pathlib import Path
-
-#from utils.utils import loading_screen, clear_screen
-from garrator.utils.utils import loading_screen, clear_screen
+from garrator.utils.utils import loading_screen, clear_screen, closest_nodes
 
 class OCR:
     """
@@ -31,7 +29,7 @@ class OCR:
         self.lang = lang
         self.gpu = gpu
         self.imgs = []
-        self.result = []
+        self.detections = []
         self.imgs_path = Path("./garrator/.tmp_imgs/")
         self.images_dir()
         self.file_nom = "OCR_pic_"
@@ -69,7 +67,6 @@ class OCR:
 
         self.reader = easyocr.Reader([self.lang], gpu=self.gpu)
         
-
     def read(self):
         """
         Start OCR engine and save results
@@ -84,23 +81,42 @@ class OCR:
         img = self.imgs[-1]
         # Read img
         imgf = cv2.imread((self.imgs_path / img).__str__())
-        self.result = self.reader.readtext(imgf, paragraph=True)
+        self.detections = self.reader.readtext(imgf, paragraph=True)
         # Clear loading screen
         clear_screen(self.app_screen)
 
-    def get_all_detections(self):
+    @property
+    def get_detections(self):
         """
         Returns the list of all detections
         """
 
-        return self.result
+        return self.detections
+
+    def find_nearest_detections(self, mouse_pos: tuple):
+        """
+        Given a mouse position, this function returns the top k nearest detections
+        :param mouse_pos: (x,y) coordinate of the mouse position
+        :return: NOTE: This function updates the self.detections list
+        """
+
+        # Convert list of lists to list of tuples
+        det_rect = [tuple(p) for det in self.detections for p in det[0]]
+        # Find the closest point of the detection (rectangle) to the mouse position
+        list_closest_nodes = closest_nodes(mouse_pos, det_rect)
+        # Check to which detection this point corresponds
+        matching_detections = [detection for detection in self.detections 
+                               if any(candidate in detection[0] 
+                                      for candidate in list_closest_nodes)]
+
+        self.detections = matching_detections
 
     def empty_results(self):
         """
         Empty the list of results
         """
 
-        self.result = []
+        self.detections = []
     
     def delete_imgs(self):
         """

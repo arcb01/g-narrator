@@ -1,6 +1,8 @@
 import ctypes
 import pyautogui
 import pygame
+import numpy as np
+from sklearn.neighbors import KDTree
 
 
 def get_disp_size():
@@ -43,13 +45,28 @@ def clear_screen(screen):
     screen.fill(transparent)
     pygame.display.update()
 
+def closest_nodes(node: tuple, nodes: list):
+    """
+    Given a node, in this case the mouse position, this function
+    returns the k nearest points from all detections.
+    :param node: Tuple containing the x and y coordinates of the mouse position
+    :param nodes: List of tuples containing the x and y coordinates for 
+                all points of every detection
+    """
+
+    neighbours = 4 # NOTE: n-1?
+
+    kdtree = KDTree(np.asarray(nodes).reshape(-1, 2))
+    _, ind = kdtree.query(np.asarray(node).reshape(1, -1), k=neighbours)
+
+    return np.squeeze(np.asarray(nodes)[ind]).tolist()
 
 def app_print():
     """
     Prints that the app is running
     """
 
-    message = "Gaming Narrator is now running"
+    message = "GNarrator is now running. You can minimize this window."
     symbol = "▒"
     width = 60
     padding = (width - len(message)) // 2

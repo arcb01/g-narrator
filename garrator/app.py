@@ -8,9 +8,13 @@ environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 
 #from ocr import OCR
+
 from garrator.ocr import OCR
 from garrator.TTS import Narrator
-from garrator.utils.utils import get_disp_size, app_print
+from garrator.utils.utils import (
+                        get_disp_size, app_print, 
+                        get_mouse_pos)
+
 #from TTS import Narrator
 #from utils.utils import get_disp_size, app_print
 
@@ -52,7 +56,7 @@ class App:
         self.clock = pygame.time.Clock()
         self.switch_detection = False
         self.engaging = False
-        self.dimmed_color = (70, 96, 0)
+        self.dimmed_color = (102, 153, 0)
         self.highlighted_color = (170, 255, 0)
         self.set_keys()
         pygame.init()
@@ -75,7 +79,7 @@ class App:
 
     def quit(self):
         try:
-            if len(self.OCR.get_all_detections()) > 0:
+            if len(self.OCR.get_detections) > 0:
                 self.OCR.empty_results()
                 self.narrator.say("Clearing screen.")
                 self.clear_screen()
@@ -86,9 +90,9 @@ class App:
             pass
 
     def end_of_list(self):
-        return True if self.det_idx == len(self.OCR.get_all_detections()) - 1 else False
+        return True if self.det_idx == len(self.OCR.get_detections) - 1 else False
 
-    def read_screen(self):
+    def read_screen(self, read_nearest=False):
         """
         Main function that reads the screen content using OCR.
         """
@@ -99,14 +103,23 @@ class App:
         self.load_display()
         # OCR 
         self.OCR.send_screen(self.screen) # Used for adding a loading screen.
-        self.OCR.read()
-        if len(self.OCR.get_all_detections()) > 0:
+
+        if read_nearest:
+            # TODO: Read only a section of the screen. For now read all screen
+            self.OCR.read()
+            # Find the top k nearest detections to the mouse position            
+            self.OCR.find_nearest_detections(get_mouse_pos())
+        else:
+            # Read all screen
+            self.OCR.read()
+            
+        if len(self.OCR.get_detections) > 0:
             # For every detection found, draw a colored bounding box around it.
-            for detection in self.OCR.get_all_detections():
+            for detection in self.OCR.get_detections:
                 self.draw_detection(detection, color=self.dimmed_color)
             # Highlight first detection
-            self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
-
+            self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
+  
     def read_out_loud(self, slow=False):
         """
         Text to speech function that reads out loud the text inside the 
@@ -114,8 +127,8 @@ class App:
         :param slow: If True, the text will be read out loud slowly.
         """
         
-        assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
-        text = self.OCR.get_all_detections()[self.det_idx][1]
+        assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."
+        text = self.OCR.get_detections[self.det_idx][1]
 
         if not slow:
             self.narrator.say(text)
@@ -133,38 +146,37 @@ class App:
             self.quit()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST:
-            pass
-            # NOTE: This is not implemented yet. Code in alternative branch.
+            self.read_screen(read_nearest=True)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
             self.read_screen()
 
         if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
-            assert len(self.OCR.get_all_detections()) > 0, "No detections found yet. Please start scanning first."
+            assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."
 
             if not self.end_of_list():
                 if event.name == self.SWITCH_DET_BACKWARD:
                     if self.det_idx == 0: # The first bbox
-                        self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
-                        self.det_idx = len(self.OCR.get_all_detections()) - 1
-                        self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
+                        self.det_idx = len(self.OCR.get_detections) - 1
+                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
                     elif self.det_idx > 0: # Not the first bbox
-                        self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
-                        self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.highlighted_color)
+                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
+                        self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
                         self.det_idx  -= 1
                 elif event.name == self.SWITCH_DET_FORWARD:
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx + 1], color=self.highlighted_color)
+                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
+                    self.draw_detection(self.OCR.get_detections[self.det_idx + 1], color=self.highlighted_color)
                     self.det_idx  += 1
             else:
                 if event.name == self.SWITCH_DET_FORWARD:
                     # Loop back to start
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
+                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
                     self.det_idx = 0
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.highlighted_color)
+                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
                 else:
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx], color=self.dimmed_color)
-                    self.draw_detection(self.OCR.get_all_detections()[self.det_idx - 1], color=self.highlighted_color)
+                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
+                    self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
                     self.det_idx  -= 1
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
@@ -218,6 +230,29 @@ class App:
                         self.rect_width)
         pygame.display.update()
 
+    def read_nearest(self):
+        """
+        Reads the nearest text to the mouse cursor
+        """
+
+        pass
+        # 1. Getting the mouse position
+        #x, y = get_mouse_pos()
+        # 2. Taking a screenshot
+        #     2.1. Taking a screenshot of the nearby area
+        #self.read_screen_locally()
+        # 3. Detect bounding boxes
+        # 4. Return the closest bounding box to the mouse position
+        # 5. Display the bounding box
+        # 6. TTS
+
+
+
+
+
+
+
+
     def run(self):
         """
         Main loop of the application
@@ -246,13 +281,3 @@ def settings(lang : str, gpu : bool, voice_speed : int):
     ocr = OCR(lang=lang, gpu=gpu)
 
     return tts, ocr
-
-
-""" if __name__ == "__main__":
-    LANGUAGE = "en"     # Language for TTS
-    GPU = True          # Use GPU for OCR
-    VOICE_SPEED = 150   # Voice speed for TTS
-
-    tts, ocr = settings(LANGUAGE, GPU, VOICE_SPEED)
-    a = App(tts, ocr)
-    a.run() """
