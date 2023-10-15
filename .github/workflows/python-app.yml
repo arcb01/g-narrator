@@ -35,6 +35,7 @@ jobs:
   build-sciprt:
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Run installation script
         run: |
           .\installation.bat
