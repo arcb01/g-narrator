@@ -56,7 +56,7 @@ class App:
         self.clock = pygame.time.Clock()
         self.switch_detection = False
         self.engaging = False
-        self.dimmed_color = (70, 96, 0)
+        self.dimmed_color = (102, 153, 0)
         self.highlighted_color = (170, 255, 0)
         self.set_keys()
         pygame.init()
@@ -105,10 +105,10 @@ class App:
         self.OCR.send_screen(self.screen) # Used for adding a loading screen.
 
         if read_nearest:
-            # Read all screen
+            # TODO: Read only a section of the screen. For now read all screen
             self.OCR.read()
-            # TODO: Find the top 3 nearest detections to the mouse position
-            self.find_nearest_detections(get_mouse_pos())
+            # FIXME: Find the top 3 nearest detections to the mouse position            
+            self.OCR.find_nearest_detections(get_mouse_pos())
         else:
             # Read all screen
             self.OCR.read()
@@ -146,15 +146,13 @@ class App:
             self.quit()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST:
-            pass
             self.read_screen(read_nearest=True)
-            # NOTE: This is not implemented yet. Code in alternative branch.
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
             self.read_screen()
 
         if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
-            assert len(self.OCR.get_detections()) > 0, "No detections found yet. Please start scanning first."
+            assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."
 
             if not self.end_of_list():
                 if event.name == self.SWITCH_DET_BACKWARD:

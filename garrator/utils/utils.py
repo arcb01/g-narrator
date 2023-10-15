@@ -1,7 +1,8 @@
 import ctypes
 import pyautogui
 import pygame
-from scipy.spatial import KDTree
+import numpy as np
+from sklearn.neighbors import KDTree
 
 
 def get_disp_size():
@@ -44,18 +45,21 @@ def clear_screen(screen):
     screen.fill(transparent)
     pygame.display.update()
 
-def closest_node(self, node: tuple, nodes: list):
+def closest_nodes(node: tuple, nodes: list):
     """
     Given a node, in this case the mouse position, this function
-    returns the closest point of the detection to it.
+    returns the indices of the k nearest points from all detections.
     :param node: Tuple containing the x and y coordinates of the mouse position
     :param nodes: List of tuples containing the x and y coordinates for 
                 all points of every detection
     """
 
-    kdtree = KDTree(nodes)
-    d, i = kdtree.query(node)
-    return nodes[i]
+    neighbours = 4
+
+    kdtree = KDTree(np.asarray(nodes).reshape(-1, 2))
+    _, ind = kdtree.query(np.asarray(node).reshape(1, -1), k=neighbours)
+
+    return np.squeeze(np.asarray(nodes)[ind]).tolist()
 
 def app_print():
     """

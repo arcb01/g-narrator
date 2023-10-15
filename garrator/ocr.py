@@ -5,7 +5,7 @@ import easyocr
 import os
 from pathlib import Path
 #from utils.utils import loading_screen, clear_screen
-from garrator.utils.utils import loading_screen, clear_screen, closest_node
+from garrator.utils.utils import loading_screen, clear_screen, closest_nodes
 
 class OCR:
     """
@@ -68,7 +68,6 @@ class OCR:
 
         self.reader = easyocr.Reader([self.lang], gpu=self.gpu)
         
-
     def read(self):
         """
         Start OCR engine and save results
@@ -95,31 +94,25 @@ class OCR:
 
         return self.detections
 
-    def find_nearest_detections(self, x: int, y: int):
+    def find_nearest_detections(self, mouse_pos: tuple):
         """
-        Given a mouse position, this function returns the top 3 closest detections
-        :param x: x coordinate of the mouse position
-        :param y: y coordinate of the mouse position
+        Given a mouse position, this function returns the top k nearest detections
+        :param mouse_pos: (x,y) coordinate of the mouse position
         :return: NOTE: This function updates the self.detections list
         """
-
-        # TODO: Get the top 3 closest detections to the mouse position
-        # WIll return a self.detections with the top 3 detections
+        # FIXME: It should return the top k nearest detections, but only returns the nearest one
+        #        This might be due to the point finding algorithm
 
         # Convert list of lists to list of tuples
         det_rect = [tuple(p) for det in self.detections for p in det[0]]
         # Find the closest point of the detection (rectangle) to the mouse position
-        closest_point_to_mouse = closest_node((x, y), det_rect)
+        list_closest_nodes = closest_nodes(mouse_pos, det_rect)
         # Check to which detection this point corresponds
-        
-        for i, detection in enumerate(self.detections):
-            rectangle = detection[0]
-            for point in rectangle:
-                if point[0] == closest_point_to_mouse[0] and \
-                    point[1] == closest_point_to_mouse[1]:
-                    index = i
+        matching_detections = [detection for detection in self.detections 
+                               if any(candidate in detection[0] 
+                                      for candidate in list_closest_nodes)]
 
-        self.detections = self.detections[index]
+        self.detections = matching_detections
 
     def empty_results(self):
         """
