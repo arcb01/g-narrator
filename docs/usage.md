@@ -40,6 +40,7 @@ Once all keys have been set, you can run the app in the background and start usi
 - [x] Installation script
 - [x] Running script
 - [x] Nearest detection mode (experimental)
+  - [ ] Screenshot the region not all the screen
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
