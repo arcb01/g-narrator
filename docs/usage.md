@@ -37,7 +37,7 @@ Once all keys have been set, you can run the app in the background and start usi
   
 ## Future work
 - [x] Installation script
-- [ ] Fix requirements encoding issue
+- [x] Running script
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
@@ -45,6 +45,7 @@ Once all keys have been set, you can run the app in the background and start usi
   - [ ] Improve linting score
   - [ ] Add more tests
   - [ ] Improve pytest coverage score
+  - [ ] Add workflow for installation script
 - [ ] Windows installer version (.msi)
 - [ ] GUI
   - [ ] Key binder
