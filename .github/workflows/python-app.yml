@@ -24,6 +24,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python setup.py install
+      - name: Download Xvfb-Win
+        run: |
+          Invoke-WebRequest -Uri https://github.com/dotnet/runtime/files/6568113/Xvfb-Win-x86.zip -OutFile xvfb-win.zip
+          Expand-Archive -Path xvfb-win.zip -DestinationPath .
+          Remove-Item xvfb-win.zip
+      - name: Start Xvfb-Win
+        run: .\Xvfb-Win-x86\Xvfb-Win.exe :99
       - name: Lint the code
         run: |
           pylint --disable=R,C --fail-under=7 ./garrator/
