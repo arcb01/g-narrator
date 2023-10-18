@@ -1,6 +1,8 @@
 import pyautogui
 import random
 import cv2
+import numpy as np
+from deprecated import deprecated
 import easyocr
 import os
 from pathlib import Path
@@ -44,11 +46,20 @@ class OCR:
         if not os.path.exists(self.imgs_path):
             os.makedirs(self.imgs_path)
         
-    def take_screenshot(self):
+    def take_screenshot(self, region=None):
         """
         Function that takes a screenshot and save it in imgs_dir
+        :param region: (x,y,w,h) coordinates of the region to be captured
+                        if None, the whole screen will be captured
         """
-        myScreenshot = pyautogui.screenshot()
+
+        if region is not None:
+            myScreenshot = pyautogui.screenshot(region=region)
+            # Save region data
+            self.region = region
+        else:
+            myScreenshot = pyautogui.screenshot()
+
         h = str(random.getrandbits(128))
         filename = self.file_nom + h + ".png"
         myScreenshot.save(self.imgs_path / filename)
@@ -72,8 +83,6 @@ class OCR:
         Start OCR engine and save results
         """
 
-        # Take screenshot
-        self.take_screenshot()
         # Loading screen
         loading_screen(self.app_screen)
         # Get last img
@@ -85,6 +94,24 @@ class OCR:
         # Clear loading screen
         clear_screen(self.app_screen)
 
+    def map_coordinates_to_screen(self, detection):
+        """
+        Maps the coordinates of a local screenshot to the real coordinates of the screen
+        :param detection: List of tuples (bbox, text, prob)
+        """
+        
+        p_top_reg = (self.region[0], self.region[1])
+
+        coords_arr = np.array(detection[0], dtype=np.int32)
+        # mapping
+        mapped_coords = coords_arr + np.array([p_top_reg[0], p_top_reg[1]])
+        # convert to list
+        mapped_coords_list = mapped_coords.tolist()
+
+        detection[0] = mapped_coords_list
+
+        return detection
+
     @property
     def get_detections(self):
         """
@@ -93,6 +120,7 @@ class OCR:
 
         return self.detections
 
+    @deprecated(reason="Old function, not used anymore")
     def find_nearest_detections(self, mouse_pos: tuple):
         """
         Given a mouse position, this function returns the top k nearest detections
