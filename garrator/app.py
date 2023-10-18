@@ -7,17 +7,11 @@ from pathlib import Path
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 
-#from ocr import OCR
-
 from garrator.ocr import OCR
 from garrator.TTS import Narrator
 from garrator.utils.utils import (
                         get_disp_size, app_print, 
                         get_mouse_pos)
-
-#from TTS import Narrator
-#from utils.utils import get_disp_size, app_print
-
 
 
 class App:
@@ -58,6 +52,8 @@ class App:
         self.engaging = False
         self.dimmed_color = (102, 153, 0)
         self.highlighted_color = (170, 255, 0)
+        self.n_pressed = False
+        self.start_x, self.start_y = 0, 0
         self.set_keys()
         pygame.init()
 
@@ -92,7 +88,7 @@ class App:
     def end_of_list(self):
         return True if self.det_idx == len(self.OCR.get_detections) - 1 else False
 
-    def read_screen(self, read_nearest=False):
+    def read_screen(self, region=None):
         """
         Main function that reads the screen content using OCR.
         """
@@ -104,22 +100,28 @@ class App:
         # OCR 
         self.OCR.send_screen(self.screen) # Used for adding a loading screen.
 
-        if read_nearest:
-            # TODO: Read only a section of the screen. For now read all screen
-            self.OCR.read()
-            # Find the top k nearest detections to the mouse position            
-            self.OCR.find_nearest_detections(get_mouse_pos())
+        if region:
+            # Take a local screenshot
+            self.OCR.take_screenshot(region)
         else:
-            # Read all screen
-            self.OCR.read()
+            # Take a screenshot
+            self.OCR.take_screenshot()
+
+        # Read screen
+        self.OCR.read()
             
         if len(self.OCR.get_detections) > 0:
             # For every detection found, draw a colored bounding box around it.
             for detection in self.OCR.get_detections:
+                if region: # If a local screenshot was taken, map the local coordinates to the screen
+                    detection = self.OCR.map_coordinates_to_screen(detection)
                 self.draw_detection(detection, color=self.dimmed_color)
             # Highlight first detection
             self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
-  
+            # if only one detection, read it out loud
+            if len(self.OCR.get_detections) == 1:
+                self.read_out_loud()
+
     def read_out_loud(self, slow=False):
         """
         Text to speech function that reads out loud the text inside the 
@@ -145,8 +147,24 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name == self.QUIT_KEY:
             self.quit()
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST:
-            self.read_screen(read_nearest=True)
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST and not self.n_pressed:
+            self.start_x, self.start_y = get_mouse_pos()
+            #print("n pressed")
+            self.n_pressed = True
+
+        if event.event_type == keyboard.KEY_UP and event.name == "n":
+            self.end_x, self.end_y = get_mouse_pos()
+            #print("n released")
+            self.n_pressed = False
+
+            region = (
+                min(self.start_x, self.end_x),
+                min(self.start_y, self.end_y),
+                abs(self.end_x - self.start_x),
+                abs(self.end_y - self.start_y)
+            )
+
+            self.read_screen(region=region)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
             self.read_screen()
@@ -180,7 +198,8 @@ class App:
                     self.det_idx  -= 1
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
-            self.read_out_loud()
+            if len(self.OCR.get_detections) > 0:
+                self.read_out_loud()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.REPEAT_KEY:
             self.read_out_loud(slow=True)
@@ -230,35 +249,10 @@ class App:
                         self.rect_width)
         pygame.display.update()
 
-    def read_nearest(self):
-        """
-        Reads the nearest text to the mouse cursor
-        """
-
-        pass
-        # 1. Getting the mouse position
-        #x, y = get_mouse_pos()
-        # 2. Taking a screenshot
-        #     2.1. Taking a screenshot of the nearby area
-        #self.read_screen_locally()
-        # 3. Detect bounding boxes
-        # 4. Return the closest bounding box to the mouse position
-        # 5. Display the bounding box
-        # 6. TTS
-
-
-
-
-
-
-
-
     def run(self):
         """
         Main loop of the application
         """
-        
-        self.OCR.delete_imgs() # Clear folder
         
         app_print()
 
@@ -266,6 +260,7 @@ class App:
             self.check_events()
             self.clock.tick(60)
 
+        self.OCR.delete_imgs() # Clear folder
 
 def settings(lang : str, gpu : bool, voice_speed : int):
 

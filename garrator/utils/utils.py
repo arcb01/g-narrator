@@ -3,6 +3,7 @@ import pyautogui
 import pygame
 import numpy as np
 from sklearn.neighbors import KDTree
+from deprecated import deprecated
 
 
 def get_disp_size():
@@ -45,6 +46,7 @@ def clear_screen(screen):
     screen.fill(transparent)
     pygame.display.update()
 
+@deprecated(reason="Old function, not used anymore")
 def closest_nodes(node: tuple, nodes: list):
     """
     Given a node, in this case the mouse position, this function
