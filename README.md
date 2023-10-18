@@ -4,7 +4,7 @@
   alt="Eye logo"
   src="./garrator/assets/logo.png">
     <br/>
-    GNarrator
+    G-Narrator
 </h1>
 
 <h4 align="center">
