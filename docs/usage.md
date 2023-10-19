@@ -25,11 +25,13 @@ Keys descriptions:
  
  `"QUIT":` Exit key. It will clear the screen aswell
 
-> NOTE: Key binding names must be in the same language as your OS.
-
-<ins>**REMEMBER:** The game you want to play must be set to **borderless**. Otherwise, the application will not work</ins>
+> [!NOTE]
+> Key binding names must be in the same language as your OS.
 
 Once all keys have been set, you can run the app in the background and start using it.
+
+> [!IMPORTANT]
+Remember that the game you want to play must be set to **borderless**. Otherwise, the application will not work</ins>
 
 ## Known issues (Work in progress)
 - In cases when GPU is not available, inference times are really slow.
