@@ -41,22 +41,26 @@ Once all keys have been set, you can run the app in the background and start usi
 - [x] Installation script
 - [x] Running script
 - [x] Regional Reading feature
-- More realistic TTS voices
+- Improve TTS
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
 - [ ] Narrator does not shut up when pressing esc
-- [ ] Better looking reading screen
-- [ ] Improve coloring and sizing
+- [ ] `__main__.py`?
 - [ ] Logging
 - [ ] Zooming feature: e.g zoom into the detection while it's being read
+- [ ] Mouse key bindings
+- Asthetics
+  - [ ] Better looking reading screen (Translucenty)
+  - [ ] Improve coloring and sizing
 - Testing (github actions)
   - [ ] Improve linting score
   - [ ] Add more tests
   - [ ] Improve pytest coverage score
   - [ ] Add workflow for installation script
 - [ ] Windows installer version (.msi)
+- [ ] Docker image
 - [ ] GUI
   - [ ] Key binder
 - [ ] AI features
 - [ ] Add new demo video
-- [ ] Docker via sharing display?
+
