@@ -34,9 +34,9 @@ Once all keys have been set, you can run the app in the background and start usi
 Remember that the game you want to play must be set to **borderless**. Otherwise, the application will not work</ins>
 
 ## Known issues (Work in progress)
-- In cases when GPU is not available, inference times are really slow.
-### Bugs
-- App sometimes crashes when display is loaded and clicking on the edges of the screen.
+> [!WARNING]
+> - In cases when GPU is not available, inference times are really slow.
+> - App sometimes crashes when display is loaded and clicking on the edges of the screen.
   
 ## Future work
 *Ranked by priority*
