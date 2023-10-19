@@ -152,7 +152,7 @@ class App:
             #print("n pressed")
             self.n_pressed = True
 
-        if event.event_type == keyboard.KEY_UP and event.name == "n":
+        if event.event_type == keyboard.KEY_UP and event.name == self.READ_NEAREST:
             self.end_x, self.end_y = get_mouse_pos()
             #print("n released")
             self.n_pressed = False
