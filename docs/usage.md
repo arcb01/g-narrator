@@ -47,6 +47,7 @@ Once all keys have been set, you can run the app in the background and start usi
 - [ ] Narrator does not shut up when pressing esc
 - [ ] Better looking reading screen
 - [ ] Improve coloring and sizing
+- [ ] Logging
 - [ ] Zooming feature: e.g zoom into the detection while it's being read
 - Testing (github actions)
   - [ ] Improve linting score
