@@ -37,13 +37,16 @@ Once all keys have been set, you can run the app in the background and start usi
 - App sometimes crashes when display is loaded and clicking on the edges of the screen.
   
 ## Future work
+*Ranked by priority*
 - [x] Installation script
 - [x] Running script
-- [x] Nearest detection mode (experimental)
-  - [ ] Screenshot the region not all the screen
+- [x] Regional Reading feature
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
+- [ ] Better looking reading screen
+- [ ] Improve coloring and sizing
+- [ ] Zooming feature: e.g zoom into the detection while it's being read
 - Testing (github actions)
   - [ ] Improve linting score
   - [ ] Add more tests
@@ -53,8 +56,5 @@ Once all keys have been set, you can run the app in the background and start usi
 - [ ] GUI
   - [ ] Key binder
 - [ ] AI features
-- [ ] Zooming into the detection while it's being read
 - [ ] Add new demo video
-- [ ] Better looking reading screen
-- [ ] Improve coloring and sizing
 - [ ] Docker via sharing display?
