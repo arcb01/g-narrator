@@ -77,7 +77,7 @@ class App:
         try:
             if len(self.OCR.get_detections) > 0:
                 self.OCR.empty_results()
-                self.narrator.say("Clearing screen.")
+                #self.narrator.say("Clearing screen.")
                 self.clear_screen()
                 pygame.display.update()
                 # Delete all images 
@@ -121,6 +121,7 @@ class App:
             # if only one detection, read it out loud
             if len(self.OCR.get_detections) == 1:
                 self.read_out_loud()
+                self.quit()
 
     def read_out_loud(self, slow=False):
         """
