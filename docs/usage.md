@@ -44,6 +44,7 @@ Once all keys have been set, you can run the app in the background and start usi
 - More realistic TTS voices
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
+- [ ] Narrator does not shut up when pressing esc
 - [ ] Better looking reading screen
 - [ ] Improve coloring and sizing
 - [ ] Zooming feature: e.g zoom into the detection while it's being read
