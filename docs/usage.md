@@ -37,6 +37,7 @@ Remember that the game you want to play must be set to **borderless**. Otherwise
 > [!WARNING]
 > - In cases when GPU is not available, inference times are really slow.
 > - App sometimes crashes when display is loaded and clicking on the edges of the screen.
+> - TTS does not shut up after pressing `esc` while reading a long phrase
   
 ## Future work
 Future tasks are defined [here](https://github.com/arcb01/gaming-narrator/blob/main/docs/todos.md)
