@@ -48,12 +48,14 @@ Remember that the game you want to play must be set to **borderless**. Otherwise
   - [ ] Hugging Face TTS model
 - [ ] Narrator does not shut up when pressing esc
 - [ ] `__main__.py`?
+- App functioning logic:
+  - App has 2 main modes: 1. When mouse not available, 2. When mouse available
+  - [ ] Better looking reading screen ([translucenty](https://stackoverflow.com/questions/75029828/transparent-window-losing-focus-makes-keyboard-events-not-working))
+  - [ ] Improve coloring and sizing
+  - [ ] Hovering over detection when mouse available
 - [ ] Logging
 - [ ] Zooming feature: e.g zoom into the detection while it's being read
 - [ ] Mouse key bindings
-- Asthetics
-  - [ ] Better looking reading screen (Translucenty)
-  - [ ] Improve coloring and sizing
 - Testing (github actions)
   - [ ] Improve linting score
   - [ ] Add more tests
