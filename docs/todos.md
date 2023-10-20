@@ -6,7 +6,6 @@
 - Improve TTS
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
-- [ ] Narrator does not shut up when pressing esc
 - [ ] `__main__.py`?
 - App functioning logic:
   (Refer to Notion project page)
