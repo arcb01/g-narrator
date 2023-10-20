@@ -40,6 +40,6 @@ Remember that the game you want to play must be set to **borderless**. Otherwise
 > - TTS does not shut up after pressing `esc` while reading a long phrase
   
 ## Future work
-Future tasks are defined [here](https://github.com/arcb01/gaming-narrator/blob/main/docs/todos.md)
+TODOs are defined [here](https://github.com/arcb01/gaming-narrator/blob/main/docs/todos.md)
 
 
