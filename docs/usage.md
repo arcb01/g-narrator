@@ -39,6 +39,6 @@ Remember that the game you want to play must be set to **borderless**. Otherwise
 > - App sometimes crashes when display is loaded and clicking on the edges of the screen.
   
 ## Future work
-Future tasks are defined [here](https://raw.githubusercontent.com/arcb01/gaming-narrator/main/docs/todos.md)
+Future tasks are defined [here](https://github.com/arcb01/gaming-narrator/blob/main/docs/todos.md)
 
 
