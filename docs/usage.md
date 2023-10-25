@@ -25,7 +25,7 @@ Keys descriptions:
  
  `"QUIT":` Exit key. It will clear the screen aswell
 
-> [!NOTE]
+> [!IMPORTANT]
 > Key binding names must be in the same language as your OS.
 
 Once all keys have been set, you can run the app in the background and start using it.
