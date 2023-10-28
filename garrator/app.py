@@ -46,11 +46,27 @@ class App(QMainWindow):
         # Override the close event to prevent the window from closing
         event.ignore()
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            sys.exit()
+        elif event.key() == Qt.Key_A:
+            print("Key A pressed")
+
+    def keyReleaseEvent(self, event):
+        if event.key() == Qt.Key_A:
+            print("Key A released")
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     mywindow = App()
     mywindow.show()
-    
+    mywindow.draw_button_on_coords((100, 100))
+    app.exec_()
+
+    # TODO:
+    # lancuh app with button see if it freezes the under screen and mouse appears and moves.
+    # maybe test controlling the key input with pygame?
+
     # if read_screen button is pressed (ALL SCREEN)
         # Take screen shot
         # Get bounding boxes
@@ -59,10 +75,6 @@ if __name__ == '__main__':
         # draw button on bounding boxes coords
         # when button clicked read out loud text content
     # else (REGIONAL)
-    # lancuh app with button see if it freezes the under screen and mouse appears and moves.
-    
 
-    mywindow.draw_button_on_coords((100, 100))
-    
-    app.exec_()
+
 
