@@ -71,6 +71,7 @@ class ReadingEngine:
         :param voice_speed: speed of the TTS voice
         """
 
+        # FIXME: Maybe this could be changed when new TTS engine is added
         # Language settings for OCR and TTS
         if lang == "en":
             voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
@@ -87,13 +88,8 @@ class ReadingEngine:
         # Detection boxes color
         self.color = 'rgba(0, 255, 0, 192)'
 
-        # Launch reading engine
-        # FIXME: async loading screen
-        self.run()
+        # TODO: async loading screen
 
-        # Launch window 
-        self.window.show()
-        self.app.exec_()
 
     def get_detection_coords(self, detection : list):
         """
@@ -136,11 +132,6 @@ class ReadingEngine:
             # Associate button with bbox text
             button.clicked.connect(lambda _, text=det_text_content: self.read_content(text))
 
-# NOTE: Testing
-if __name__ == '__main__':
-    lang = "es"
-    voice_speed = 120
-
-    r = ReadingEngine(lang="es", voice_speed=voice_speed)
-    r.run()
-
+        # Launch window 
+        self.window.show()
+        self.app.exec_()

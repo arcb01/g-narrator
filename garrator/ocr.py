@@ -32,9 +32,6 @@ class OCR:
         self.gpu = gpu
         self.imgs = []
         self.detections = []
-        self.imgs_path = Path("./garrator/.tmp_imgs/")
-        self.images_dir()
-        self.file_nom = "OCR_pic_"
         
         self.start()
         

@@ -12,9 +12,9 @@ from garrator.TTS import Narrator
 from garrator.utils.utils import (
                         get_disp_size, app_print, 
                         get_mouse_pos)
-from garrator.window import Window, read_screen
+from garrator.window import Window, ReadingEngine
 
-class App:
+class App():
     """
     Class that runs the entire application
 
@@ -40,13 +40,10 @@ class App:
         set_keys(): Sets key bindings
     """
 
-    def __init__(self, narrator: object, OCR: object):
+    def __init__(self, lang, voice_speed):
         self.app_name = "Garrator"
         self.path = Path("./garrator/")
         self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
-        self.rect_width = 4
-        self.narrator = narrator
-        self.OCR = OCR
         self.clock = pygame.time.Clock()
         self.switch_detection = False
         self.engaging = False
@@ -56,6 +53,8 @@ class App:
         self.start_x, self.start_y = 0, 0
         self.set_keys()
         pygame.init()
+
+        self.reading_engine = ReadingEngine(lang, voice_speed)
 
     def set_keys(self):
         """
@@ -169,9 +168,7 @@ class App:
             self.read_screen(region=region)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
-            #self.read_screen()
-            read_screen()
-            
+            self.reading_engine.run()
 
         if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
             # FIXME: Refactor to circular doubly linked list
@@ -268,27 +265,18 @@ class App:
 
         self.OCR.delete_imgs() # Clear folder
 
-def settings(lang : str, gpu : bool, voice_speed : int):
-
-    en_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
-    es_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ES-ES_HELENA_11.0"
-
-    if lang == "en":
-        voice = en_voice
-    elif lang == "es":
-        voice = es_voice
-
-    tts = Narrator(voice=voice, voice_speed=voice_speed)
-    ocr = OCR(lang=lang, gpu=gpu)
-
-    return tts, ocr
-
 
 if __name__ == '__main__':
     LANGUAGE = "en"     # Language for TTS
-    GPU = True          # Use GPU for OCR
     VOICE_SPEED = 150   # Voice speed for TTS
 
-    tts, ocr = settings(LANGUAGE, GPU, VOICE_SPEED)
-    a = App(tts, ocr)
+    a = App(LANGUAGE, VOICE_SPEED)
     a.run()
+
+    # FIXME: Esc closes the app does not clear the screen
+    # TODO: Remove unnecessary functions **all over .py files**
+    # TODO: Remove unnecessary imports **all over .py files**
+    # TODO: Change this class name
+    # TODO: Update documentation for this class
+    # TODO: Adapt regional functionality to new code
+    # TODO: 1 class per file? File/class naming?
