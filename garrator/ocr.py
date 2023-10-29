@@ -37,14 +37,6 @@ class OCR:
         self.file_nom = "OCR_pic_"
         
         self.start()
-
-    def images_dir(self):
-        """
-        Makes sure that the imgs directory exists
-        """
-            
-        if not os.path.exists(self.imgs_path):
-            os.makedirs(self.imgs_path)
         
     def take_screenshot(self, region=None):
         """
@@ -60,16 +52,7 @@ class OCR:
         else:
             myScreenshot = pyautogui.screenshot()
 
-        h = str(random.getrandbits(128))
-        filename = self.file_nom + h + ".png"
-        myScreenshot.save(self.imgs_path / filename)
-        self.imgs.append(filename)
-    
-    def send_screen(self, screen):
-        """
-        Receives the screen from the main app
-        """
-        self.app_screen = screen
+        self.imgs.append(np.array(myScreenshot))
 
     def start(self):
         """
@@ -83,16 +66,10 @@ class OCR:
         Start OCR engine and save results
         """
 
-        # Loading screen
-        loading_screen(self.app_screen)
         # Get last img
-        #self.last_img = self.imgs.pop()
         img = self.imgs[-1]
-        # Read img
-        imgf = cv2.imread((self.imgs_path / img).__str__())
-        self.detections = self.reader.readtext(imgf, paragraph=True)
-        # Clear loading screen
-        clear_screen(self.app_screen)
+        # Fill all detections info
+        self.detections = self.reader.readtext(img, paragraph=True)
 
     def map_coordinates_to_screen(self, detection):
         """
@@ -145,14 +122,3 @@ class OCR:
         """
 
         self.detections = []
-    
-    def delete_imgs(self):
-        """
-        Deletes all screenshots taken
-        """
-
-        # empty self.imgs_path directory 
-
-        for item in self.imgs_path.iterdir():
-            if item.is_file():
-                item.unlink()  # Remove file 

@@ -131,13 +131,13 @@ class App:
         """
         
         # FIXME: Fix this
-        assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."
-        text = self.OCR.get_detections[self.det_idx][1]
+        if self.OCR.get_detections > 0:
+            text = self.OCR.get_detections[self.det_idx][1]
 
-        if not slow:
-            self.narrator.say(text)
-        else:
-            self.narrator.slower_saying(text)
+            if not slow:
+                self.narrator.say(text)
+            else:
+                self.narrator.slower_saying(text)
 
     def check_events(self):
         """
