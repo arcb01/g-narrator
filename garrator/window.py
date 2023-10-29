@@ -9,6 +9,11 @@ from garrator.ocr import OCR
 from garrator.TTS import Narrator
 
 class Window(QMainWindow):
+    """
+    This class creates a semi-transparent overlay for displaying the OCR detections
+    as clickable buttons.
+    """
+
     def __init__(self):
         QMainWindow.__init__(self)
         self.setWindowFlags(
@@ -35,11 +40,16 @@ class Window(QMainWindow):
         self.overlay.show()
 
     def create_button(self, coords : list, color: str):
+        """
+        Draws a button on the screen with the given coordinates and color
+        :param coords: coordinates of the button (x, y, w, h)
+        :param color: color of the button
+        """
+
         # Create button
         button = QPushButton("", self)
         # Styling
         button.setGeometry(coords[0], coords[1], coords[2], coords[3])  # Set the position and size of the button
-        transparency = 192
         button.setStyleSheet(f"background-color: {color};")
         button.show() 
 
@@ -53,6 +63,13 @@ class Window(QMainWindow):
 class ReadingEngine:
 
     def __init__(self, lang, voice_speed):
+        """
+        This class runs the OCR and TTS engines into the Window class to be able to 
+        read the screen content.
+
+        :param lang: language for OCR and TTS
+        :param voice_speed: speed of the TTS voice
+        """
 
         # Language settings for OCR and TTS
         if lang == "en":
@@ -60,29 +77,31 @@ class ReadingEngine:
         elif lang == "es":
             voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ES-ES_HELENA_11.0"
 
+        # OCR and TTS engines
         self.OCR = OCR(lang=lang, gpu=True)
         self.TTS = Narrator(voice=voice, voice_speed=voice_speed)
 
         # Window
         self.app = QApplication(sys.argv)
         self.window = Window()
-        self.window.show()
-        
-        # Read screen conrent
+        # Detection boxes color
+        self.color = 'rgba(0, 255, 0, 192)'
+
+        # Launch reading engine
         # FIXME: async loading screen
         self.run()
 
         # Launch window 
+        self.window.show()
         self.app.exec_()
 
     def get_detection_coords(self, detection : list):
         """
-        For a given detection, draw a bounding box around the text
+        For a given detection, returns the coordinates of the bounding box
         :param detection: a list containing the bounding box vertices, text, and confidence
         """
     
         bbox = detection[0]
-        self.output_text = detection[1]
         top = bbox[0][0]
         left = bbox[0][1]
         width = bbox[1][0] - bbox[0][0]
@@ -91,22 +110,29 @@ class ReadingEngine:
         return top, left, width, height
     
     def read_content(self, content : str):
+        """
+        Call the TTS engine to read the content out loud
+        :param content: text to be read
+        """
+
         self.TTS.say(content)
 
     def run(self):
+        """
+        Main function
+        """
+
         # Take screen shot
         self.OCR.take_screenshot()
         # Read screen
         self.OCR.read()
-        # Detection color
-        color = 'rgba(0, 255, 0, 192)'
         # Get screenshot results (bounding boxes)
         # Create a button for each bounding box
         for det in self.OCR.get_detections:
             det_text_content = det[1]
             det_coords = self.get_detection_coords(det) # x, y, w, h
             # draw button on bounding boxes coords
-            button = self.window.create_button(coords=det_coords, color=color)
+            button = self.window.create_button(coords=det_coords, color=self.color)
             # Associate button with bbox text
             button.clicked.connect(lambda _, text=det_text_content: self.read_content(text))
 
