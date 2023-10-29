@@ -14,28 +14,24 @@ from garrator.utils.utils import (
                         get_mouse_pos)
 from garrator.window import Window, ReadingEngine
 
-class App():
+class App:
     """
     Class that runs the entire application
 
     `Attributes:`
-        rect_width: width of the bounding box
-        narrator: An object of the Narrator class that is used to read the text
-        OCR: An object of the OCR class that is used to detect text
         clock: Pygame clock object
         switch_detection: Boolean that enables swtiching between detections
         det_idx: Index of the current detection
         highlighted_color: Color that highlights the current bounding box
         dimmed_color: Color of the unselected bounding boxes
+        start_x: Starting x coordinate of the region to be read
+        start_y: Starting y coordinate of the region to be read
+        n_pressed: Boolean that checks if the n key is pressed
 
     `Methods:`
         check_events(): Checks for keyboard events
-        load_display(): Loads the display window
-        draw_detection(detection): For a given detection, draw a bounding box around the text
         quit(): Clears the screen and deletes all screenshots taken
         end_of_list(): Checks if the current detection is the last one
-        read_screen(): Main reading function. 
-        read_out_loud(slow: bool): TTS
         run(): Main loop of the application
         set_keys(): Sets key bindings
     """
@@ -92,22 +88,23 @@ class App():
         Main function that reads the screen content using OCR.
         """
 
-        self.det_idx = 0
-        self.engaging = True
+        #self.det_idx = 0
+        #self.engaging = True
         # Load pygame window 
-        self.load_display()
+        #self.load_display()
         # OCR 
-        self.OCR.send_screen(self.screen) # Used for adding a loading screen.
+        #self.OCR.send_screen(self.screen) # Used for adding a loading screen.
 
         if region:
             # Take a local screenshot
-            self.OCR.take_screenshot(region)
+            self.reading_engine.OCR.take_screenshot(region)
+            #self.OCR.take_screenshot(region)
         else:
             # Take a screenshot
-            self.OCR.take_screenshot()
+            self.reading_engine.OCR.take_screenshot()
 
         # Read screen
-        self.OCR.read()
+        self.reading_engine.OCR.read()
             
         if len(self.OCR.get_detections) > 0:
             # For every detection found, draw a colored bounding box around it.
@@ -165,10 +162,11 @@ class App():
                 abs(self.end_y - self.start_y)
             )
 
-            self.read_screen(region=region)
+            # Launch reading engine
+            self.reading_engine.read_screen(screen_region=region)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
-            self.reading_engine.run()
+            self.reading_engine.read_screen()
 
         if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
             # FIXME: Refactor to circular doubly linked list
@@ -278,5 +276,6 @@ if __name__ == '__main__':
     # TODO: Remove unnecessary imports **all over .py files**
     # TODO: Change this class name
     # TODO: Update documentation for this class
-    # TODO: Adapt regional functionality to new code
+    # FIXME: Region working, buttons not showing
     # TODO: 1 class per file? File/class naming?
+    # FIXME: esc does not work in region mode: will only work when focus?

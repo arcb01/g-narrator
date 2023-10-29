@@ -2,6 +2,7 @@ import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QRect
 from PyQt5.QtGui import QCursor
 import pyautogui
 
@@ -38,6 +39,9 @@ class Window(QMainWindow):
         overlay_palette.setColor(QtGui.QPalette.Background, QtGui.QColor(0, 0, 0, 128))
         self.overlay.setPalette(overlay_palette)
         self.overlay.show()
+
+    def set_to_regional(self, screen_region=None):
+        self.setGeometry(*screen_region)
 
     def create_button(self, coords : list, color: str):
         """
@@ -105,7 +109,7 @@ class ReadingEngine:
 
         return top, left, width, height
     
-    def read_content(self, content : str):
+    def say_content(self, content : str):
         """
         Call the TTS engine to read the content out loud
         :param content: text to be read
@@ -113,25 +117,35 @@ class ReadingEngine:
 
         self.TTS.say(content)
 
-    def run(self):
+    def read_screen(self, screen_region=None):
         """
         Main function
         """
 
-        # Take screen shot
-        self.OCR.take_screenshot()
-        # Read screen
+        if screen_region:
+            # Take regional screen shot
+            self.OCR.take_screenshot(screen_region=screen_region)
+        else:
+            # Take full screen shot
+            self.OCR.take_screenshot()
+
+        # Read textual elements
         self.OCR.read()
         # Get screenshot results (bounding boxes)
         # Create a button for each bounding box
-        for det in self.OCR.get_detections:
-            det_text_content = det[1]
-            det_coords = self.get_detection_coords(det) # x, y, w, h
-            # draw button on bounding boxes coords
-            button = self.window.create_button(coords=det_coords, color=self.color)
-            # Associate button with bbox text
-            button.clicked.connect(lambda _, text=det_text_content: self.read_content(text))
+        if len(self.OCR.get_detections) > 0:
+            for det in self.OCR.get_detections:
+                if screen_region: # If a local screenshot was taken, map the local coordinates to the screen
+                    det = self.OCR.map_coordinates_to_screen(det)
+                det_text_content = det[1]
+                det_coords = self.get_detection_coords(det) # x, y, w, h
+                # draw button on bounding boxes coords
+                button = self.window.create_button(coords=det_coords, color=self.color)
+                # Associate button with bbox text
+                button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
 
-        # Launch window 
-        self.window.show()
-        self.app.exec_()
+            # Launch window 
+            if screen_region:
+                self.window.set_to_regional(screen_region=screen_region)
+            self.window.show()
+            self.app.exec_()

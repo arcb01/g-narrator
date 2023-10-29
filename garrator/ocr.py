@@ -35,17 +35,17 @@ class OCR:
         
         self.start()
         
-    def take_screenshot(self, region=None):
+    def take_screenshot(self, screen_region=None):
         """
         Function that takes a screenshot and save it in imgs_dir
-        :param region: (x,y,w,h) coordinates of the region to be captured
+        :param screen_region: (x,y,w,h) coordinates of the region to be captured
                         if None, the whole screen will be captured
         """
 
-        if region is not None:
-            myScreenshot = pyautogui.screenshot(region=region)
+        if screen_region is not None:
+            myScreenshot = pyautogui.screenshot(region=screen_region)
             # Save region data
-            self.region = region
+            self.region = screen_region
         else:
             myScreenshot = pyautogui.screenshot()
 
