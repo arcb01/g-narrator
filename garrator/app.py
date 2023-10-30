@@ -15,164 +15,6 @@ from garrator.TTS import Narrator
 from garrator.utils.utils import (
                         get_disp_size, app_print, 
                         get_mouse_pos, create_arb_reg)
-from garrator.window import Window, ReadingEngine
-
-
-class App:
-    """
-    Class that runs the entire application
-
-    # TODO: Update doc
-
-    `Attributes:`
-        clock: Pygame clock object
-        switch_detection: Boolean that enables swtiching between detections
-        det_idx: Index of the current detection
-        highlighted_color: Color that highlights the current bounding box
-        dimmed_color: Color of the unselected bounding boxes
-        start_x: Starting x coordinate of the region to be read
-        start_y: Starting y coordinate of the region to be read
-        n_pressed: Boolean that checks if the n key is pressed
-
-    `Methods:`
-        check_events(): Checks for keyboard events
-        quit(): Clears the screen and deletes all screenshots taken
-        end_of_list(): Checks if the current detection is the last one
-        run(): Main loop of the application
-        set_keys(): Sets key bindings
-    """
-
-    def __init__(self, lang, voice_speed):
-        self.app_name = "Garrator"
-        self.path = Path("./garrator/")
-        self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
-        self.clock = pygame.time.Clock()
-        self.switch_detection = False
-        self.engaging = False
-        self.dimmed_color = (102, 153, 0)
-        self.highlighted_color = (170, 255, 0)
-        self.n_pressed = False
-        self.start_x, self.start_y = 0, 0
-        self.set_keys()
-        pygame.init()
-
-        self.reading_engine = ReadingEngine(lang, voice_speed)
-
-    def set_keys(self):
-        """
-        Set key bindings
-        """
-
-        # Read json file containing key bindings
-        with open(self.path / "config" / "keys.json") as json_file:
-            k = json.load(json_file)
-            self.CAPTURE = k["CAPTURE"]
-            self.SWITCH_DET_FORWARD = k["SWITCH_FORWARD"]
-            self.SWITCH_DET_BACKWARD = k["SWITCH_BACKWARD"]
-            self.REPEAT_KEY = k["REPEAT"]
-            self.READ_NEAREST = k["READ_NEAREST"]
-            self.READ_OUT_LOUD = k["READ_OUT_LOUD"]
-            self.QUIT_KEY = k["QUIT"]
-
-    def quit(self):
-        self.reading_engine.window.clear_screen()
-        # TODO: quit program entire app?
-
-    # FIXME: This will be removed
-    def end_of_list(self):
-        return True if self.det_idx == len(self.OCR.get_detections) - 1 else False
-
-    def check_events(self):
-        """
-        Captures any keyboard events
-        """
-
-        event = keyboard.read_event()
-
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.QUIT_KEY:
-            self.quit()
-
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST and not self.n_pressed:
-            self.start_x, self.start_y = get_mouse_pos()
-            self.n_pressed = True
-
-        if event.event_type == keyboard.KEY_UP and event.name == self.READ_NEAREST:
-            self.end_x, self.end_y = get_mouse_pos()
-            #print("n released")
-            self.n_pressed = False
-
-            region = (
-                min(self.start_x, self.end_x),
-                min(self.start_y, self.end_y),
-                abs(self.end_x - self.start_x),
-                abs(self.end_y - self.start_y)
-            )
-
-            assert region[2] > 15 and region[3] > 15, "Region to scan is too small. Please select a bigger region."
-            # if region is too small, create arb rectangled region
-            # FIXME:
-            #rect_cent_p = (region[0], region[1])
-            #rect_w, rect_h = region[2], region[3]
-            #if rect_w < 20 or rect_h < 20:
-                #print(region)
-                #region = create_arb_reg(cp=(region[0], region[1]), w=25)
-                #print(region)
-                #print(type(region[0]))
-            # Launch reading engine
-            self.reading_engine.read_screen(screen_region=region)
-
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
-            self.reading_engine.read_screen()
-
-        # FIXME: Refactor to circular doubly linked list
-        if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
-            
-            assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."
-
-            if not self.end_of_list():
-                if event.name == self.SWITCH_DET_BACKWARD:
-                    if self.det_idx == 0: # The first bbox
-                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                        self.det_idx = len(self.OCR.get_detections) - 1
-                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
-                    elif self.det_idx > 0: # Not the first bbox
-                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                        self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
-                        self.det_idx  -= 1
-                elif event.name == self.SWITCH_DET_FORWARD:
-                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                    self.draw_detection(self.OCR.get_detections[self.det_idx + 1], color=self.highlighted_color)
-                    self.det_idx  += 1
-            else:
-                if event.name == self.SWITCH_DET_FORWARD:
-                    # Loop back to start
-                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                    self.det_idx = 0
-                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
-                else:
-                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                    self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
-                    self.det_idx  -= 1
-
-        # FIXME: This needs to be updated
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
-            if len(self.OCR.get_detections) > 0:
-                self.read_out_loud()
-
-        # FIXME: This needs to be updated
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.REPEAT_KEY:
-            self.read_out_loud(slow=True)
-
-    def run(self):
-        """
-        Main loop of the application
-        """
-        
-        app_print()
-
-        while True:
-            self.check_events()
-            self.clock.tick(60)
 
 
 class Window(QMainWindow):
@@ -342,3 +184,159 @@ class ReadingEngine:
             self.window.show()
             self.app.exec_()
 
+
+class App:
+    """
+    Class that runs the entire application
+
+    # TODO: Update doc
+
+    `Attributes:`
+        clock: Pygame clock object
+        switch_detection: Boolean that enables swtiching between detections
+        det_idx: Index of the current detection
+        highlighted_color: Color that highlights the current bounding box
+        dimmed_color: Color of the unselected bounding boxes
+        start_x: Starting x coordinate of the region to be read
+        start_y: Starting y coordinate of the region to be read
+        n_pressed: Boolean that checks if the n key is pressed
+
+    `Methods:`
+        check_events(): Checks for keyboard events
+        quit(): Clears the screen and deletes all screenshots taken
+        end_of_list(): Checks if the current detection is the last one
+        run(): Main loop of the application
+        set_keys(): Sets key bindings
+    """
+
+    def __init__(self, lang, voice_speed):
+        self.app_name = "Garrator"
+        self.path = Path("./garrator/")
+        self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
+        self.clock = pygame.time.Clock()
+        self.switch_detection = False
+        self.engaging = False
+        self.dimmed_color = (102, 153, 0)
+        self.highlighted_color = (170, 255, 0)
+        self.n_pressed = False
+        self.start_x, self.start_y = 0, 0
+        self.set_keys()
+        pygame.init()
+
+        self.reading_engine = ReadingEngine(lang, voice_speed)
+
+    def set_keys(self):
+        """
+        Set key bindings
+        """
+
+        # Read json file containing key bindings
+        with open(self.path / "config" / "keys.json") as json_file:
+            k = json.load(json_file)
+            self.CAPTURE = k["CAPTURE"]
+            self.SWITCH_DET_FORWARD = k["SWITCH_FORWARD"]
+            self.SWITCH_DET_BACKWARD = k["SWITCH_BACKWARD"]
+            self.REPEAT_KEY = k["REPEAT"]
+            self.READ_NEAREST = k["READ_NEAREST"]
+            self.READ_OUT_LOUD = k["READ_OUT_LOUD"]
+            self.QUIT_KEY = k["QUIT"]
+
+    def quit(self):
+        self.reading_engine.window.clear_screen()
+        # TODO: quit program entire app?
+
+    # FIXME: This will be removed
+    def end_of_list(self):
+        return True if self.det_idx == len(self.OCR.get_detections) - 1 else False
+
+    def check_events(self):
+        """
+        Captures any keyboard events
+        """
+
+        event = keyboard.read_event()
+
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.QUIT_KEY:
+            self.quit()
+
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST and not self.n_pressed:
+            self.start_x, self.start_y = get_mouse_pos()
+            self.n_pressed = True
+
+        if event.event_type == keyboard.KEY_UP and event.name == self.READ_NEAREST:
+            self.end_x, self.end_y = get_mouse_pos()
+            #print("n released")
+            self.n_pressed = False
+
+            region = (
+                min(self.start_x, self.end_x),
+                min(self.start_y, self.end_y),
+                abs(self.end_x - self.start_x),
+                abs(self.end_y - self.start_y)
+            )
+
+            assert region[2] > 15 and region[3] > 15, "Region to scan is too small. Please select a bigger region."
+            # if region is too small, create arb rectangled region
+            # FIXME:
+            #rect_cent_p = (region[0], region[1])
+            #rect_w, rect_h = region[2], region[3]
+            #if rect_w < 20 or rect_h < 20:
+                #print(region)
+                #region = create_arb_reg(cp=(region[0], region[1]), w=25)
+                #print(region)
+                #print(type(region[0]))
+            # Launch reading engine
+            self.reading_engine.read_screen(screen_region=region)
+
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
+            self.reading_engine.read_screen()
+
+        # FIXME: Refactor to circular doubly linked list
+        if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
+            
+            assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."
+
+            if not self.end_of_list():
+                if event.name == self.SWITCH_DET_BACKWARD:
+                    if self.det_idx == 0: # The first bbox
+                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
+                        self.det_idx = len(self.OCR.get_detections) - 1
+                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
+                    elif self.det_idx > 0: # Not the first bbox
+                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
+                        self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
+                        self.det_idx  -= 1
+                elif event.name == self.SWITCH_DET_FORWARD:
+                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
+                    self.draw_detection(self.OCR.get_detections[self.det_idx + 1], color=self.highlighted_color)
+                    self.det_idx  += 1
+            else:
+                if event.name == self.SWITCH_DET_FORWARD:
+                    # Loop back to start
+                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
+                    self.det_idx = 0
+                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
+                else:
+                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
+                    self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
+                    self.det_idx  -= 1
+
+        # FIXME: This needs to be updated
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
+            if len(self.OCR.get_detections) > 0:
+                self.read_out_loud()
+
+        # FIXME: This needs to be updated
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.REPEAT_KEY:
+            self.read_out_loud(slow=True)
+
+    def run(self):
+        """
+        Main loop of the application
+        """
+        
+        app_print()
+
+        while True:
+            self.check_events()
+            self.clock.tick(60)

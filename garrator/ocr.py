@@ -27,6 +27,7 @@ class OCR:
         self.gpu = gpu
         self.imgs = []
         self.detections = []
+        self.region = None
         
         self.start()
         

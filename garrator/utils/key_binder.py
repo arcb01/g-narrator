@@ -1,6 +1,6 @@
 import keyboard
 import sys
-import pprint, json
+import json
 
 def key_binder():
     
@@ -35,7 +35,7 @@ def key_binder():
                 sys.exit()
 
     # Save keys to json file
-    with open("./config/keys.json", "w") as f:
+    with open("./config/keys.json", "w", encoding="utf-8") as f:
         json.dump(keys_db, f, indent=4)
 
     print("\n\t === Key binding finished succesfully ===\n")
