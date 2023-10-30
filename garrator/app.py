@@ -75,8 +75,8 @@ class App:
             self.QUIT_KEY = k["QUIT"]
 
     def quit(self):
-        # TODO: Add a confirmation message
-        pass
+        self.reading_engine.window.clear_screen()
+        # TODO: quit program entire app?
 
     # FIXME: This will be removed
     def end_of_list(self):
@@ -241,6 +241,13 @@ class Window(QMainWindow):
         if event.key() == Qt.Key_Escape:
             self.close()
 
+    def clear_screen(self):
+        """
+        Clears the screen
+        """
+
+        self.close()
+
 
 class ReadingEngine:
 
@@ -329,7 +336,6 @@ class ReadingEngine:
                 button = self.window.create_button(coords=det_coords, bbox_color=self.bbox_color, hover_color=self.hover_color)
                 # Associate button with bbox text
                 button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
-
             # Launch window 
             if screen_region:
                 self.window.set_to_regional(screen_region=screen_region)
