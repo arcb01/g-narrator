@@ -7,6 +7,8 @@ if __name__ == '__main__':
     a = App(LANGUAGE, VOICE_SPEED)
     a.run()
 
+    # NOTE: Merge new changes? Which bugs/fixes to do first?
+    
     # BUG: In region mode, define a minimum region if not enough pixels are selected
     # BUG: Some issue with window focus
     # BUG: Sometimes can ocurr that the language from the keybaord changes and therefore keyboard input stops working
