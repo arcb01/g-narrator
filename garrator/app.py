@@ -14,7 +14,7 @@ from garrator.ocr import OCR
 from garrator.TTS import Narrator
 from garrator.utils.utils import (
                         get_disp_size, app_print, 
-                        get_mouse_pos)
+                        get_mouse_pos, create_arb_reg)
 from garrator.window import Window, ReadingEngine
 
 
@@ -108,6 +108,16 @@ class App:
                 abs(self.end_y - self.start_y)
             )
 
+            assert region[2] > 15 and region[3] > 15, "Region to scan is too small. Please select a bigger region."
+            # if region is too small, create arb rectangled region
+            # FIXME:
+            #rect_cent_p = (region[0], region[1])
+            #rect_w, rect_h = region[2], region[3]
+            #if rect_w < 20 or rect_h < 20:
+                #print(region)
+                #region = create_arb_reg(cp=(region[0], region[1]), w=25)
+                #print(region)
+                #print(type(region[0]))
             # Launch reading engine
             self.reading_engine.read_screen(screen_region=region)
 

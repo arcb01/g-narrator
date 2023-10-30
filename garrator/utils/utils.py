@@ -80,4 +80,15 @@ def app_print():
     print(formatted_message)
     print(decorative_line)
 
+def create_arb_reg(cp : tuple, w : int):
+    """
+    Creates a rectangle region of arbitrary width
+    :param cp: Center point
+    :param w: Width
+    :returns Region of interest
+    """
 
+    top_left = (cp[0] - np.sqrt(w**2 + w**2), cp[1] - np.sqrt(w**2 + w**2))
+    region = (top_left[0], top_left[1], w, w)
+
+    return tuple(np.array(region).astype(int))
