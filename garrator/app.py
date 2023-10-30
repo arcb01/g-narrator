@@ -1,11 +1,14 @@
 from os import environ
 import keyboard
-import win32gui, json
-import win32api, win32con, win32gui
+import json
 from pathlib import Path
 # Remove pygame welcome message
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
+import sys
+from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton
+from PyQt5.QtCore import Qt
 
 from garrator.ocr import OCR
 from garrator.TTS import Narrator
@@ -14,9 +17,12 @@ from garrator.utils.utils import (
                         get_mouse_pos)
 from garrator.window import Window, ReadingEngine
 
+
 class App:
     """
     Class that runs the entire application
+
+    # TODO: Update doc
 
     `Attributes:`
         clock: Pygame clock object
@@ -69,71 +75,12 @@ class App:
             self.QUIT_KEY = k["QUIT"]
 
     def quit(self):
-        try:
-            if len(self.OCR.get_detections) > 0:
-                self.OCR.empty_results()
-                #self.narrator.say("Clearing screen.")
-                self.clear_screen()
-                pygame.display.update()
-                # Delete all images 
-                self.OCR.delete_imgs()
-        except:
-            pass
+        # TODO: Add a confirmation message
+        pass
 
+    # FIXME: This will be removed
     def end_of_list(self):
         return True if self.det_idx == len(self.OCR.get_detections) - 1 else False
-
-    def read_screen(self, region=None):
-        """
-        Main function that reads the screen content using OCR.
-        """
-
-        #self.det_idx = 0
-        #self.engaging = True
-        # Load pygame window 
-        #self.load_display()
-        # OCR 
-        #self.OCR.send_screen(self.screen) # Used for adding a loading screen.
-
-        if region:
-            # Take a local screenshot
-            self.reading_engine.OCR.take_screenshot(region)
-            #self.OCR.take_screenshot(region)
-        else:
-            # Take a screenshot
-            self.reading_engine.OCR.take_screenshot()
-
-        # Read screen
-        self.reading_engine.OCR.read()
-            
-        if len(self.OCR.get_detections) > 0:
-            # For every detection found, draw a colored bounding box around it.
-            for detection in self.OCR.get_detections:
-                if region: # If a local screenshot was taken, map the local coordinates to the screen
-                    detection = self.OCR.map_coordinates_to_screen(detection)
-                self.draw_detection(detection, color=self.dimmed_color)
-            # Highlight first detection
-            self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
-            # if only one detection, read it out loud
-            if len(self.OCR.get_detections) == 1:
-                self.read_out_loud()
-                self.quit()
-
-    def read_out_loud(self, slow=False):
-        """
-        Text to speech function that reads out loud the text inside the 
-        selected detection.
-        :param slow: If True, the text will be read out loud slowly.
-        """
-        
-        # FIXME: Fix this
-        if self.OCR.get_detections > 0:
-            text = self.OCR.get_detections[self.det_idx][1]
-
-            if not slow:
-                self.narrator.say(text)
-            else:
-                self.narrator.slower_saying(text)
 
     def check_events(self):
         """
@@ -147,7 +94,6 @@ class App:
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST and not self.n_pressed:
             self.start_x, self.start_y = get_mouse_pos()
-            #print("n pressed")
             self.n_pressed = True
 
         if event.event_type == keyboard.KEY_UP and event.name == self.READ_NEAREST:
@@ -168,9 +114,9 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
             self.reading_engine.read_screen()
 
+        # FIXME: Refactor to circular doubly linked list
         if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
-            # FIXME: Refactor to circular doubly linked list
-
+            
             assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."
 
             if not self.end_of_list():
@@ -198,57 +144,14 @@ class App:
                     self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
                     self.det_idx  -= 1
 
+        # FIXME: This needs to be updated
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
             if len(self.OCR.get_detections) > 0:
                 self.read_out_loud()
 
+        # FIXME: This needs to be updated
         if event.event_type == keyboard.KEY_DOWN and event.name == self.REPEAT_KEY:
             self.read_out_loud(slow=True)
-
-    def load_display(self):
-        """
-        Loads the display window
-        """
-
-        pygame.init()
-        w, h = get_disp_size()
-        self.screen = pygame.display.set_mode((w, h)) # For borderless, use pygame.NOFRAME
-        pygame.display.set_caption(self.app_name)
-        pygame.display.set_icon(self.app_logo)
-        fuchsia = (255, 0, 128)  # Transparency bbox_color
-        # Lock window on top
-        win32gui.SetWindowPos(pygame.display.get_wm_info()['window'], win32con.HWND_TOPMOST, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
-        # Create layered window
-        hwnd = pygame.display.get_wm_info()["window"]
-        win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE,
-                            win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_LAYERED)
-        # Set window transparency bbox_color
-        win32gui.SetLayeredWindowAttributes(hwnd, win32api.RGB(*fuchsia), 0, win32con.LWA_COLORKEY)
-
-        self.screen.fill(fuchsia)  # Transparent background
-        self.clear_screen = lambda : self.screen.fill(fuchsia)
-
-        pygame.display.update()
-
-
-    def draw_detection(self, detection : list, color : tuple = (170, 255, 0)):
-        """
-        For a given detection, draw a bounding box around the text
-        :param detection: a list containing the bounding box vertices, text, and confidence
-        :param color: the color of the bounding box
-        """
-    
-        #self.clear_screen()
-        bbox = detection[0]
-        self.output_text = detection[1]
-        top = bbox[0][0]
-        left = bbox[0][1]
-        width = bbox[1][0] - bbox[0][0]
-        height = bbox[2][1] - bbox[1][1]
-        pygame.draw.rect(self.screen, color,  pygame.Rect(top, left, 
-                                                            width, height), 
-                        self.rect_width)
-        pygame.display.update()
 
     def run(self):
         """
@@ -261,21 +164,165 @@ class App:
             self.check_events()
             self.clock.tick(60)
 
-        self.OCR.delete_imgs() # Clear folder
+
+class Window(QMainWindow):
+
+    """
+    This class creates a semi-transparent overlay for displaying the OCR detections
+    as clickable buttons.
+
+    `Attributes:`	
+        overlay: semi-transparent overlay for the whole screen
+    """
+
+    def __init__(self):
+        QMainWindow.__init__(self)
+        self.setWindowFlags(
+            Qt.WindowStaysOnTopHint |
+            Qt.FramelessWindowHint |
+            Qt.X11BypassWindowManagerHint #|
+            #Qt.WindowTransparentForInput  # Transparent
+        )
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)  # Set focus policy to accept keyboard focus
+
+        screen_geometry = QtWidgets.qApp.desktop().availableGeometry()
+        self.setGeometry(screen_geometry)
+
+        # Set window opacity (0.5 for example, change as needed)
+        self.setWindowOpacity(0.7)
+
+        # Create a semi-transparent overlay for the whole screen
+        self.overlay = QtWidgets.QWidget(self)
+        self.overlay.setGeometry(screen_geometry)
+        self.overlay.setAutoFillBackground(True)
+        overlay_palette = self.overlay.palette()
+        overlay_palette.setColor(QtGui.QPalette.Background, QtGui.QColor(0, 0, 0, 156))
+        self.overlay.setPalette(overlay_palette)
+        self.overlay.show()
+
+    def set_to_regional(self, screen_region=None):
+        """
+        Resize the window to the given region
+        :param screen_region: (x,y,w,h) coordinates of the region to be captured
+        """
+        
+        self.setGeometry(*screen_region)
+
+    def create_button(self, coords : list, bbox_color: str, hover_color: str):
+        """
+        Draws a button on the screen with the given coordinates and color
+        :param coords: coordinates of the button (x, y, w, h)
+        :param bbox_color: color of the button
+        """
+
+        # Create button
+        button = QPushButton("", self)
+        # Styling
+        button.setGeometry(coords[0], coords[1], coords[2], coords[3])  # Set the position and size of the button
+        button.setStyleSheet(f"background-color: {bbox_color};")
+        # BUG: This doesn't work
+        # button.setStyleSheet(f"QPushButton:hover {{ background-color: {hover_color}; }}")
+
+        button.show() 
+
+        return button
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
 
 
-if __name__ == '__main__':
-    LANGUAGE = "en"     # Language for TTS
-    VOICE_SPEED = 150   # Voice speed for TTS
+class ReadingEngine:
 
-    a = App(LANGUAGE, VOICE_SPEED)
-    a.run()
+    """
+    This class runs the OCR and TTS engines into the Window class to be able to 
+    read the screen content.
 
-    # FIXME: Esc closes the app does not clear the screen
-    # TODO: Remove unnecessary functions **all over .py files**
-    # TODO: Remove unnecessary imports **all over .py files**
-    # TODO: Change this class name
-    # TODO: Update documentation for this class
-    # FIXME: Region working, buttons not showing
-    # TODO: 1 class per file? File/class naming?
-    # FIXME: esc does not work in region mode: will only work when focus?
+    `Attributes:`
+        lang: language for OCR and TTS
+        voice_speed: speed of the TTS voice
+        OCR: OCR engine
+        TTS: TTS engine
+        app: Window app
+        color: color of the bounding boxes
+    """
+
+    def __init__(self, lang, voice_speed):
+
+        # FIXME: Maybe this could be changed when new TTS engine is added
+        # Language settings for OCR and TTS
+        if lang == "en":
+            voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
+        elif lang == "es":
+            voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ES-ES_HELENA_11.0"
+
+        # OCR and TTS engines
+        self.OCR = OCR(lang=lang, gpu=True)
+        self.TTS = Narrator(voice=voice, voice_speed=voice_speed)
+
+        # Window app
+        self.app = QApplication(sys.argv)
+        # Colors
+        self.bbox_color = 'rgba(124, 252, 0, 224)'
+        self.hover_color = None
+
+        # TODO: async loading screen
+
+    def get_detection_coords(self, detection : list):
+        """
+        For a given detection, returns the coordinates of the bounding box
+        :param detection: a list containing the bounding box vertices, text, and confidence
+        """
+    
+        bbox = detection[0]
+        top = bbox[0][0]
+        left = bbox[0][1]
+        width = bbox[1][0] - bbox[0][0]
+        height = bbox[2][1] - bbox[1][1]
+
+        return top, left, width, height
+    
+    def say_content(self, content : str):
+        """
+        Call the TTS engine to read the content out loud
+        :param content: text to be read
+        """
+
+        self.TTS.say(content)
+
+    def read_screen(self, screen_region=None):
+        """
+        Main function
+        """
+
+        # Create window
+        # NOTE: This needs to be here in order to make the screenshot loop process to work.
+        #       otherwise the program will only run once.
+        self.window = Window()
+
+        if screen_region:
+            # Take regional screen shot
+            self.OCR.take_screenshot(screen_region=screen_region)
+        else:
+            # Take full screen shot
+            self.OCR.take_screenshot()
+
+        # Read textual elements
+        self.OCR.read()
+        # Get screenshot results (bounding boxes)
+        # Create a button for each bounding box
+        if len(self.OCR.get_detections) > 0:
+            for det in self.OCR.get_detections:
+                det_text_content = det[1]
+                det_coords = self.get_detection_coords(det) # x, y, w, h
+                # draw button on bounding boxes coords
+                button = self.window.create_button(coords=det_coords, bbox_color=self.bbox_color, hover_color=self.hover_color)
+                # Associate button with bbox text
+                button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
+
+            # Launch window 
+            if screen_region:
+                self.window.set_to_regional(screen_region=screen_region)
+            self.window.show()
+            self.app.exec_()
+
