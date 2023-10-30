@@ -23,6 +23,6 @@
   - [ ] Add workflow for installation script
 - [ ] Windows installer version (.msi)
 - [ ] Docker image
-  - [ ] Key binder
+- [ ] Key binder
 - [ ] AI features
 - [ ] Add new demo video
