@@ -1,12 +1,9 @@
 import pyautogui
-import random
-import cv2
 import numpy as np
 from deprecated import deprecated
 import easyocr
-import os
-from pathlib import Path
-from garrator.utils.utils import loading_screen, clear_screen, closest_nodes
+
+from garrator.utils.utils import closest_nodes
 
 class OCR:
     """
@@ -16,15 +13,13 @@ class OCR:
         lang: language in which the OCR will be performed
         gpu: use GPU or not (recommended to use GPU)
         imgs: List containing the filenames of the screenshots
-        result: List of tuples (bbox, text, prob)
-        imgs_dir: Directory where screenshots will be stored
-        file_nom: Nomenclature of the screenshots
+        detections: List of tuples (bbox, text, prob)
 
     `Methods:`
-        images_dir(): Makes sure that the imgs directory exists
         take_screenshot(): Take a screenshot and save it in imgs_dir
-        start(): Start OCR detection and save results
-        delete_imgs(): Deletes all screenshots when the program finishes running
+        start(): Loads the OCR engine into memory
+        read(): Start OCR engine and save results
+        get_detections(): Returns the list of all detections
     """
 
     def __init__(self, lang="en", gpu=True):
@@ -32,44 +27,25 @@ class OCR:
         self.gpu = gpu
         self.imgs = []
         self.detections = []
-        self.imgs_path = Path("./garrator/.tmp_imgs/")
-        self.images_dir()
-        self.file_nom = "OCR_pic_"
+        self.region = None
         
         self.start()
-
-    def images_dir(self):
-        """
-        Makes sure that the imgs directory exists
-        """
-            
-        if not os.path.exists(self.imgs_path):
-            os.makedirs(self.imgs_path)
         
-    def take_screenshot(self, region=None):
+    def take_screenshot(self, screen_region=None):
         """
         Function that takes a screenshot and save it in imgs_dir
-        :param region: (x,y,w,h) coordinates of the region to be captured
+        :param screen_region: (x,y,w,h) coordinates of the region to be captured
                         if None, the whole screen will be captured
         """
 
-        if region is not None:
-            myScreenshot = pyautogui.screenshot(region=region)
+        if screen_region is not None:
+            myScreenshot = pyautogui.screenshot(region=screen_region)
             # Save region data
-            self.region = region
+            self.region = screen_region
         else:
             myScreenshot = pyautogui.screenshot()
 
-        h = str(random.getrandbits(128))
-        filename = self.file_nom + h + ".png"
-        myScreenshot.save(self.imgs_path / filename)
-        self.imgs.append(filename)
-    
-    def send_screen(self, screen):
-        """
-        Receives the screen from the main app
-        """
-        self.app_screen = screen
+        self.imgs.append(np.array(myScreenshot))
 
     def start(self):
         """
@@ -83,17 +59,14 @@ class OCR:
         Start OCR engine and save results
         """
 
-        # Loading screen
-        loading_screen(self.app_screen)
+        # Delete if previous detections
+        self.empty_detections()
         # Get last img
-        #self.last_img = self.imgs.pop()
         img = self.imgs[-1]
-        # Read img
-        imgf = cv2.imread((self.imgs_path / img).__str__())
-        self.detections = self.reader.readtext(imgf, paragraph=True)
-        # Clear loading screen
-        clear_screen(self.app_screen)
+        # Fill all detections info
+        self.detections = self.reader.readtext(img, paragraph=True)
 
+    @deprecated(reason="Old function, not used anymore")
     def map_coordinates_to_screen(self, detection):
         """
         Maps the coordinates of a local screenshot to the real coordinates of the screen
@@ -139,20 +112,9 @@ class OCR:
 
         self.detections = matching_detections
 
-    def empty_results(self):
+    def empty_detections(self):
         """
-        Empty the list of results
+        Empty the list of detections
         """
 
         self.detections = []
-    
-    def delete_imgs(self):
-        """
-        Deletes all screenshots taken
-        """
-
-        # empty self.imgs_path directory 
-
-        for item in self.imgs_path.iterdir():
-            if item.is_file():
-                item.unlink()  # Remove file 
