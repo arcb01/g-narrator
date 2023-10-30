@@ -1,5 +1,5 @@
 from garrator.ocr import OCR
-from garrator.narrator import Narrator
+from garrator.TTS import Narrator
 
 def test_ocr():
     """
