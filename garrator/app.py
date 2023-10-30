@@ -13,7 +13,7 @@ from PyQt5.QtCore import Qt
 from garrator.ocr import OCR
 from garrator.TTS import Narrator
 from garrator.utils.utils import (
-                        get_disp_size, app_print, 
+                        app_print, 
                         get_mouse_pos, create_arb_reg)
 
 
@@ -106,7 +106,7 @@ class ReadingEngine:
         color: color of the bounding boxes
     """
 
-    def __init__(self, lang, voice_speed):
+    def __init__(self, lang="en", voice_speed=115):
 
         # FIXME: Maybe this could be changed when new TTS engine is added
         # Language settings for OCR and TTS

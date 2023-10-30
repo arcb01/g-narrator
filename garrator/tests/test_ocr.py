@@ -1,9 +1,10 @@
-from garrator.ocr import OCR
+from garrator.app import ReadingEngine
 
-def test_ocr_init():
+def test_reading_engine():
     """
-    Test that the OCR object initialises properly
+    Test that the reading engine works properly
     """
 
-    ocr = OCR()
-    assert ocr is not None
+    r = ReadingEngine()
+
+    assert r is not None
