@@ -7,6 +7,9 @@
 - Improve TTS
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
+- [ ] Button hover color 
+- [ ] Some issue with window focus
+- [ ] Maybe adding quit to the main app fixes the issue of not being able to clear the screen unless clicked
 - [ ] Update documentation
 - [ ] In region mode, clear screen when new region is selected
 - [ ] Read actumatically if  only 1 box
@@ -23,6 +26,6 @@
   - [ ] Add workflow for installation script
 - [ ] Windows installer version (.msi)
 - [ ] Docker image
-  - [ ] Key binder
+- [ ] Key binder
 - [ ] AI features
 - [ ] Add new demo video
