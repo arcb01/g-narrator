@@ -135,8 +135,6 @@ class ReadingEngine:
         # Create a button for each bounding box
         if len(self.OCR.get_detections) > 0:
             for det in self.OCR.get_detections:
-                if screen_region: # If a local screenshot was taken, map the local coordinates to the screen
-                    det = self.OCR.map_coordinates_to_screen(det)
                 det_text_content = det[1]
                 det_coords = self.get_detection_coords(det) # x, y, w, h
                 # draw button on bounding boxes coords
@@ -149,3 +147,7 @@ class ReadingEngine:
                 self.window.set_to_regional(screen_region=screen_region)
             self.window.show()
             self.app.exec_()
+
+if __name__ == "__main__":
+    r = ReadingEngine(lang="en", voice_speed=0)
+    r.read_screen(screen_region=(80, 80, 2100, 400))

@@ -68,6 +68,7 @@ class OCR:
         # Fill all detections info
         self.detections = self.reader.readtext(img, paragraph=True)
 
+    @deperecated(reason="Old function, not used anymore")
     def map_coordinates_to_screen(self, detection):
         """
         Maps the coordinates of a local screenshot to the real coordinates of the screen
