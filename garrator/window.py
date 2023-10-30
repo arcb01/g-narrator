@@ -2,9 +2,6 @@ import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton
 from PyQt5.QtCore import Qt
-from PyQt5.QtCore import QRect
-from PyQt5.QtGui import QCursor
-import pyautogui
 
 from garrator.ocr import OCR
 from garrator.TTS import Narrator
@@ -36,7 +33,7 @@ class Window(QMainWindow):
         self.overlay.setGeometry(screen_geometry)
         self.overlay.setAutoFillBackground(True)
         overlay_palette = self.overlay.palette()
-        overlay_palette.setColor(QtGui.QPalette.Background, QtGui.QColor(0, 0, 0, 128))
+        overlay_palette.setColor(QtGui.QPalette.Background, QtGui.QColor(0, 0, 0, 156))
         self.overlay.setPalette(overlay_palette)
         self.overlay.show()
 
@@ -61,7 +58,7 @@ class Window(QMainWindow):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
-            sys.exit()
+            self.close()
 
 
 class ReadingEngine:
@@ -86,14 +83,12 @@ class ReadingEngine:
         self.OCR = OCR(lang=lang, gpu=True)
         self.TTS = Narrator(voice=voice, voice_speed=voice_speed)
 
-        # Window
+        # Window app
         self.app = QApplication(sys.argv)
-        self.window = Window()
-        # Detection boxes color
+        # Bboxes color
         self.color = 'rgba(0, 255, 0, 192)'
 
         # TODO: async loading screen
-
 
     def get_detection_coords(self, detection : list):
         """
@@ -122,6 +117,11 @@ class ReadingEngine:
         Main function
         """
 
+        # Create window
+        # NOTE: This needs to be here in order to make the screenshot loop process to work.
+        #       otherwise the program will only run once.
+        self.window = Window()
+
         if screen_region:
             # Take regional screen shot
             self.OCR.take_screenshot(screen_region=screen_region)
@@ -147,7 +147,3 @@ class ReadingEngine:
                 self.window.set_to_regional(screen_region=screen_region)
             self.window.show()
             self.app.exec_()
-
-if __name__ == "__main__":
-    r = ReadingEngine(lang="en", voice_speed=0)
-    r.read_screen(screen_region=(80, 80, 2100, 400))

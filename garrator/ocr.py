@@ -1,11 +1,8 @@
 import pyautogui
-import random
-import cv2
 import numpy as np
 from deprecated import deprecated
 import easyocr
-import os
-from pathlib import Path
+
 from garrator.utils.utils import loading_screen, clear_screen, closest_nodes
 
 class OCR:
@@ -16,15 +13,13 @@ class OCR:
         lang: language in which the OCR will be performed
         gpu: use GPU or not (recommended to use GPU)
         imgs: List containing the filenames of the screenshots
-        result: List of tuples (bbox, text, prob)
-        imgs_dir: Directory where screenshots will be stored
-        file_nom: Nomenclature of the screenshots
+        detections: List of tuples (bbox, text, prob)
 
     `Methods:`
-        images_dir(): Makes sure that the imgs directory exists
         take_screenshot(): Take a screenshot and save it in imgs_dir
-        start(): Start OCR detection and save results
-        delete_imgs(): Deletes all screenshots when the program finishes running
+        start(): Loads the OCR engine into memory
+        read(): Start OCR engine and save results
+        get_detections(): Returns the list of all detections
     """
 
     def __init__(self, lang="en", gpu=True):
@@ -63,12 +58,14 @@ class OCR:
         Start OCR engine and save results
         """
 
+        # Delete if previous detections
+        self.empty_detections()
         # Get last img
         img = self.imgs[-1]
         # Fill all detections info
         self.detections = self.reader.readtext(img, paragraph=True)
 
-    @deperecated(reason="Old function, not used anymore")
+    @deprecated(reason="Old function, not used anymore")
     def map_coordinates_to_screen(self, detection):
         """
         Maps the coordinates of a local screenshot to the real coordinates of the screen
@@ -114,9 +111,9 @@ class OCR:
 
         self.detections = matching_detections
 
-    def empty_results(self):
+    def empty_detections(self):
         """
-        Empty the list of results
+        Empty the list of detections
         """
 
         self.detections = []
