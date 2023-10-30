@@ -3,13 +3,16 @@
 - [x] Installation script
 - [x] Running script
 - [x] Regional Reading feature
+- [x] New GUI 
 - Improve TTS
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
+- [ ] Update documentation
+- [ ] In region mode, clear screen when new region is selected
+- [ ] Read actumatically if  only 1 box
+- [ ] Mouse key bindings
+- [ ] Async load screen
 - [ ] `__main__.py`?
-- App functioning logic:
-  (Refer to Notion project page)
-  - [ ] New GUI 
 - [ ] Logging
 - [ ] Zooming feature: e.g zoom into the detection while it's being read
 - [ ] Mouse key bindings
