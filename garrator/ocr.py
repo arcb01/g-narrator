@@ -3,7 +3,7 @@ import numpy as np
 from deprecated import deprecated
 import easyocr
 
-from garrator.utils.utils import loading_screen, clear_screen, closest_nodes
+from garrator.utils.utils import closest_nodes
 
 class OCR:
     """

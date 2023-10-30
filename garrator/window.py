@@ -7,9 +7,13 @@ from garrator.ocr import OCR
 from garrator.TTS import Narrator
 
 class Window(QMainWindow):
+
     """
     This class creates a semi-transparent overlay for displaying the OCR detections
     as clickable buttons.
+
+    `Attributes:`	
+        overlay: semi-transparent overlay for the whole screen
     """
 
     def __init__(self):
@@ -38,6 +42,11 @@ class Window(QMainWindow):
         self.overlay.show()
 
     def set_to_regional(self, screen_region=None):
+        """
+        Resize the window to the given region
+        :param screen_region: (x,y,w,h) coordinates of the region to be captured
+        """
+        
         self.setGeometry(*screen_region)
 
     def create_button(self, coords : list, color: str):
@@ -63,14 +72,20 @@ class Window(QMainWindow):
 
 class ReadingEngine:
 
-    def __init__(self, lang, voice_speed):
-        """
-        This class runs the OCR and TTS engines into the Window class to be able to 
-        read the screen content.
+    """
+    This class runs the OCR and TTS engines into the Window class to be able to 
+    read the screen content.
 
-        :param lang: language for OCR and TTS
-        :param voice_speed: speed of the TTS voice
-        """
+    `Attributes:`
+        lang: language for OCR and TTS
+        voice_speed: speed of the TTS voice
+        OCR: OCR engine
+        TTS: TTS engine
+        app: Window app
+        color: color of the bounding boxes
+    """
+
+    def __init__(self, lang, voice_speed):
 
         # FIXME: Maybe this could be changed when new TTS engine is added
         # Language settings for OCR and TTS
