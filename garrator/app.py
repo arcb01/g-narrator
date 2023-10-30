@@ -108,7 +108,7 @@ class ReadingEngine:
 
     def __init__(self, lang="en", voice_speed=115):
 
-        # FIXME: Maybe this could be changed when new TTS engine is added
+        # TODO: Maybe this could be changed when new TTS engine is added
         # Language settings for OCR and TTS
         if lang == "en":
             voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
@@ -124,8 +124,6 @@ class ReadingEngine:
         # Colors
         self.bbox_color = 'rgba(124, 252, 0, 224)'
         self.hover_color = None
-
-        # TODO: async loading screen
 
     def get_detection_coords(self, detection : list):
         """
@@ -291,7 +289,7 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
             self.reading_engine.read_screen()
 
-        # FIXME: Refactor to circular doubly linked list
+        # TODO: Refactor to circular doubly linked list
         if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
             
             assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."

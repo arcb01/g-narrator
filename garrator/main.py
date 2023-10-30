@@ -6,19 +6,3 @@ if __name__ == '__main__':
 
     a = App(LANGUAGE, VOICE_SPEED)
     a.run()
-
-    # NOTE: Merge new changes? Which bugs/fixes to do first?
-    
-    # BUG: In region mode, define a minimum region if not enough pixels are selected
-    # BUG: Some issue with window focus
-    # BUG: Sometimes can ocurr that the language from the keybaord changes and therefore keyboard input stops working
-    # BUG: If you click the window while narrator is reading the program crashes
-    
-    # FIXME: hover color does not work
-    # FIXME: Maybe adding quit to the main app fixes the issue of not being able to clear the screen unless clicked
-
-    # TODO: Update documentation
-    # TODO: In region mode, clear screen when new region is selected
-    # TODO: Read actumatically if  only 1 box
-    # TODO: Mouse key bindings
-    
