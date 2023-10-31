@@ -251,8 +251,12 @@ class App:
             self.QUIT_KEY = k["QUIT"]
 
     def quit(self):
-        if self.reading_engine.window:
+        try:
+            # Clear screen
             self.reading_engine.window.clear_screen()
+        except:
+            # if window is not yet loaded, ignore
+            pass
         # TODO: quit program entire app?
 
     # TODO: This will be removed
