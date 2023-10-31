@@ -6,6 +6,11 @@
 - [ ] Some issue with window focus
 - [ ] If you click the window while narrator is reading the program crashes
 - [ ] Logging
+- Testing (github actions)
+    - [ ] Improve linting score
+    - [ ] Add more tests
+    - [ ] Improve pytest coverage score
+    - [ ] Add workflow for installation script
 ## Medium
 - Improve TTS
   - [x] Elevenlabs
@@ -23,11 +28,6 @@
   - [ ] Async load screen
   - [ ] `__main__.py`?
   - [ ] Zooming feature: e.g zoom into the detection while it's being read
-  - Testing (github actions)
-    - [ ] Improve linting score
-    - [ ] Add more tests
-    - [ ] Improve pytest coverage score
-    - [ ] Add workflow for installation script
   - [ ] Windows installer version (.msi)
   - [ ] Docker image
   - [ ] AI features
