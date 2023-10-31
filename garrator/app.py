@@ -240,7 +240,7 @@ class App:
         """
 
         # Read json file containing key bindings
-        with open(self.path / "config" / "keys.json") as json_file:
+        with open(self.path / "config" / "keys.json", encoding="utf-8") as json_file:
             k = json.load(json_file)
             self.CAPTURE = k["CAPTURE"]
             self.SWITCH_DET_FORWARD = k["SWITCH_FORWARD"]
