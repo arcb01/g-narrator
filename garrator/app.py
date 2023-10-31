@@ -176,11 +176,19 @@ class ReadingEngine:
                 button = self.window.create_button(coords=det_coords, bbox_color=self.bbox_color, hover_color=self.hover_color)
                 # Associate button with bbox text
                 button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
+
             # Launch window 
             if screen_region:
                 self.window.set_to_regional(screen_region=screen_region)
             self.window.show()
+
+            # FIXME: Voice comes before the window, is there any way to fix this?
+            if len(self.OCR.get_detections) == 1:
+                self.say_content(det_text_content)
+
             self.app.exec_()
+
+            
 
 
 class App:
