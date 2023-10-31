@@ -1,30 +1,35 @@
 # Future work
-*Ranked by priority*
-- [x] Installation script
-- [x] Running script
-- [x] Regional Reading feature
-- [x] New GUI 
+*Ranked by 3 tiers of importance (High, Medium, Low)*
+
+---
+## High
+- [ ] Some issue with window focus
+- [ ] If you click the window while narrator is reading the program crashes
+- [ ] Logging
+- Testing (github actions)
+    - [ ] Improve linting score
+    - [ ] Add more tests
+    - [ ] Improve pytest coverage score
+    - [ ] Add workflow for installation script
+## Medium
 - Improve TTS
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
-- [ ] Button hover color 
-- [ ] Some issue with window focus
-- [ ] Maybe adding quit to the main app fixes the issue of not being able to clear the screen unless clicked
-- [ ] Update documentation
 - [ ] In region mode, clear screen when new region is selected
 - [ ] Read actumatically if  only 1 box
-- [ ] Async load screen
-- [ ] `__main__.py`?
-- [ ] Logging
-- [ ] Zooming feature: e.g zoom into the detection while it's being read
 - [ ] Mouse key bindings
-- Testing (github actions)
-  - [ ] Improve linting score
-  - [ ] Add more tests
-  - [ ] Improve pytest coverage score
-  - [ ] Add workflow for installation script
-- [ ] Windows installer version (.msi)
-- [ ] Docker image
 - [ ] Key binder
-- [ ] AI features
-- [ ] Add new demo video
+  - [ ] Support for mouse bindings
+- [ ] TTS does not shut up after pressing `esc` while reading a long phrase
+- [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
+## Low
+  - [ ] Add icon logo to `.bat` file
+  - [ ] Button hover color
+  - [ ] Update documentation
+  - [ ] Async load screen
+  - [ ] `__main__.py`?
+  - [ ] Zooming feature: e.g zoom into the detection while it's being read
+  - [ ] Windows installer version (.msi)
+  - [ ] Docker image
+  - [ ] AI features
+  - [ ] Add new demo video

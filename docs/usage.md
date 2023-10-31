@@ -6,6 +6,10 @@
 - **Suported languages**: English and Spaniash
 
 - **Python version**: 3.9+
+  
+> [!IMPORTANT]
+> - GPU is recomended for faster inference times.
+
 ### Installation
 - Run the `run.bat` and let the installation follow.
 
@@ -35,11 +39,7 @@ Remember that the game you want to play must be set to **borderless**. Otherwise
 
 ## Known issues (Work in progress)
 > [!WARNING]
-> - When GPU is not available, inference times are really slow.
-> - TTS does not shut up after pressing `esc` while reading a long phrase
-> - In region mode, define a minimum region if not enough pixels are selected
-> - Sometimes can ocurr that the language from the keybaord changes and therefore keyboard input stops working
-> - If you click the window while narrator is reading the program crashes
+> - App still in development, issues can ocurr frequently
   
 ## Future work
 TODOs are defined [here](https://github.com/arcb01/gaming-narrator/blob/main/docs/todos.md)
