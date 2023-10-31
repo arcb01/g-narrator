@@ -13,7 +13,6 @@
 - [ ] Update documentation
 - [ ] In region mode, clear screen when new region is selected
 - [ ] Read actumatically if  only 1 box
-- [ ] Mouse key bindings
 - [ ] Async load screen
 - [ ] `__main__.py`?
 - [ ] Logging
