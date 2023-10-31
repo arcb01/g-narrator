@@ -14,15 +14,15 @@ for e in ["utf-8", "utf-8-sig", "utf16"]:
 
 
 setuptools.setup(
-    name='garrator',
-    version='0.5.142',
+    name='gnarrator',
+    version='0.6.1',
     python_requires='>=3.9.0',
     author='Arnau Castelalno',
     author_email='arcascb2001@gmail.com',
     description='A screen reading accessibility tool for videogames',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/arcb01/gaming-narrator',
+    url='https://github.com/arcb01/g-narrator',
     packages=setuptools.find_packages(),
     classifiers=[
        "Programming Language :: Python :: 3",
@@ -31,7 +31,7 @@ setuptools.setup(
    ],
    entry_points={
        'console_scripts': [
-            'garrator = garrator.run:main'
+            'gnarrator = gnarrator.main:main'
        ]
     },
     install_requires=requirements_list
