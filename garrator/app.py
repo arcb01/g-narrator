@@ -72,7 +72,7 @@ class Window(QMainWindow):
         # Styling
         button.setGeometry(coords[0], coords[1], coords[2], coords[3])  # Set the position and size of the button
         button.setStyleSheet(f"background-color: {bbox_color};")
-        # BUG: This doesn't work
+        # FIXME: This doesn't work
         # button.setStyleSheet(f"QPushButton:hover {{ background-color: {hover_color}; }}")
 
         button.show() 
@@ -183,8 +183,8 @@ class ReadingEngine:
             self.window.show()
 
             # FIXME: Voice comes before the window, is there any way to fix this?
-            if len(self.OCR.get_detections) == 1:
-                self.say_content(det_text_content)
+            #if len(self.OCR.get_detections) == 1:
+                #self.say_content(det_text_content)
 
             self.app.exec_()
 
@@ -281,16 +281,12 @@ class App:
                 abs(self.end_y - self.start_y)
             )
 
-            assert region[2] > 15 and region[3] > 15, "Region to scan is too small. Please select a bigger region."
             # if region is too small, create arb rectangled region
-            # FIXME:
-            #rect_cent_p = (region[0], region[1])
-            #rect_w, rect_h = region[2], region[3]
-            #if rect_w < 20 or rect_h < 20:
-                #print(region)
-                #region = create_arb_reg(cp=(region[0], region[1]), w=25)
-                #print(region)
-                #print(type(region[0]))
+            rect_cent_p = (region[0], region[1])
+            rect_w, rect_h = region[2], region[3]
+            if rect_w < 20 or rect_h < 20:
+                region = create_arb_reg(cp=(region[0], region[1]), w=320, h=240)
+
             # Launch reading engine
             self.reading_engine.read_screen(screen_region=region)
 
