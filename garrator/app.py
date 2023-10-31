@@ -251,7 +251,8 @@ class App:
             self.QUIT_KEY = k["QUIT"]
 
     def quit(self):
-        self.reading_engine.window.clear_screen()
+        if self.reading_engine.window:
+            self.reading_engine.window.clear_screen()
         # TODO: quit program entire app?
 
     # TODO: This will be removed
