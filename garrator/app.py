@@ -6,9 +6,12 @@ from pathlib import Path
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 import sys
-from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import (QMainWindow, QApplication, 
+                            QPushButton, QWidget, qApp)
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPalette, QColor
+
 
 from garrator.ocr import OCR
 from garrator.TTS import Narrator
@@ -35,20 +38,20 @@ class Window(QMainWindow):
             Qt.X11BypassWindowManagerHint #|
             #Qt.WindowTransparentForInput  # Transparent
         )
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)  # Set focus policy to accept keyboard focus
+        self.setFocusPolicy(Qt.StrongFocus)  # Set focus policy to accept keyboard focus
 
-        screen_geometry = QtWidgets.qApp.desktop().availableGeometry()
+        screen_geometry = qApp.desktop().availableGeometry()
         self.setGeometry(screen_geometry)
 
         # Set window opacity (0.5 for example, change as needed)
         self.setWindowOpacity(0.7)
 
         # Create a semi-transparent overlay for the whole screen
-        self.overlay = QtWidgets.QWidget(self)
+        self.overlay = QWidget(self)
         self.overlay.setGeometry(screen_geometry)
         self.overlay.setAutoFillBackground(True)
         overlay_palette = self.overlay.palette()
-        overlay_palette.setColor(QtGui.QPalette.Background, QtGui.QColor(0, 0, 0, 156))
+        overlay_palette.setColor(QPalette.Background, QColor(0, 0, 0, 156))
         self.overlay.setPalette(overlay_palette)
         self.overlay.show()
 
@@ -72,7 +75,7 @@ class Window(QMainWindow):
         # Styling
         button.setGeometry(coords[0], coords[1], coords[2], coords[3])  # Set the position and size of the button
         button.setStyleSheet(f"background-color: {bbox_color};")
-        # BUG: This doesn't work
+        # FIXME: This doesn't work
         # button.setStyleSheet(f"QPushButton:hover {{ background-color: {hover_color}; }}")
 
         button.show() 
@@ -108,7 +111,7 @@ class ReadingEngine:
 
     def __init__(self, lang="en", voice_speed=115):
 
-        # TODO: Maybe this could be changed when new TTS engine is added
+        # TODO: Maybe this could be changed when new TTS engine is added # pylint: disable=fixme
         # Language settings for OCR and TTS
         if lang == "en":
             voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
@@ -176,11 +179,19 @@ class ReadingEngine:
                 button = self.window.create_button(coords=det_coords, bbox_color=self.bbox_color, hover_color=self.hover_color)
                 # Associate button with bbox text
                 button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
+
             # Launch window 
             if screen_region:
                 self.window.set_to_regional(screen_region=screen_region)
             self.window.show()
+
+            # TODO: Voice comes before the window, is there any way to fix this? # pylint: disable=fixme
+            #if len(self.OCR.get_detections) == 1:
+                #self.say_content(det_text_content)
+
             self.app.exec_()
+
+            
 
 
 class App:
@@ -243,7 +254,7 @@ class App:
         self.reading_engine.window.clear_screen()
         # TODO: quit program entire app?
 
-    # FIXME: This will be removed
+    # TODO: This will be removed
     def end_of_list(self):
         return True if self.det_idx == len(self.OCR.get_detections) - 1 else False
 
@@ -273,23 +284,19 @@ class App:
                 abs(self.end_y - self.start_y)
             )
 
-            assert region[2] > 15 and region[3] > 15, "Region to scan is too small. Please select a bigger region."
             # if region is too small, create arb rectangled region
-            # FIXME:
-            #rect_cent_p = (region[0], region[1])
-            #rect_w, rect_h = region[2], region[3]
-            #if rect_w < 20 or rect_h < 20:
-                #print(region)
-                #region = create_arb_reg(cp=(region[0], region[1]), w=25)
-                #print(region)
-                #print(type(region[0]))
+            rect_cent_p = (region[0], region[1])
+            rect_w, rect_h = region[2], region[3]
+            if rect_w < 20 or rect_h < 20:
+                region = create_arb_reg(cp=(region[0], region[1]), w=320, h=240)
+
             # Launch reading engine
             self.reading_engine.read_screen(screen_region=region)
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
             self.reading_engine.read_screen()
 
-        # TODO: Refactor to circular doubly linked list
+        # TODO: Refactor to circular doubly linked list # pylint: disable=fixme
         if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
             
             assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."
@@ -319,14 +326,16 @@ class App:
                     self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
                     self.det_idx  -= 1
 
-        # FIXME: This needs to be updated
+        # TODO: This needs to be updated # pylint: disable=fixme
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
             if len(self.OCR.get_detections) > 0:
-                self.read_out_loud()
+                pass
+                #self.read_out_loud()
 
-        # FIXME: This needs to be updated
+        # TODO: This needs to be updated # pylint: disable=fixme
         if event.event_type == keyboard.KEY_DOWN and event.name == self.REPEAT_KEY:
-            self.read_out_loud(slow=True)
+            pass
+            #self.read_out_loud(slow=True)
 
     def run(self):
         """
