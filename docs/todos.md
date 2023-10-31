@@ -4,6 +4,7 @@
 ---
 ## High
 - [ ] Some issue with window focus
+- [ ] If you click the window while narrator is reading the program crashes
 - [ ] Logging
 ## Medium
 - Improve TTS
@@ -14,6 +15,8 @@
 - [ ] Mouse key bindings
 - [ ] Key binder
   - [ ] Support for mouse bindings
+- [ ] TTS does not shut up after pressing `esc` while reading a long phrase
+- [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
 ## Low
   - [ ] Button hover color
   - [ ] Update documentation
