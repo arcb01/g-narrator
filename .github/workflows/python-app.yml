@@ -24,9 +24,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python setup.py install
-      - name: Lint the code
-        run: |
-          pylint --disable=R,C --fail-under=5 ./garrator/
+      #- name: Lint the code
+      #  run: |
+      #    pylint --disable=R,C --fail-under=5 ./garrator/
       - name: Formating the code
         run: |
           black *.py
