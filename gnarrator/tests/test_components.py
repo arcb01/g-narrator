@@ -1,5 +1,6 @@
-from garrator.ocr import OCR
-from garrator.TTS import Narrator
+from gnarrator.ocr import OCR
+from gnarrator.TTS import Narrator
+from gnarrator.app import ReadingEngine
 
 def test_ocr():
     """
@@ -14,5 +15,17 @@ def test_narrator():
     """
     Test that the narrator works properly
     """
-    # TODO
-    pass
+    
+    sample_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
+    tts = Narrator(voice=sample_voice, voice_speed=115)
+    
+    assert tts is not None
+
+def test_reading_engine():
+    """
+    Test that the reading engine works properly
+    """
+    
+    r = ReadingEngine(lang="es", voice_speed=115)
+
+    assert r is not None
