@@ -6,16 +6,15 @@ from pathlib import Path
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 import sys
-from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QApplication, 
                             QPushButton, QWidget, qApp)
-from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor
 
 
-from garrator.ocr import OCR
-from garrator.TTS import Narrator
-from garrator.utils.utils import (
+from gnarrator.ocr import OCR
+from gnarrator.TTS import Narrator
+from gnarrator.utils.utils import (
                         app_print, 
                         get_mouse_pos, create_arb_reg)
 
@@ -219,8 +218,8 @@ class App:
     """
 
     def __init__(self, lang, voice_speed):
-        self.app_name = "Garrator"
-        self.path = Path("./garrator/")
+        self.app_name = "G-Narrator"
+        self.path = Path("./gnarrator/")
         self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
         self.clock = pygame.time.Clock()
         self.switch_detection = False
