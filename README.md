@@ -2,7 +2,7 @@
  <img
   width="180"
   alt="Eye logo"
-  src="./garrator/assets/logo.png">
+  src="./gnarrator/assets/logo.png">
     <br/>
     G-Narrator
 </h1>
