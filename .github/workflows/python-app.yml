@@ -20,29 +20,19 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
-      - name: Install application
+      - name: Install application via script
         run: |
-          python -m pip install --upgrade pip
-          python setup.py install
+          .\installation.bat
+        shell: cmd
       #- name: Lint the code
       #  run: |
       #    pylint --disable=R,C --fail-under=5 ./garrator/
       - name: Formating the code
         run: |
           black *.py
-      - name: Testing the code
-        # add --cov-fail-under=80
+      - name: Testing application
+      # add --cov-fail-under=80
         run: |
-          pytest --import-mode=importlib
-  build:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.10"
-      - name: Installation via script
-        run: |
-          .\installation.bat
+          .\.env\Scripts\activate
+          python -m pytest
         shell: cmd
