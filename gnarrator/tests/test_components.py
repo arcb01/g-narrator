@@ -1,6 +1,6 @@
 from gnarrator.ocr import OCR
 from gnarrator.TTS import Narrator
-from gnarrator.app import App
+from gnarrator.app import App, ReadingEngine
 
 def test_ocr():
     """
@@ -21,13 +21,36 @@ def test_app():
 
     gnarrator = App(LANGUAGE, VOICE_SPEED)
 
-    # FIXME: Works locally, not in github actions
 
-    #sample_voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
-    #tts = Narrator(voice=sample_voice, voice_speed=115)
-    
-    #assert tts is not None
+
+
     assert gnarrator is not None
 
 
-# NOTE: Seems like pytest doesn't work well when testing with a GUI (PyQt5)
+def test_narrator():
+    """
+    Test that the narrator works properly
+    """
+    
+    VOICE = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
+    VOICE_SPEED = 115 
+
+    narrator = Narrator(VOICE, VOICE_SPEED)
+
+    assert narrator is not None
+
+
+def test_reading_engine():
+    """
+    Test that the reading engine works properly
+    """
+
+    LANGUAGE = "en"    
+    VOICE_SPEED = 115 
+
+    reading_engine = ReadingEngine(LANGUAGE, VOICE_SPEED)
+
+    assert reading_engine is not None
+
+
+# FIXME: Works locally, not in github actions
