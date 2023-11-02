@@ -20,6 +20,7 @@
 - [ ] TTS does not shut up after pressing `esc` while reading a long phrase
 - [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
 - [ ] Replace bat console for GUI
+- [ ] Switch detections based on CircularDoublyLinkedList
 ## Low
   - [ ] Add icon logo to `.bat` file
   - [ ] Button hover color
