@@ -10,17 +10,16 @@
     - [ ] Linting
     - [ ] Some tests inside github actions do not work
 ## Medium
-- [ ] Add drawing effect in region mode
 - Improve TTS
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
-- [ ] In region mode, clear screen when new region is selected
 - [ ] Read actumatically if  only 1 box
 - [ ] Mouse key bindings
 - [ ] Key binder
   - [ ] Support for mouse bindings
 - [ ] TTS does not shut up after pressing `esc` while reading a long phrase
 - [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
+- [ ] Replace bat console for GUI
 ## Low
   - [ ] Add icon logo to `.bat` file
   - [ ] Button hover color
