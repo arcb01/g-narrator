@@ -29,7 +29,9 @@ jobs:
       #    pylint --disable=R,C --fail-under=5 ./garrator/
       - name: Formating the code
         run: |
+          .\.env\Scripts\activate
           black *.py
+        shell: cmd
       - name: Testing application
       # add --cov-fail-under=80
         run: |
