@@ -17,7 +17,7 @@ from gnarrator.TTS import Narrator
 from gnarrator.utils.utils import (
                         app_print, 
                         get_mouse_pos, create_arb_reg)
-
+from gnarrator.utils.region_drawing import RegionMode
 
 class Window(QMainWindow):
 
@@ -43,7 +43,8 @@ class Window(QMainWindow):
         self.setGeometry(screen_geometry)
 
         # Set window opacity (0.5 for example, change as needed)
-        self.setWindowOpacity(0.7)
+        self.window_opacity = 0.85
+        self.setWindowOpacity(self.window_opacity)
 
         # Create a semi-transparent overlay for the whole screen
         self.overlay = QWidget(self)
@@ -53,6 +54,9 @@ class Window(QMainWindow):
         overlay_palette.setColor(QPalette.Background, QColor(0, 0, 0, 156))
         self.overlay.setPalette(overlay_palette)
         self.overlay.show()
+
+    def set_window_opacity(self, opacity):
+        self.setWindowOpacity(opacity)
 
     def set_to_regional(self, screen_region=None):
         """
@@ -108,7 +112,7 @@ class ReadingEngine:
         color: color of the bounding boxes
     """
 
-    def __init__(self, lang="en", voice_speed=115):
+    def __init__(self, lang="en", voice_speed=115, region_mode=False):
 
         # TODO: Maybe this could be changed when new TTS engine is added # pylint: disable=fixme
         # Language settings for OCR and TTS
@@ -123,6 +127,7 @@ class ReadingEngine:
 
         # Window app
         self.app = QApplication(sys.argv)
+
         # Colors
         self.bbox_color = 'rgba(124, 252, 0, 224)'
         self.hover_color = None
@@ -181,6 +186,7 @@ class ReadingEngine:
 
             # Launch window 
             if screen_region:
+                # NOTE: This can be changed to be all screen if needed (using map_coordinates function)
                 self.window.set_to_regional(screen_region=screen_region)
             self.window.show()
 
@@ -190,7 +196,20 @@ class ReadingEngine:
 
             self.app.exec_()
 
-            
+    def read_screen_regional(self):
+        """
+        Creates a drawing canvas for selecting a region to be read
+        The RegionMode object will read the content of the delimited region after its drawn.
+        """
+
+        # open region canvas for drawing
+        self.drawing_canvas = Window()
+        region_window = RegionMode(reading_engine=self)
+        self.drawing_canvas.setCentralWidget(region_window)
+        self.drawing_canvas.set_window_opacity(0.35)
+        # FIXME: The use of drawing canvas + region window pops up warning message
+        self.drawing_canvas.show()
+        self.app.exec_()
 
 
 class App:
@@ -272,30 +291,8 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name == self.QUIT_KEY:
             self.quit()
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST and not self.n_pressed:
-            self.start_x, self.start_y = get_mouse_pos()
-            self.n_pressed = True
-
-        if event.event_type == keyboard.KEY_UP and event.name == self.READ_NEAREST:
-            self.end_x, self.end_y = get_mouse_pos()
-            #print("n released")
-            self.n_pressed = False
-
-            region = (
-                min(self.start_x, self.end_x),
-                min(self.start_y, self.end_y),
-                abs(self.end_x - self.start_x),
-                abs(self.end_y - self.start_y)
-            )
-
-            # if region is too small, create arb rectangled region
-            rect_cent_p = (region[0], region[1])
-            rect_w, rect_h = region[2], region[3]
-            if rect_w < 20 or rect_h < 20:
-                region = create_arb_reg(cp=(region[0], region[1]), w=320, h=240)
-
-            # Launch reading engine
-            self.reading_engine.read_screen(screen_region=region)
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST:
+            self.reading_engine.read_screen_regional()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
             self.reading_engine.read_screen()
