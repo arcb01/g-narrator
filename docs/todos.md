@@ -6,8 +6,6 @@
 - [ ] Some issue with window focus
 - [ ] If you click the window while narrator is reading the program crashes
 - [ ] Logging
-- Testing (github actions)
-    - [ ] Linting
 ## Medium
 - Improve TTS
   - [x] Elevenlabs
@@ -20,6 +18,8 @@
 - [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
 - [ ] Replace bat console for GUI
 - [ ] Switch detections based on CircularDoublyLinkedList
+- Testing (github actions)
+    - [ ] Linting
 ## Low
   - [ ] Add icon logo to `.bat` file
   - [ ] Button hover color
