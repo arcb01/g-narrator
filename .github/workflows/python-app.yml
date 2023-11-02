@@ -33,7 +33,7 @@ jobs:
       - name: Testing the code
         # add --cov-fail-under=80
         run: |
-          pytest
+          pytest --import-mode=importlib
   build:
     runs-on: windows-latest
     steps:
