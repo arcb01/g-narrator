@@ -30,6 +30,7 @@ jobs:
       - name: Formating the code
         run: |
           black *.py
+        shell: powershell
       - name: Testing the code
         # add --cov-fail-under=80
         run: |
