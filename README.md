@@ -25,4 +25,7 @@ In the following video it is shown how the application works:
 2. Once scanned, the user can switch between all detected text bounding boxes.
 3. When the read out loud key is pressed the text inside the selected bounding box is read. 
 
+
 https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-b365-ccd43e37dae7.mp4
+
+> THe previous video is outdated and only depicts the initial stages of the porject. Updated video showcasing the latest update is coming soon.
