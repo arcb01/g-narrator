@@ -8,6 +8,7 @@
 - [ ] Logging
 - Testing (github actions)
     - [ ] Linting
+    - [ ] Some tests inside github actions do not work
 ## Medium
 - [ ] Add drawing effect in region mode
 - Improve TTS
