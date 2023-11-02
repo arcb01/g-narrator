@@ -26,6 +26,7 @@ def get_mouse_pos():
 
     return x_mouse_pos, y_mouse_pos
 
+@deprecated(reason="Old function, not used anymore")
 def loading_screen(screen):
     """
     Loading screen while OCR is running
@@ -38,6 +39,7 @@ def loading_screen(screen):
         screen.blit(t[0], t[1])
     pygame.display.update()
 
+@deprecated(reason="Old function, not used anymore")
 def clear_screen(screen):
     """
     Clears the screen
