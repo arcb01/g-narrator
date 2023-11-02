@@ -8,7 +8,6 @@
 - [ ] Logging
 - Testing (github actions)
     - [ ] Linting
-    - [ ] Some tests inside github actions do not work
 ## Medium
 - Improve TTS
   - [x] Elevenlabs
