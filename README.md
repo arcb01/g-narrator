@@ -8,7 +8,7 @@
 </h1>
 
 <h4 align="center">
-A screen reading accessibility tool for videogames
+An easy-to-use screen reading accessibility tool purely built using Python
 </h4>
  
 <p align="center">
