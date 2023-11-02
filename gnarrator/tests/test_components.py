@@ -1,5 +1,6 @@
 from gnarrator.ocr import OCR
 from gnarrator.TTS import Narrator
+from gnarrator.app import App
 
 def test_ocr():
     """
@@ -10,11 +11,15 @@ def test_ocr():
 
     assert ocr is not None
 
-def test_narrator():
+def test_app():
     """
     Test that the narrator works properly
     """
-    pass
+    
+    LANGUAGE = "en"    
+    VOICE_SPEED = 115 
+
+    gnarrator = App(LANGUAGE, VOICE_SPEED)
 
     # FIXME: Works locally, not in github actions
 
@@ -22,6 +27,7 @@ def test_narrator():
     #tts = Narrator(voice=sample_voice, voice_speed=115)
     
     #assert tts is not None
+    assert gnarrator is not None
 
 
 # NOTE: Seems like pytest doesn't work well when testing with a GUI (PyQt5)
