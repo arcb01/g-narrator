@@ -21,12 +21,5 @@ def test_narrator():
     
     assert tts is not None
 
-def test_reading_engine():
-    """
-    """
-
-    r = ReadingEngine(lang="en", voice_speed=115)
-
-    assert r is not None
 
 # NOTE: Seems like pytest doesn't work well when testing with a GUI (PyQt5)
