@@ -1,6 +1,5 @@
 from gnarrator.ocr import OCR
 from gnarrator.TTS import Narrator
-from gnarrator.app import ReadingEngine
 
 def test_ocr():
     """
