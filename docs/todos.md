@@ -7,11 +7,9 @@
 - [ ] If you click the window while narrator is reading the program crashes
 - [ ] Logging
 - Testing (github actions)
-    - [ ] Improve linting score
-    - [ ] Add more tests
-    - [ ] Improve pytest coverage score
-    - [ ] Add workflow for installation script
+    - [ ] Linting
 ## Medium
+- [ ] Add drawing effect in region mode
 - Improve TTS
   - [x] Elevenlabs
   - [ ] Hugging Face TTS model
