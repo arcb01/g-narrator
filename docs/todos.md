@@ -4,7 +4,6 @@
 ---
 ## High
 - [ ] Some issue with window focus
-- [ ] If you click the window while narrator is reading the program crashes
 - [ ] Logging
 ## Medium
 - Improve TTS
