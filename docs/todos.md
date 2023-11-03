@@ -17,11 +17,13 @@
 - [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
 - [ ] Replace bat console for GUI
 - [ ] Switch detections based on CircularDoublyLinkedList
-- Testing (github actions)
+- Github Actions Workflows
     - [ ] Linting
+    - [ ] Dependency review [(example)](https://github.com/badges/shields/blob/master/.github/workflows/enforce-dependency-review.yml)
 ## Low
   - [ ] Add icon logo to `.bat` file
   - [ ] Button hover color
+  - [ ] Maybe region mode could be changed to directly drawing (not entering in "paint" mode)
   - [ ] Update documentation
   - [ ] Async load screen
   - [ ] `__main__.py`?
