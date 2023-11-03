@@ -6,9 +6,6 @@
 - [ ] Some issue with window focus
 - [ ] Logging
 ## Medium
-- Improve TTS
-  - [x] ~Elevenlabs~ (API key inconvenience)
-  - [ ] [New TTS](https://github.com/rany2/edge-tts)
 - [ ] Read actumatically if  only 1 box
 - [ ] Mouse key bindings
 - [ ] Key binder
@@ -21,6 +18,7 @@
     - [ ] Linting
     - [ ] Dependency review [(example)](https://github.com/badges/shields/blob/master/.github/workflows/enforce-dependency-review.yml)
 ## Low
+  - [ ] Narrator has a little bit of delay when button is clicked
   - [ ] Add icon logo to `.bat` file
   - [ ] Button hover color
   - [ ] Maybe region mode could be changed to directly drawing (not entering in "paint" mode)
