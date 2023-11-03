@@ -295,6 +295,7 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CLEAR_KEY:
             self.clear()
 
+        # TODO: Define exit key
         if event.event_type == keyboard.KEY_DOWN and event.name == "":
             pass
             # TODO: sys.exit()
