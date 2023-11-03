@@ -60,6 +60,13 @@ class RegionMode(QWidget):
         self.reading_engine.read_screen(screen_region=rect_region)
 
     def draw_rectangle(self, rect):
+        # Ensure left < right and top < bottom
+        left = min(rect.left(), rect.right())
+        top = min(rect.top(), rect.bottom())
+        right = max(rect.left(), rect.right())
+        bottom = max(rect.top(), rect.bottom())
+
+        rect = QRect(left, top, right - left, bottom - top)
         self.rectangles.append(rect)
         self.update()
         # NOTE: Here it would start the reading process
