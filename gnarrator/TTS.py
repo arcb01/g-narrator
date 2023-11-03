@@ -1,24 +1,57 @@
-import pyttsx3
-
+import tempfile
+import asyncio
+import edge_tts  # Assuming you have the edge_tts library installed
+from pygame import mixer
+import time
+import os
 
 class Narrator:
     """
     Class used to read text
 
     `Attributes:`
-        engine: pyttsx3 engine
-        voice_speed: Playback speed of the voice
+        settings: Settings dictionary for the narrator
 
     `Methods:`
         say(): Playsback the text
+        aplay(): Async playback of the text
         stop(): Stop playback
-        slower_saying(): Repeats the text at a slower rate
     """
 
-    def __init__(self, voice, voice_speed = 160):
-        self._engine = pyttsx3.init()
-        self._engine.setProperty('voice', str(voice))
-        self.voice_speed = voice_speed
+    def __init__(self, settings):
+        self.gender = settings["GENDER"]
+        self.voice = settings["VOICE"]
+        self.rate = settings["VOICE_RATE"]
+        self.volume = settings["VOICE_VOLUME"]
+
+    async def aplay(self, text : str):
+        """
+        Given a text, read it out loud
+        :param text: Text to be read
+        """
+
+        communicate = edge_tts.Communicate(text, self.voice, rate=self.rate, volume=self.volume)
+        output_file_path = tempfile.mktemp(suffix=".mp3")
+        try:
+            await communicate.save(output_file_path)
+            #print("Temporary MP3 file path:", output_file_path)
+            # Play the MP3 file
+            mixer.init()
+            mixer.music.load(output_file_path)
+            mixer.music.play()
+            while mixer.music.get_busy():
+                time.sleep(.01)
+        except Exception as e:
+            print("Error while playing the audio:", str(e))
+        finally:
+            # Stop the mixer and ensure the file is closed
+            mixer.music.stop()
+            mixer.quit()
+            # Clean up the temporary file after playback
+            try:
+                os.remove(output_file_path)
+            except Exception as e:
+                print("Error while deleting the file:", str(e))
 
     def say(self, text: str):
         """
@@ -26,24 +59,15 @@ class Narrator:
         :param text: Text to be read
         """
 
-        self._engine.setProperty('rate', self.voice_speed)
-        self._engine.say(text)
-        self._engine.runAndWait()
+        loop = asyncio.get_event_loop_policy().get_event_loop()
+        try:
+            loop.run_until_complete(self.aplay(text))
+        finally:
+            #loop.close()
+            pass
 
     def stop(self):
         """
         Stop the voice engine
         """
-
-        self._engine.stop()
-
-    def slower_saying(self, text: str):
-        """
-        Given a text, read it out loud at a slower rate
-        :param text: Text to be read
-        """
-
-        self._engine.stop()
-        self._engine.setProperty('rate', self.voice_speed * 0.5)
-        self._engine.say(text)
-        self._engine.runAndWait()
+        pass

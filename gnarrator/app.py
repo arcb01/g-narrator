@@ -117,18 +117,24 @@ class ReadingEngine:
         color: color of the bounding boxes
     """
 
-    def __init__(self, lang="en", voice_speed=115, region_mode=False):
+    def __init__(self, settings, region_mode=False):
 
-        # TODO: Maybe this could be changed when new TTS engine is added # pylint: disable=fixme
         # Language settings for OCR and TTS
-        if lang == "en":
-            voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0"
-        elif lang == "es":
-            voice = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_ES-ES_HELENA_11.0"
+        if settings["GENDER"] == "male":
+            if settings["LANGUAGE"] == "es":
+                VOICE = "es-ES-AlvaroNeural"
+            elif settings["LANGUAGE"]  == "en":
+                VOICE = "en-US-GuyNeural"
+        elif settings["GENDER"] == "female":
+            if settings["LANGUAGE"] == "es":
+                VOICE = "es-ES-ElviraNeural"
+            elif settings["LANGUAGE"] == "en":
+                VOICE = "en-US-JennyNeural"
 
         # OCR and TTS engines
-        self.OCR = OCR(lang=lang, gpu=True)
-        self.TTS = Narrator(voice=voice, voice_speed=voice_speed)
+        self.OCR = OCR(lang=settings["LANGUAGE"], gpu=True)
+        settings["VOICE"] = VOICE
+        self.TTS = Narrator(settings)
 
         # Window app
         self.app = QApplication(sys.argv)
@@ -241,7 +247,7 @@ class App:
         set_keys(): Sets key bindings
     """
 
-    def __init__(self, lang, voice_speed):
+    def __init__(self, settings):
         self.app_name = "G-Narrator"
         self.path = Path("./gnarrator/")
         self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
@@ -255,7 +261,7 @@ class App:
         self.set_keys()
         pygame.init()
 
-        self.reading_engine = ReadingEngine(lang, voice_speed)
+        self.reading_engine = ReadingEngine(settings)
 
     def set_keys(self):
         """
@@ -356,4 +362,4 @@ class App:
 
         while True:
             self.check_events()
-            self.clock.tick(60)
+            self.clock.tick(60)  
