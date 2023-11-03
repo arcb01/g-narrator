@@ -1,6 +1,6 @@
 from gnarrator.app import App
 
-if __name__ == '__main__':
+def _main():
     # Settings for TTS and OCR
     settings = {"LANGUAGE": "en", 
                 "VOICE_RATE": "+5%",
@@ -9,3 +9,8 @@ if __name__ == '__main__':
     
     gnarrator = App(settings)
     gnarrator.run()
+
+if __name__ == '__main__':
+    _main()
+    
+  

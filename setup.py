@@ -15,7 +15,7 @@ for e in ["utf-8", "utf-8-sig", "utf16"]:
 
 setuptools.setup(
     name='gnarrator',
-    version='0.8.5',
+    version='0.8.63',
     python_requires='>=3.9.0',
     author='Arnau Castelalno',
     author_email='arcascb2001@gmail.com',
@@ -31,7 +31,7 @@ setuptools.setup(
    ],
    entry_points={
        'console_scripts': [
-            'gnarrator = gnarrator.main:main'
+            'gnarrator = gnarrator.__main__:_main'
        ]
     },
     install_requires=requirements_list
