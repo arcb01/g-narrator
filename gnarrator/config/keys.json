@@ -5,5 +5,5 @@
     "REPEAT": "r",
     "READ_NEAREST": "f21",
     "READ_OUT_LOUD": "-",
-    "QUIT": "esc"
+    "CLEAR": "esc"
 }

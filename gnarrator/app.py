@@ -235,7 +235,7 @@ class App:
 
     `Methods:`
         check_events(): Checks for keyboard events
-        quit(): Clears the screen and deletes all screenshots taken
+        clear(): Clears the screen and deletes all screenshots taken
         end_of_list(): Checks if the current detection is the last one
         run(): Main loop of the application
         set_keys(): Sets key bindings
@@ -271,16 +271,15 @@ class App:
             self.REPEAT_KEY = k["REPEAT"]
             self.READ_NEAREST = k["READ_NEAREST"]
             self.READ_OUT_LOUD = k["READ_OUT_LOUD"]
-            self.QUIT_KEY = k["QUIT"]
+            self.CLEAR_KEY = k["CLEAR"]
 
-    def quit(self):
+    def clear(self):
         try:
             # Clear screen
             self.reading_engine.window.clear_screen()
         except:
             # if window is not yet loaded, ignore
-            pass
-        # TODO: quit program entire app?
+            pass  
 
     # TODO: This will be removed
     def end_of_list(self):
@@ -293,8 +292,12 @@ class App:
 
         event = keyboard.read_event()
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.QUIT_KEY:
-            self.quit()
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.CLEAR_KEY:
+            self.clear()
+
+        if event.event_type == keyboard.KEY_DOWN and event.name == "":
+            pass
+            # TODO: sys.exit()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST:
             self.reading_engine.read_screen_regional()
