@@ -19,7 +19,7 @@
 - [ ] Switch detections based on CircularDoublyLinkedList
 - Github Actions Workflows
     - [ ] Linting
-    - [ ] Dependency review
+    - [ ] Dependency review [(example)](https://github.com/badges/shields/blob/master/.github/workflows/enforce-dependency-review.yml)
 ## Low
   - [ ] Add icon logo to `.bat` file
   - [ ] Button hover color
