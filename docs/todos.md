@@ -17,8 +17,9 @@
 - [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
 - [ ] Replace bat console for GUI
 - [ ] Switch detections based on CircularDoublyLinkedList
-- Testing (github actions)
+- Github Actions Workflows
     - [ ] Linting
+    - [ ] Dependency review
 ## Low
   - [ ] Add icon logo to `.bat` file
   - [ ] Button hover color
