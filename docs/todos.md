@@ -7,8 +7,8 @@
 - [ ] Logging
 ## Medium
 - Improve TTS
-  - [x] Elevenlabs
-  - [ ] Hugging Face TTS model
+  - [x] ~Elevenlabs~ (API key inconvenience)
+  - [ ] [New TTS](https://github.com/rany2/edge-tts)
 - [ ] Read actumatically if  only 1 box
 - [ ] Mouse key bindings
 - [ ] Key binder
