@@ -22,6 +22,7 @@
 ## Low
   - [ ] Add icon logo to `.bat` file
   - [ ] Button hover color
+  - [ ] Maybe region mode could be changed to directly drawing (not entering in "paint" mode)
   - [ ] Update documentation
   - [ ] Async load screen
   - [ ] `__main__.py`?
