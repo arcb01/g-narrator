@@ -1,6 +1,7 @@
 from gnarrator.ocr import OCR
 from gnarrator.TTS import Narrator
 from gnarrator.app import App, ReadingEngine
+import subprocess
 
 SAMPLE_SETTINGS = {"LANGUAGE": "en", 
             "VOICE_RATE": "+5%",
@@ -45,3 +46,15 @@ def test_reading_engine():
     reading_engine = ReadingEngine(SAMPLE_SETTINGS)
 
     assert reading_engine is not None
+
+
+def test_cli():
+    """
+    Test that the CLI works properly
+    """
+
+    try:
+        subprocess.run(['gnarrator'], stdout=subprocess.PIPE, 
+                       stderr=subprocess.PIPE, text=True)
+    except:
+        raise Exception("CLI failed")
