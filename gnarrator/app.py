@@ -96,6 +96,11 @@ class Window(QMainWindow):
 
         self.close()
 
+    def mousePressEvent(self, event):
+        pass
+
+    def mouseReleaseEvent(self, event):
+        pass
 
 class ReadingEngine:
 
