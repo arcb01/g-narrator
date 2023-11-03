@@ -1,6 +1,8 @@
+#-- TTS based on https://github.com/rany2/edge-tts
+
 import tempfile
 import asyncio
-import edge_tts  # Assuming you have the edge_tts library installed
+import edge_tts
 from pygame import mixer
 import time
 import os
