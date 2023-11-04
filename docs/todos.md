@@ -20,7 +20,6 @@
 ## Low
   - [ ] Narrator has a little bit of delay when button is clicked
   - [ ] Add icon logo to `.bat` file
-  - [ ] Button hover color
   - [ ] Maybe region mode could be changed to directly drawing (not entering in "paint" mode)
   - [ ] Update documentation
   - [ ] Async load screen
