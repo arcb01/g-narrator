@@ -9,10 +9,7 @@ rem Install or upgrade dependencies (modify this line as needed)
 python setup.py install
 python -m pip uninstall PyQt5 -y
 python -m pip uninstall PyQt5-Qt5 -y
-python -m pip uninstall pywin32 -y
-python -m pip uninstall pypiwin32 -y
 python -m pip install PyQt5 --upgrade
-python -m pip install pywin32 --upgrade
 
 rem Check the exit code of the installation process
 if %errorlevel% equ 0 (

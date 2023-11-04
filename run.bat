@@ -15,4 +15,4 @@ if not exist .env (
 
 echo Starting. Please wait...
 rem Run the Python script
-python .\gnarrator\main.py
+python .\gnarrator\__main__.py
