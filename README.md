@@ -21,11 +21,10 @@ Adiotionally, tools like, for example, Windows Narrator do not work in these sce
 
 ## Application demo
 In the following video it is shown how the application works:
-1. It starts by scanning the content of the screen.
-2. Once scanned, the user can switch between all detected text bounding boxes.
-3. When the read out loud key is pressed the text inside the selected bounding box is read. 
-
-
+1. The user can choose betweem 2 modes, full screen or regional:
+   - Full screen: The whole screen is scanned.
+   - Region: Define a region of the screen to be scanned.
+2. Once scanned, the user can interact with the detected regions and choose one to be read out loud.
 
 https://github.com/arcb01/g-narrator/assets/13052324/1c1572b5-9627-44f0-8771-e595c79d1a25
 
