@@ -39,7 +39,13 @@ Remember that the game you want to play must be set to **borderless**. Otherwise
 
 ## Known issues (Work in progress)
 > [!WARNING]
-> - App still in development, issues can ocurr frequently
+> App still in development, issues can ocurr frequently 
+
+**Bug list**
+- [ ] Region mode + Full screen mode combination crashes (viceversa aswell?)
+- [ ] TTS does not shut up after pressing esc while reading a long phrase
+- [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
+- [ ] Some issue with window focus
   
 ## Future work
 TODOs are defined [here](https://github.com/arcb01/gaming-narrator/blob/main/docs/todos.md)
