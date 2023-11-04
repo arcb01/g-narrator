@@ -14,11 +14,11 @@
 - [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
 - [ ] Replace bat console for GUI
 - [ ] Switch detections based on CircularDoublyLinkedList
+- [ ] CLI params
 - Github Actions Workflows
     - [ ] Linting
     - [ ] Dependency review [(example)](https://github.com/badges/shields/blob/master/.github/workflows/enforce-dependency-review.yml)
 ## Low
-  - [ ] Narrator has a little bit of delay when button is clicked
   - [ ] Add icon logo to `.bat` file
   - [ ] Maybe region mode could be changed to directly drawing (not entering in "paint" mode)
   - [ ] Update documentation
