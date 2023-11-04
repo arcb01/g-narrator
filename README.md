@@ -26,6 +26,6 @@ In the following video it is shown how the application works:
 3. When the read out loud key is pressed the text inside the selected bounding box is read. 
 
 
-https://user-images.githubusercontent.com/13052324/214283712-3282a405-70bc-4821-b365-ccd43e37dae7.mp4
 
-> THe previous video is outdated and only depicts the initial stages of the porject. Updated video showcasing the latest update is coming soon.
+https://github.com/arcb01/g-narrator/assets/13052324/1c1572b5-9627-44f0-8771-e595c79d1a25
+
