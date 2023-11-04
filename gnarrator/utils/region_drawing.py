@@ -13,8 +13,8 @@ class RegionMode(QWidget):
         self.end_point = None
         self.reading_engine = reading_engine
         
-        self.border_color = QColor(0, 92, 0)
-        self.fill_color = QColor(144, 238, 144)
+        self.border_color = QColor(21, 93, 39)
+        self.fill_color = QColor(146, 230, 167)
 
     def paintEvent(self, event):
         qp = QPainter(self)

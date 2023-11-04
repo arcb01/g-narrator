@@ -55,6 +55,14 @@ class Window(QMainWindow):
         self.overlay.setPalette(overlay_palette)
         self.overlay.show()
 
+        # Styling settings
+        self.buttons = [] 
+        self.bbox_color = "#2dc653"
+        self.hover_color = "#b7efc5"
+        self.border_width = 1.5
+        self.border_color = "#000000"
+        self.border_radius = 3
+
     def set_window_opacity(self, opacity):
         self.setWindowOpacity(opacity)
 
@@ -66,7 +74,7 @@ class Window(QMainWindow):
         
         self.setGeometry(*screen_region)
 
-    def create_button(self, coords : list, bbox_color: str, hover_color: str):
+    def create_button(self, coords : list):
         """
         Draws a button on the screen with the given coordinates and color
         :param coords: coordinates of the button (x, y, w, h)
@@ -77,13 +85,33 @@ class Window(QMainWindow):
         button = QPushButton("", self)
         # Styling
         button.setGeometry(coords[0], coords[1], coords[2], coords[3])  # Set the position and size of the button
-        button.setStyleSheet(f"background-color: {bbox_color};")
         # FIXME: This doesn't work
         # button.setStyleSheet(f"QPushButton:hover {{ background-color: {hover_color}; }}")
+        self.buttons.append(button)  # Store a reference
 
         button.show() 
 
         return button
+
+    def style_buttons(self):
+        """
+        Styles the buttons
+        :param buttons: list of buttons to be styled
+        :param color: color of the buttons
+        """
+
+        for button in self.buttons:
+            button.setStyleSheet(
+                f"QPushButton {{"
+                f"background-color: {self.bbox_color};"
+                f"border: {self.border_width}px solid {self.border_color};"
+                f"border-radius: {self.border_radius}px;"
+                f"}}"
+                f"QPushButton:hover {{"
+                f"background-color: {self.hover_color};"
+                f"}}"
+            )
+
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
@@ -139,10 +167,6 @@ class ReadingEngine:
         # Window app
         self.app = QApplication(sys.argv)
 
-        # Colors
-        self.bbox_color = 'rgba(124, 252, 0, 224)'
-        self.hover_color = None
-
     def get_detection_coords(self, detection : list):
         """
         For a given detection, returns the coordinates of the bounding box
@@ -189,11 +213,13 @@ class ReadingEngine:
         if len(self.OCR.get_detections) > 0:
             for det in self.OCR.get_detections:
                 det_text_content = det[1]
-                det_coords = self.get_detection_coords(det) # x, y, w, h
+                det_coords = self.get_detection_coords(det)  # x, y, w, h
                 # draw button on bounding boxes coords
-                button = self.window.create_button(coords=det_coords, bbox_color=self.bbox_color, hover_color=self.hover_color)
+                button = self.window.create_button(coords=det_coords)
                 # Associate button with bbox text
                 button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
+
+            self.window.style_buttons()
 
             # Launch window 
             if screen_region:
