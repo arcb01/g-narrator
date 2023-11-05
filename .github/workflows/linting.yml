@@ -26,6 +26,7 @@ jobs:
         shell: cmd
       - name: Lint the code
         run: |
+          .\.env\Scripts\activate
           pylint --disable=R,C --fail-under=9 ./gnarrator/
         shell: cmd
       - name: Formating the code
