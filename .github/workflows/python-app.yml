@@ -27,6 +27,5 @@ jobs:
       - name: Testing application
       # add --cov-fail-under=80
         run: |
-          .\.env\Scripts\activate
-          python -m pytest
+          python -m pytest 
         shell: cmd
