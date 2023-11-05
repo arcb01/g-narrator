@@ -68,5 +68,5 @@ class RegionMode(QWidget):
         rect = QRect(left, top, right - left, bottom - top)
         self.rectangles.append(rect)
         self.update()
-        # NOTE: Here it would start the reading process
+        # NOTE: Here starts the reading process
         self.read_region()
