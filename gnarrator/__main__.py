@@ -8,7 +8,10 @@ import click
 @click.option('--voice-volume', default="+0%", help="Voice volume setting")
 @click.option('--gender', default="male", help="Gender setting")
 def _main(language, voice_rate, voice_volume, gender):
-
+    """
+    Main function
+    """
+    
     settings = {
                 "LANGUAGE": language,
                 "VOICE_RATE": voice_rate,

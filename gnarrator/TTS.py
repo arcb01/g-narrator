@@ -17,7 +17,6 @@ class Narrator:
     `Methods:`
         say(): Playsback the text
         aplay(): Async playback of the text
-        stop(): Stop playback
     """
 
     def __init__(self, settings):
@@ -36,7 +35,6 @@ class Narrator:
         output_file_path = tempfile.mktemp(suffix=".mp3")
         try:
             await communicate.save(output_file_path)
-            #print("Temporary MP3 file path:", output_file_path)
             # Play the MP3 file
             mixer.init()
             mixer.music.load(output_file_path)
@@ -67,9 +65,3 @@ class Narrator:
         finally:
             #loop.close()
             pass
-
-    def stop(self):
-        """
-        Stop the voice engine
-        """
-        pass

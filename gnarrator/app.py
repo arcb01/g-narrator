@@ -27,6 +27,12 @@ class Window(QMainWindow):
 
     `Attributes:`	
         overlay: semi-transparent overlay for the whole screen
+        buttons: list of buttons
+        bbox_color: color of the detection boxes
+        hover_color: color of the detection boxes when hovered
+        border_width: width of the detection boxes border
+        border_color: color of the detection boxes border
+        border_radius: radius of the detection boxes border
     """
 
     def __init__(self):
@@ -85,8 +91,6 @@ class Window(QMainWindow):
         button = QPushButton("", self)
         # Styling
         button.setGeometry(coords[0], coords[1], coords[2], coords[3])  # Set the position and size of the button
-        # FIXME: This doesn't work
-        # button.setStyleSheet(f"QPushButton:hover {{ background-color: {hover_color}; }}")
         self.buttons.append(button)  # Store a reference
 
         button.show() 
@@ -95,9 +99,7 @@ class Window(QMainWindow):
 
     def style_buttons(self):
         """
-        Styles the buttons
-        :param buttons: list of buttons to be styled
-        :param color: color of the buttons
+        Styles the buttons with color and border
         """
 
         for button in self.buttons:
@@ -142,7 +144,12 @@ class ReadingEngine:
         OCR: OCR engine
         TTS: TTS engine
         app: Window app
-        color: color of the bounding boxes
+
+    `Methods:`
+        get_detection_coords(): Returns the coordinates of the bounding box
+        say_content(): Call the TTS engine to read the content out loud
+        read_screen(): Read the screen content and create buttons for each detection
+        read_screen_regional(): Creates a drawing canvas for selecting a region to be read
     """
 
     def __init__(self, settings, region_mode=False):
@@ -191,7 +198,7 @@ class ReadingEngine:
 
     def read_screen(self, screen_region=None):
         """
-        Main function
+        Read the screen content and create buttons for each detection
         """
 
         # Create window
@@ -219,6 +226,7 @@ class ReadingEngine:
                 # Associate button with bbox text
                 button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
 
+            # Give buttons style
             self.window.style_buttons()
 
             # Launch window 
@@ -226,10 +234,6 @@ class ReadingEngine:
                 # NOTE: This can be changed to be all screen if needed (using map_coordinates function)
                 self.window.set_to_regional(screen_region=screen_region)
             self.window.show()
-
-            # TODO: Voice comes before the window, is there any way to fix this? # pylint: disable=fixme
-            #if len(self.OCR.get_detections) == 1:
-                #self.say_content(det_text_content)
 
             self.app.exec_()
 
@@ -253,22 +257,15 @@ class App:
     """
     Class that runs the entire application
 
-    # TODO: Update doc
-
     `Attributes:`
         clock: Pygame clock object
-        switch_detection: Boolean that enables swtiching between detections
-        det_idx: Index of the current detection
-        highlighted_color: Color that highlights the current bounding box
-        dimmed_color: Color of the unselected bounding boxes
-        start_x: Starting x coordinate of the region to be read
-        start_y: Starting y coordinate of the region to be read
-        n_pressed: Boolean that checks if the n key is pressed
+        app_name: Name of the application
+        path: Path to the application folder
+        app_logo: Application logo
 
     `Methods:`
         check_events(): Checks for keyboard events
         clear(): Clears the screen and deletes all screenshots taken
-        end_of_list(): Checks if the current detection is the last one
         run(): Main loop of the application
         set_keys(): Sets key bindings
     """
@@ -278,12 +275,6 @@ class App:
         self.path = Path("./gnarrator/")
         self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
         self.clock = pygame.time.Clock()
-        self.switch_detection = False
-        self.engaging = False
-        self.dimmed_color = (102, 153, 0)
-        self.highlighted_color = (170, 255, 0)
-        self.n_pressed = False
-        self.start_x, self.start_y = 0, 0
         self.set_keys()
         pygame.init()
 
@@ -297,12 +288,8 @@ class App:
         # Read json file containing key bindings
         with open(self.path / "config" / "keys.json", encoding="utf-8") as json_file:
             k = json.load(json_file)
-            self.CAPTURE = k["CAPTURE"]
-            self.SWITCH_DET_FORWARD = k["SWITCH_FORWARD"]
-            self.SWITCH_DET_BACKWARD = k["SWITCH_BACKWARD"]
-            self.REPEAT_KEY = k["REPEAT"]
-            self.READ_NEAREST = k["READ_NEAREST"]
-            self.READ_OUT_LOUD = k["READ_OUT_LOUD"]
+            self.FULL_SCREEN = k["FULL_SCREEN"]
+            self.REGION = k["REGION"]
             self.CLEAR_KEY = k["CLEAR"]
 
     def clear(self):
@@ -312,10 +299,6 @@ class App:
         except:
             # if window is not yet loaded, ignore
             pass  
-
-    # TODO: This will be removed
-    def end_of_list(self):
-        return True if self.det_idx == len(self.OCR.get_detections) - 1 else False
 
     def check_events(self):
         """
@@ -327,57 +310,11 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name == self.CLEAR_KEY:
             self.clear()
 
-        # TODO: Define exit key
-        if event.event_type == keyboard.KEY_DOWN and event.name == "":
-            pass
-            # TODO: sys.exit()
-
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_NEAREST:
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.REGION:
             self.reading_engine.read_screen_regional()
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.CAPTURE:
+        if event.event_type == keyboard.KEY_DOWN and event.name == self.FULL_SCREEN:
             self.reading_engine.read_screen()
-
-        # TODO: Refactor to circular doubly linked list # pylint: disable=fixme
-        if event.event_type == keyboard.KEY_DOWN and event.name in [self.SWITCH_DET_FORWARD, self.SWITCH_DET_BACKWARD]:
-            
-            assert len(self.OCR.get_detections) > 0, "No detections found yet. Please start scanning first."
-
-            if not self.end_of_list():
-                if event.name == self.SWITCH_DET_BACKWARD:
-                    if self.det_idx == 0: # The first bbox
-                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                        self.det_idx = len(self.OCR.get_detections) - 1
-                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
-                    elif self.det_idx > 0: # Not the first bbox
-                        self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                        self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
-                        self.det_idx  -= 1
-                elif event.name == self.SWITCH_DET_FORWARD:
-                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                    self.draw_detection(self.OCR.get_detections[self.det_idx + 1], color=self.highlighted_color)
-                    self.det_idx  += 1
-            else:
-                if event.name == self.SWITCH_DET_FORWARD:
-                    # Loop back to start
-                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                    self.det_idx = 0
-                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.highlighted_color)
-                else:
-                    self.draw_detection(self.OCR.get_detections[self.det_idx], color=self.dimmed_color)
-                    self.draw_detection(self.OCR.get_detections[self.det_idx - 1], color=self.highlighted_color)
-                    self.det_idx  -= 1
-
-        # TODO: This needs to be updated # pylint: disable=fixme
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.READ_OUT_LOUD:
-            if len(self.OCR.get_detections) > 0:
-                pass
-                #self.read_out_loud()
-
-        # TODO: This needs to be updated # pylint: disable=fixme
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.REPEAT_KEY:
-            pass
-            #self.read_out_loud(slow=True)
 
     def run(self):
         """
