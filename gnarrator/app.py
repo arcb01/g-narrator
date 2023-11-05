@@ -11,13 +11,11 @@ from PyQt5.QtWidgets import (QMainWindow, QApplication,
                             QPushButton, QWidget, qApp)
 from PyQt5.QtGui import QPalette, QColor
 
-
 from gnarrator.ocr import OCR
 from gnarrator.TTS import Narrator
-from gnarrator.utils.utils import (
-                        app_print, 
-                        get_mouse_pos, create_arb_reg)
+from gnarrator.utils.utils import app_print
 from gnarrator.utils.region_drawing import RegionMode
+
 
 class Window(QMainWindow):
 
@@ -152,7 +150,7 @@ class ReadingEngine:
         read_screen_regional(): Creates a drawing canvas for selecting a region to be read
     """
 
-    def __init__(self, settings, region_mode=False):
+    def __init__(self, settings):
 
         # Language settings for OCR and TTS
         if settings["GENDER"] == "male":

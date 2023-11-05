@@ -55,6 +55,7 @@ def test_cli():
 
     try:
         subprocess.run(['gnarrator'], stdout=subprocess.PIPE, 
-                       stderr=subprocess.PIPE, text=True)
-    except:
-        raise Exception("CLI failed")
+                    stderr=subprocess.PIPE, text=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Subprocess failed with return code {e.returncode}, stderr output: {e.stderr}")
+        raise
