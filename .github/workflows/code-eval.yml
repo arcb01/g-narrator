@@ -49,7 +49,7 @@ jobs:
         shell: cmd
       - name: Lint the code
         run: |
-          python -m pylint --disable=R,C --fail-under=9 --extension-pkg-whitelist=PyQt5 ./gnarrator/
+          python -m pylint --disable=R,C --fail-under=9 --extension-pkg-whitelist=PyQt5,PyQt5-Qt5,PyQt5-sip ./gnarrator/
         shell: cmd
       - name: Formating the code
         run: |
