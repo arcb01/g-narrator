@@ -24,6 +24,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python setup.py install
+          python -m pip uninstall PyQt5 -y
+          python -m pip uninstall PyQt5-Qt5 -y
+          python -m pip install PyQt5 --upgrade
         shell: cmd
       - name: Testing
         run: |
@@ -41,8 +44,11 @@ jobs:
           python-version: "3.10"
       - name: Install application 
         run: |
-          python -m pip install pylint
+          python -m pip install --upgrade pip
           python setup.py install
+          python -m pip uninstall PyQt5 -y
+          python -m pip uninstall PyQt5-Qt5 -y
+          python -m pip install PyQt5 --upgrade
         shell: cmd
       - name: Lint the code
         run: |
