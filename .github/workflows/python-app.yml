@@ -1,4 +1,4 @@
-name: Build and testing
+name: Building and testing
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  run:
+  build-test:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,15 +20,11 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
-      - name: Install application via script
+      - name: Install application
         run: |
-          .\installation.bat
-      - name: Run application
-        run: |
-          .\run.bat
-        shell: cmd
-      #- name: Testing application
+          python -m pip install --upgrade pip
+          python setup.py install
+      - name: Testing application
       # add --cov-fail-under=80
-      #  run: |
-      #    python -m pytest 
-      #  shell: cmd
+        run: |
+          python -m pytest 
