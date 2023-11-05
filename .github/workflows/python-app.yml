@@ -23,7 +23,11 @@ jobs:
       - name: Install application via script
         run: |
           .\installation.bat
-        shell: cmd
+      - name: Activate virtual environment
+        run: |
+          . .\env\Scripts\activate
+          echo "PATH=$PATH" >> $GITHUB_ENV
+        shell: bash
       - name: Testing application
       # add --cov-fail-under=80
         run: |
