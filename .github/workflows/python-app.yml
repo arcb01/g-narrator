@@ -27,7 +27,7 @@ jobs:
         run: |
           . .\env\Scripts\activate
           echo "PATH=$PATH" >> $GITHUB_ENV
-        shell: bash
+        shell: cmd
       - name: Testing application
       # add --cov-fail-under=80
         run: |
