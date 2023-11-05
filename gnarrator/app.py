@@ -246,7 +246,7 @@ class ReadingEngine:
         region_window = RegionMode(reading_engine=self)
         self.drawing_canvas.setCentralWidget(region_window)
         self.drawing_canvas.set_window_opacity(0.35)
-        # FIXME: The use of drawing canvas + region window pops up warning message
+        # NOTE: The use of drawing canvas + region window pops up warning message
         self.drawing_canvas.show()
         self.app.exec_()
 
