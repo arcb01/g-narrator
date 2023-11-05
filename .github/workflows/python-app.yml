@@ -25,7 +25,7 @@ jobs:
           .\installation.bat
       - name: Activate virtual environment
         run: |
-          . .\env\Scripts\activate
+          .\env\Scripts\activate
           echo "PATH=$PATH" >> $GITHUB_ENV
         shell: cmd
       - name: Testing application
