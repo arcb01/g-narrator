@@ -286,7 +286,7 @@ class ReadingEngine:
         self.window.set_to_regional(screen_region=reg)
         self.window.show()
 
-        # QTimer.singleShot(25, lambda: self.say_content(det_text_content))
+        QTimer.singleShot(5, lambda: self.say_content(det_text_content))
 
         # # 5. Read the button out loud 
         self.app.exec_()
