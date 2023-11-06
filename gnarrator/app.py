@@ -6,7 +6,7 @@ from pathlib import Path
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 import sys
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import (QMainWindow, QApplication, 
                             QPushButton, QWidget, qApp)
 from PyQt5.QtGui import QPalette, QColor
@@ -235,6 +235,10 @@ class ReadingEngine:
                 self.window.set_to_regional(screen_region=screen_region)
             self.window.show()
 
+            # if only 1 detection was found, read it directly
+            if len(self.OCR.get_detections) == 1:
+                QTimer.singleShot(5, lambda: self.say_content(det_text_content))
+    
             self.app.exec_()
 
     def read_screen_regional(self):
