@@ -25,6 +25,7 @@ def _main(language, voice_rate, voice_volume, gender):
 
 
 if __name__ == '__main__':
-    _main()
+    _main(langiage="en", voice_rate="+0%", 
+          voice_volume="+0%", gender="male")
     
   

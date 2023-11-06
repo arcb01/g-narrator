@@ -170,6 +170,8 @@ class ReadingEngine:
         self.TTS = Narrator(settings)
 
         # Window app
+        self.window = None
+        self.drawing_canvas = None
         self.app = QApplication(sys.argv)
 
     def get_detection_coords(self, detection : list):
