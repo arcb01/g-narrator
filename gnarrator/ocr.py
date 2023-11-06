@@ -92,23 +92,15 @@ class OCR:
 
         return self.detections
 
+
     def find_closest_detection(self, mouse_position):
-        closest_element = None
-        closest_distance = float('inf')
+        
+        # NOTE: 
+        l = [self.map_coordinates_to_screen(det) for det in self.detections]
 
-        for element in self.detections:
-            element = self.map_coordinates_to_screen(element)
-
-            points = element[0]
-            label = element[1]
-
-            for point in points:
-                distance = np.linalg.norm(np.array(point) - np.array(mouse_position))
-
-                if distance < closest_distance:
-                    closest_distance = distance
-                    closest_element = element
-
+        closest_element = min(l, key=lambda element: min(np.linalg.norm(np.array(point) - np.array(mouse_position)) 
+                            for point in element[0]))
+        
         return closest_element
 
     def find_nearest_detections(self, mouse_pos: tuple):

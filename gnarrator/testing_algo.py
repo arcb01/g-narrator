@@ -1,20 +1,8 @@
 import numpy as np
 
 def find_closest_element(input_list, mouse_position):
-    closest_element = None
-    closest_distance = float('inf')
-
-    for element in input_list:
-        points = element[0]
-        label = element[1]
-
-        for point in points:
-            distance = np.linalg.norm(np.array(point) - np.array(mouse_position))
-
-            if distance < closest_distance:
-                closest_distance = distance
-                closest_element = element
-
+    closest_element = min(input_list, key=lambda element: min(np.linalg.norm(np.array(point) - np.array(mouse_position)) 
+                            for point in element[0]))
     return closest_element
 
 # Your input list with inhomogeneous structure
@@ -25,7 +13,7 @@ input_list = [
     [[0, 472], [350, 472], [350, 498], [0, 498], ') 0 8> Git Graph GIST [Create Profile]']
 ]
 
-mouse_position = (1000, 1000)
+mouse_position = np.array((1000, 1000))
 
 closest_element = find_closest_element(input_list, mouse_position)
 print(closest_element)
