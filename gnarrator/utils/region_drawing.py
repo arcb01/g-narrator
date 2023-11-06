@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPainter, QColor, QPen, QBrush
 from PyQt5.QtCore import Qt, QRect
-
+import cv2
 
 class RegionMode(QWidget):
     def __init__(self, reading_engine):
@@ -56,7 +56,10 @@ class RegionMode(QWidget):
     def read_region(self):
         drawn_rect = self.rectangles.pop()
         rect_region = drawn_rect.getRect()
-        self.reading_engine.read_screen(screen_region=rect_region)
+        try:
+            self.reading_engine.read_screen(screen_region=rect_region)
+        except cv2.error as e:
+            print("WARNING: Trying to capture a region that is too small!")
 
     def draw_rectangle(self, rect):
         # Ensure left < right and top < bottom
