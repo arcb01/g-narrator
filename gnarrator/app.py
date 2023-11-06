@@ -261,36 +261,37 @@ class ReadingEngine:
         # 1. Create arbitrary region from mouse point
         xmouse, ymouse = get_mouse_pos()
         print(xmouse, ymouse)
-        reg = create_arb_reg(cp=(xmouse, ymouse), w=85, h=85)
+        reg = create_arb_reg(cp=(xmouse, ymouse), w=600, h=600)
         print(reg)
         # 2. Take a screenshot of the arbitrary region
         self.window = Window()
         self.OCR.take_screenshot(screen_region=reg)
         self.OCR.read()
         # 3. Find the nearest detection
-        print(self.OCR.get_detections)
-        #self.OCR.find_nearest_detections((xmouse, ymouse))
+        closest_det = self.OCR.find_closest_detection((xmouse, ymouse))
+        print(closest_det)
+        # FIXME: Some issue when capturing the region, bboxes are not correct, mouse poisiton in relation to region problem
         # 4. Draw the button
         #print("nn -- ", self.OCR.get_detections)
-        if len(self.OCR.get_detections) == 1:
-            raw_det = self.OCR.get_detections.pop()
-            det_text_content = raw_det[1]
-            det_coords = self.get_detection_coords(raw_det)
-            
-            button = self.window.create_button(coords=det_coords)
-            button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
+        #if len(self.OCR.get_detections) == 1:
+        # """ raw_det = self.OCR.get_detections.pop()
+        det_text_content = closest_det[1]
+        det_coords = self.get_detection_coords(closest_det)
+        
+        button = self.window.create_button(coords=det_coords)
+        button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
 
-            self.window.style_buttons()
+        self.window.style_buttons()
 
-            self.window.set_to_regional(screen_region=reg)
-            self.window.show()
+        self.window.set_to_regional(screen_region=reg)
+        self.window.show()
 
-            QTimer.singleShot(25, lambda: self.say_content(det_text_content))
+        # QTimer.singleShot(25, lambda: self.say_content(det_text_content))
 
-            # 5. Read the button out loud 
-            self.app.exec_()
-        else: 
-            pass
+        # # 5. Read the button out loud 
+        self.app.exec_()
+        # #else: 
+        #     #pass
 
 class App:
     """

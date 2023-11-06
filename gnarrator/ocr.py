@@ -76,7 +76,7 @@ class OCR:
 
         coords_arr = np.array(detection[0], dtype=np.int32)
         # mapping
-        mapped_coords = coords_arr + np.array([p_top_reg[0], p_top_reg[1]])
+        mapped_coords = coords_arr - np.array([p_top_reg[0], p_top_reg[1]])
         # convert to list
         mapped_coords_list = mapped_coords.tolist()
 
@@ -91,6 +91,25 @@ class OCR:
         """
 
         return self.detections
+
+    def find_closest_detection(self, mouse_position):
+        closest_element = None
+        closest_distance = float('inf')
+
+        for element in self.detections:
+            points = element[0]
+            label = element[1]
+
+            for point in points:
+                distance = np.linalg.norm(np.array(point) - np.array(mouse_position))
+
+                if distance < closest_distance:
+                    closest_distance = distance
+                    closest_element = element
+
+        f = self.map_coordinates_to_screen(closest_element)
+
+        return f
 
     def find_nearest_detections(self, mouse_pos: tuple):
         """
