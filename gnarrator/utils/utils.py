@@ -3,6 +3,8 @@ import pyautogui
 import pygame
 import numpy as np
 from sklearn.neighbors import KDTree
+from scipy.spatial import distance
+from sklearn.neighbors import NearestNeighbors
 from deprecated import deprecated
 
 
@@ -48,7 +50,6 @@ def clear_screen(screen):
     screen.fill(transparent)
     pygame.display.update()
 
-@deprecated(reason="Old function, not used anymore")
 def closest_nodes(node: tuple, nodes: list):
     """
     Given a node, in this case the mouse position, this function
@@ -58,12 +59,18 @@ def closest_nodes(node: tuple, nodes: list):
                 all points of every detection
     """
 
-    neighbours = 4 # NOTE: n-1?
+    
+    # neighbours = 2 # NOTE: n-1?
 
-    kdtree = KDTree(np.asarray(nodes).reshape(-1, 2))
-    _, ind = kdtree.query(np.asarray(node).reshape(1, -1), k=neighbours)
+    # kdtree = KDTree(np.asarray(nodes).reshape(-1, 2))
+    # _, ind = kdtree.query(np.asarray(node).reshape(1, -1), k=neighbours)
 
-    return np.squeeze(np.asarray(nodes)[ind]).tolist()
+    # return np.squeeze(np.asarray(nodes)[ind]).tolist()
+    nodes = np.asarray(nodes)
+    dist_2 = np.sum((nodes - node)**2, axis=1)
+    return nodes[np.argmin(dist_2)]
+    
+
 
 def app_print():
     """

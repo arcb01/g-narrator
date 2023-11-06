@@ -6,14 +6,14 @@ from pathlib import Path
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 import sys
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import (QMainWindow, QApplication, 
                             QPushButton, QWidget, qApp)
 from PyQt5.QtGui import QPalette, QColor
 
 from gnarrator.ocr import OCR
 from gnarrator.TTS import Narrator
-from gnarrator.utils.utils import app_print
+from gnarrator.utils.utils import app_print, create_arb_reg, get_mouse_pos
 from gnarrator.utils.region_drawing import RegionMode
 
 
@@ -252,6 +252,41 @@ class ReadingEngine:
         self.drawing_canvas.show()
         self.app.exec_()
 
+    def read_screen_quickly(self):
+
+        # 1. Create arbitrary region from mouse point
+        xmouse, ymouse = get_mouse_pos()
+        print(xmouse, ymouse)
+        reg = create_arb_reg(cp=(xmouse, ymouse), w=85, h=85)
+        print(reg)
+        # 2. Take a screenshot of the arbitrary region
+        self.window = Window()
+        self.OCR.take_screenshot(screen_region=reg)
+        self.OCR.read()
+        # 3. Find the nearest detection
+        print(self.OCR.get_detections)
+        #self.OCR.find_nearest_detections((xmouse, ymouse))
+        # 4. Draw the button
+        #print("nn -- ", self.OCR.get_detections)
+        if len(self.OCR.get_detections) == 1:
+            raw_det = self.OCR.get_detections.pop()
+            det_text_content = raw_det[1]
+            det_coords = self.get_detection_coords(raw_det)
+            
+            button = self.window.create_button(coords=det_coords)
+            button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
+
+            self.window.style_buttons()
+
+            self.window.set_to_regional(screen_region=reg)
+            self.window.show()
+
+            QTimer.singleShot(25, lambda: self.say_content(det_text_content))
+
+            # 5. Read the button out loud 
+            self.app.exec_()
+        else: 
+            pass
 
 class App:
     """
@@ -315,6 +350,10 @@ class App:
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.FULL_SCREEN:
             self.reading_engine.read_screen()
+
+        # FIXME
+        if event.event_type == keyboard.KEY_DOWN and event.name == "p":
+            self.reading_engine.read_screen_quickly()
 
     def run(self):
         """

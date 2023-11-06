@@ -66,7 +66,6 @@ class OCR:
         # Fill all detections info
         self.detections = self.reader.readtext(img, paragraph=True)
 
-    @deprecated(reason="Old function, not used anymore")
     def map_coordinates_to_screen(self, detection):
         """
         Maps the coordinates of a local screenshot to the real coordinates of the screen
@@ -93,7 +92,6 @@ class OCR:
 
         return self.detections
 
-    @deprecated(reason="Old function, not used anymore")
     def find_nearest_detections(self, mouse_pos: tuple):
         """
         Given a mouse position, this function returns the top k nearest detections
@@ -105,6 +103,7 @@ class OCR:
         det_rect = [tuple(p) for det in self.detections for p in det[0]]
         # Find the closest point of the detection (rectangle) to the mouse position
         list_closest_nodes = closest_nodes(mouse_pos, det_rect)
+        print("closnode", list_closest_nodes)
         # Check to which detection this point corresponds
         matching_detections = [detection for detection in self.detections 
                                if any(candidate in detection[0] 
