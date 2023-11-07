@@ -4,7 +4,7 @@ import sys
 from gnarrator.utils.utils import get_mouse_pos, create_arb_reg, get_detection_coords
 from gnarrator.windows import Window, RegionMode
 from gnarrator.ocr import OCR
-from gnarrator.tts import Narrator
+from gnarrator.TTS import Narrator
 
 
 class ReadingEngine:
