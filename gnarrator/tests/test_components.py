@@ -1,6 +1,7 @@
 from gnarrator.ocr import OCR
-from gnarrator.TTS import Narrator
-from gnarrator.app import App, ReadingEngine
+from gnarrator.tts import Narrator
+from gnarrator.app import App
+from gnarrator.reading_engine import ReadingEngine
 
 SAMPLE_SETTINGS = {"LANGUAGE": "en", 
             "VOICE_RATE": "+5%",
