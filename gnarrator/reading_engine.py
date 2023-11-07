@@ -25,7 +25,7 @@ class ReadingEngine:
         say_content(): Call the TTS engine to read the content out loud
         read_screen(): Read the screen content and create buttons for each detection
         read_screen_regional(): Creates a drawing canvas for selecting a region to be read
-        read_screen_quickly(): Finds the closest detection to the mouse pointer and reads it out loud
+        read_screen_small_n_quick(): Finds the closest detection to the mouse pointer and reads it out loud
     """
 
     def __init__(self, settings):
