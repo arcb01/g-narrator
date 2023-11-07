@@ -108,17 +108,16 @@ class Window(QMainWindow):
         screen_geometry = qApp.desktop().availableGeometry()
         self.setGeometry(screen_geometry)
 
-        # Set window opacity (0.5 for example, change as needed)
-        self.window_opacity = 0.85
+        # Set window opacity 
+        self.window_opacity = 0.70
         self.setWindowOpacity(self.window_opacity)
 
         # Create a semi-transparent overlay for the whole screen
         self.overlay = QWidget(self)
+        self.ov_bck_color = "black"
         self.overlay.setGeometry(screen_geometry)
         self.overlay.setAutoFillBackground(True)
-        overlay_palette = self.overlay.palette()
-        overlay_palette.setColor(QPalette.Background, QColor(0, 0, 0, 156))
-        self.overlay.setPalette(overlay_palette)
+        self.overlay.setStyleSheet(f"background-color: {self.ov_bck_color};")
         self.overlay.show()
 
         # Styling settings
