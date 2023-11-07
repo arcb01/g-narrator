@@ -3,8 +3,6 @@ import numpy as np
 from deprecated import deprecated
 import easyocr
 
-from gnarrator.utils.utils import closest_nodes
-
 class OCR:
     """
     Class that captures the screen and performs OCR
@@ -20,6 +18,7 @@ class OCR:
         start(): Loads the OCR engine into memory
         read(): Start OCR engine and save results
         get_detections(): Returns the list of all detections
+        find_closest_detection(): Given a mouse position, this function returns the nearest detection
     """
 
     def __init__(self, lang="en", gpu=True):
@@ -66,7 +65,7 @@ class OCR:
         # Fill all detections info
         self.detections = self.reader.readtext(img, paragraph=True)
 
-    @deprecated(reason="Old function, not used anymore")
+    @deprecated(reason="Not used anymore")
     def map_coordinates_to_screen(self, detection):
         """
         Maps the coordinates of a local screenshot to the real coordinates of the screen
@@ -93,24 +92,20 @@ class OCR:
 
         return self.detections
 
-    @deprecated(reason="Old function, not used anymore")
-    def find_nearest_detections(self, mouse_pos: tuple):
+
+    def find_closest_detection(self, mouse_position):
         """
-        Given a mouse position, this function returns the top k nearest detections
+        Given a mouse position, this function returns the nearest detection
         :param mouse_pos: (x,y) coordinate of the mouse position
-        :return: NOTE: This function updates the self.detections list
         """
 
-        # Convert list of lists to list of tuples
-        det_rect = [tuple(p) for det in self.detections for p in det[0]]
-        # Find the closest point of the detection (rectangle) to the mouse position
-        list_closest_nodes = closest_nodes(mouse_pos, det_rect)
-        # Check to which detection this point corresponds
-        matching_detections = [detection for detection in self.detections 
-                               if any(candidate in detection[0] 
-                                      for candidate in list_closest_nodes)]
+        # NOTE: Map mouse position to local coordinates
+        mouse_position = (mouse_position[0] - self.region[0], mouse_position[1] - self.region[1])
 
-        self.detections = matching_detections
+        closest_element = min(self.detections, key=lambda element: min(np.linalg.norm(np.array(point) - np.array(mouse_position)) 
+                            for point in element[0]))
+        
+        return closest_element
 
     def empty_detections(self):
         """
