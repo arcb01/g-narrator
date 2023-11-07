@@ -31,21 +31,22 @@ class ReadingEngine:
     def __init__(self, settings):
 
         # Language settings for OCR and TTS
-        if settings["GENDER"] == "male":
-            if settings["LANGUAGE"] == "es":
+        self.settings = settings
+        if self.settings["GENDER"] == "male":
+            if self.settings["LANGUAGE"] == "es":
                 VOICE = "es-ES-AlvaroNeural"
-            elif settings["LANGUAGE"]  == "en":
+            elif self.settings["LANGUAGE"]  == "en":
                 VOICE = "en-US-GuyNeural"
-        elif settings["GENDER"] == "female":
-            if settings["LANGUAGE"] == "es":
+        elif self.settings["GENDER"] == "female":
+            if self.settings["LANGUAGE"] == "es":
                 VOICE = "es-ES-ElviraNeural"
-            elif settings["LANGUAGE"] == "en":
+            elif self.settings["LANGUAGE"] == "en":
                 VOICE = "en-US-JennyNeural"
 
         # OCR and TTS engines
-        self.OCR = OCR(lang=settings["LANGUAGE"], gpu=True)
-        settings["VOICE"] = VOICE
-        self.TTS = Narrator(settings)
+        self.OCR = OCR(lang=self.settings["LANGUAGE"], gpu=True)
+        self.settings["VOICE"] = VOICE
+        self.TTS = Narrator(self.settings)
 
         # Window app
         self.window = None
@@ -68,7 +69,7 @@ class ReadingEngine:
         # Create window
         # NOTE: This needs to be here in order to make the screenshot loop process to work.
         #       otherwise the program will only run once.
-        self.window = Window()
+        self.window = Window(mode=self.settings["APPERANCE"])
 
         if screen_region:
             # Take regional screen shot

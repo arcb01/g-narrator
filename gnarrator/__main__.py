@@ -3,11 +3,12 @@ import click
 
 
 @click.command()
-@click.option('--language', default="en", help="Language setting")
-@click.option('--voice-rate', default="+0%", help="Voice rate setting")
+@click.option('--language', default="en", help="Language of the voice")
+@click.option('--voice-rate', default="+0%", help="Voice speed")
 @click.option('--voice-volume', default="+0%", help="Voice volume setting")
-@click.option('--gender', default="male", help="Gender setting")
-def _main(language, voice_rate, voice_volume, gender):
+@click.option('--gender', default="male", help="Voice gender setting")
+@click.option('--apperance', default="light", help="Apperance setting")
+def _main(language, voice_rate, voice_volume, gender, apperance):
     """
     Main function
     """
@@ -16,7 +17,8 @@ def _main(language, voice_rate, voice_volume, gender):
                 "LANGUAGE": language,
                 "VOICE_RATE": voice_rate,
                 "VOICE_VOLUME": voice_volume,
-                "GENDER": gender
+                "GENDER": gender,
+                "APPERANCE": apperance
                 }
 
     # Start the app
@@ -26,6 +28,7 @@ def _main(language, voice_rate, voice_volume, gender):
 
 if __name__ == '__main__':
     _main(langiage="en", voice_rate="+0%", 
-          voice_volume="+0%", gender="male")
+          voice_volume="+0%", gender="male", 
+          apperance="dark")
     
   
