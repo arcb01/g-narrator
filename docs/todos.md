@@ -17,7 +17,7 @@
   - [ ] Maybe region mode could be changed to directly drawing (not entering in "paint" mode)
   - [ ] Update documentation
   - [ ] Async load screen
-  - [ ] Zooming feature: e.g zoom into the detection while it's being read
+  - [ ] Zooming feature: e.g zoom into the detection while it's being read (especially for small buttons)
   - [ ] Windows installer version (.msi)
   - [ ] AI features
 
