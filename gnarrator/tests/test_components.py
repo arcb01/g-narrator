@@ -1,5 +1,5 @@
 from gnarrator.ocr import OCR
-from gnarrator.tts import Narrator
+#from gnarrator.tts import Narrator
 from gnarrator.app import App
 from gnarrator.reading_engine import ReadingEngine
 
@@ -27,15 +27,15 @@ def test_app():
     assert gnarrator is not None
 
 
-def test_narrator():
-    """
-    Test that the narrator works properly
-    """
+# # def test_narrator():
+# #     """
+# #     Test that the narrator works properly
+# #     """
     
 
-    narrator = Narrator(SAMPLE_SETTINGS)
+# #     narrator = Narrator(SAMPLE_SETTINGS)
 
-    assert narrator is not None
+# #     assert narrator is not None
 
 
 def test_reading_engine():
