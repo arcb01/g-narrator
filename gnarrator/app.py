@@ -261,17 +261,16 @@ class ReadingEngine:
         self.window = Window()
         # 1. Create arbitrary region from mouse point
         xmouse, ymouse = get_mouse_pos()
-        reg = create_arb_reg(cp=(xmouse, ymouse), w=600, h=600)
+        reg = create_arb_reg(cp=(xmouse, ymouse), w=540, h=320)
         # 2. Take a screenshot of the arbitrary region
         self.OCR.take_screenshot(screen_region=reg)
         self.OCR.read()
         # 3. Find the nearest detection
         closest_det = self.OCR.find_closest_detection((xmouse, ymouse))
-        print(closest_det)
         # 4. Draw the button
         det_text_content = closest_det[1]
         det_coords = self.get_detection_coords(closest_det)
-        # FIXME: Coordinates are in screen coordinations, not region
+
         button = self.window.create_button(coords=det_coords)
         button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
 
