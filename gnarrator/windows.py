@@ -115,6 +115,7 @@ class Window(QMainWindow):
         # load color styling configuration
         # FIXME: add path
         # FIXME: appearance mode loads partially (region mode?)
+        # FIXME: change file colors.json to apperance.json
         self.apperance = mode
         with open("gnarrator/config/colors.json", "r") as f:
             raw = json.load(f)
