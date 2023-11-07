@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPainter, QColor, QPen, QBrush
 from PyQt5.QtCore import Qt, QRect
-import cv2
+import cv2, json
 from PyQt5.QtWidgets import (QMainWindow, QPushButton, QWidget, qApp)
 from PyQt5.QtGui import QPalette, QColor
 
@@ -95,7 +95,7 @@ class Window(QMainWindow):
         border_radius: radius of the detection boxes border
     """
 
-    def __init__(self):
+    def __init__(self, mode="dark"):
         QMainWindow.__init__(self)
         self.setWindowFlags(
             Qt.WindowStaysOnTopHint |
@@ -112,9 +112,21 @@ class Window(QMainWindow):
         self.window_opacity = 0.70
         self.setWindowOpacity(self.window_opacity)
 
+        # load color styling configuration
+        # FIXME: add path
+        # FIXME: appearance mode loads partially (region mode?)
+        self.apperance = mode
+        with open("gnarrator/config/colors.json", "r") as f:
+            raw = json.load(f)
+            try:
+                colors = raw[self.apperance]
+            except KeyError:
+                print(f"WARNING: Color mode {self.apperance} not found. Using dark mode instead.")
+                colors = raw["dark"]
+
         # Create a semi-transparent overlay for the whole screen
         self.overlay = QWidget(self)
-        self.ov_bck_color = "black"
+        self.ov_bck_color = colors["ov_bck_color"]
         self.overlay.setGeometry(screen_geometry)
         self.overlay.setAutoFillBackground(True)
         self.overlay.setStyleSheet(f"background-color: {self.ov_bck_color};")
@@ -122,10 +134,10 @@ class Window(QMainWindow):
 
         # Styling settings
         self.buttons = [] 
-        self.bbox_color = "#2dc653"
-        self.hover_color = "#b7efc5"
+        self.bbox_color = colors["bbox_color"]
+        self.hover_color = colors["hover_color"]
         self.border_width = 1.5
-        self.border_color = "#000000"
+        self.border_color = colors["border_color"]
         self.border_radius = 3
 
     def set_window_opacity(self, opacity):
