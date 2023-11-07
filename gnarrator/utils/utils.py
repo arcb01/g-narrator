@@ -1,12 +1,21 @@
 import ctypes
 import pyautogui
-import pygame
 import numpy as np
-from sklearn.neighbors import KDTree
-from scipy.spatial import distance
-from sklearn.neighbors import NearestNeighbors
-from deprecated import deprecated
 
+
+def get_detection_coords(detection : list):
+    """
+    For a given detection, returns the coordinates of the bounding box
+    :param detection: a list containing the bounding box vertices, text, and confidence
+    """
+
+    bbox = detection[0]
+    top = bbox[0][0]
+    left = bbox[0][1]
+    width = bbox[1][0] - bbox[0][0]
+    height = bbox[2][1] - bbox[1][1]
+
+    return top, left, width, height
 
 def get_disp_size():
     """
@@ -27,50 +36,6 @@ def get_mouse_pos():
     y_mouse_pos = pyautogui.position().y
 
     return x_mouse_pos, y_mouse_pos
-
-@deprecated(reason="Old function, not used anymore")
-def loading_screen(screen):
-    """
-    Loading screen while OCR is running
-    """
-
-    font = pygame.font.SysFont("couriernew", 90)
-    text = []
-    text.append((font.render("Reading screen", 0, (0, 255, 0)), (25, 25)))
-    for t in text:
-        screen.blit(t[0], t[1])
-    pygame.display.update()
-
-@deprecated(reason="Old function, not used anymore")
-def clear_screen(screen):
-    """
-    Clears the screen
-    """
-    transparent = (255, 0, 128)
-    screen.fill(transparent)
-    pygame.display.update()
-
-def closest_nodes(node: tuple, nodes: list):
-    """
-    Given a node, in this case the mouse position, this function
-    returns the k nearest points from all detections.
-    :param node: Tuple containing the x and y coordinates of the mouse position
-    :param nodes: List of tuples containing the x and y coordinates for 
-                all points of every detection
-    """
-
-    
-    # neighbours = 2 # NOTE: n-1?
-
-    # kdtree = KDTree(np.asarray(nodes).reshape(-1, 2))
-    # _, ind = kdtree.query(np.asarray(node).reshape(1, -1), k=neighbours)
-
-    # return np.squeeze(np.asarray(nodes)[ind]).tolist()
-    nodes = np.asarray(nodes)
-    dist_2 = np.sum((nodes - node)**2, axis=1)
-    return nodes[np.argmin(dist_2)]
-    
-
 
 def app_print():
     """
