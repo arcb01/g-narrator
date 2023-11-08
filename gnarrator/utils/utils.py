@@ -2,6 +2,7 @@ import ctypes
 import pyautogui
 import numpy as np
 from PyQt5.QtGui import QColor
+import pyfiglet
 
 def map_rgb_string_to_qcolor(rgb_string):
     """
@@ -56,17 +57,9 @@ def app_print():
     Prints that the app is running
     """
 
-    message = "GNarrator is now running. You can minimize this window."
-    symbol = "▒"
-    width = 60
-    padding = (width - len(message)) // 2
-
-    decorative_line = symbol * width
-    formatted_message = f"{symbol * padding} {message} {symbol * padding}"
-    
-    print(decorative_line)
-    print(formatted_message)
-    print(decorative_line)
+    gnarrator_art = pyfiglet.figlet_format("G-Narrator")
+    print(gnarrator_art)
+    print("App is now running. You can minimize this window.")
 
 def create_arb_reg(cp : tuple, w : int, h : int):
     """
