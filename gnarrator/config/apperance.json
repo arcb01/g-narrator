@@ -14,5 +14,10 @@
         "border_color": "#000000",
         "rect_reg_fill_color": "(146, 230, 167)",
         "rect_reg_border_color": "(21, 93, 39)"
+    },
+    "oppacity": {
+        "op_regional_mode": 0.35,
+        "op_full_mode": 0.7,
+        "op_snq_mode": 0.7
     }
 }
