@@ -28,7 +28,7 @@ class ReadingEngine:
         read_screen_small_n_quick(): Finds the closest detection to the mouse pointer and reads it out loud
     """
 
-    def __init__(self, settings):
+    def __init__(self, settings=None):
 
         # Language settings for OCR and TTS
         self.settings = settings
@@ -49,8 +49,6 @@ class ReadingEngine:
         self.TTS = Narrator(self.settings)
 
         # Window app
-        self.window = None
-        self.drawing_canvas = None
         self.app = QApplication(sys.argv)
     
     def say_content(self, content : str):
@@ -61,25 +59,25 @@ class ReadingEngine:
 
         self.TTS.say(content)
 
-    def read_screen(self, screen_region=None):
+    def read_screen(self, mode, window, screen_region=None):
         """
         Read the screen content and create buttons for each detection
+        :param window: Window where the buttons will be displayed
+        :param mode: mode of reading (full, regional, small_n_quick)
+        :param screen_region: (x,y,w,h) coordinates of the region to be captured
+                        if None, the whole screen will be captured
         """
 
-        # Create window
-        # NOTE: This needs to be here in order to make the screenshot loop process to work.
-        #       otherwise the program will only run once.
-        self.window = Window(mode=self.settings["APPERANCE"])
-
-        if screen_region:
-            # Take regional screen shot
-            self.OCR.take_screenshot(screen_region=screen_region)
-        else:
+        if mode == "full":
             # Take full screen shot
             self.OCR.take_screenshot()
-
+        elif mode == "regional" or mode == "regional_n_quick":
+            # Take regional screen shot
+            self.OCR.take_screenshot(screen_region=screen_region)
+            
         # Read textual elements
         self.OCR.read()
+
         # Get screenshot results (bounding boxes)
         # Create a button for each bounding box
         if len(self.OCR.get_detections) > 0:
@@ -87,24 +85,23 @@ class ReadingEngine:
                 det_text_content = det[1]
                 det_coords = get_detection_coords(det)  # x, y, w, h
                 # draw button on bounding boxes coords
-                button = self.window.create_button(coords=det_coords)
+                button = window.create_button(coords=det_coords)
                 # Associate button with bbox text
                 button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
 
             # Give buttons style
-            self.window.style_buttons()
+            window.style_buttons()
 
             # Launch window 
             if screen_region:
                 # NOTE: This can be changed to be all screen if needed (using map_coordinates function)
-                self.window.set_to_regional(screen_region=screen_region)
-            self.window.show()
+                window.set_to_regional(screen_region=screen_region)
 
             # if only 1 detection was found, read it directly
-            if len(self.OCR.get_detections) == 1:
-                QTimer.singleShot(5, lambda: self.say_content(det_text_content))
-    
-            self.app.exec_()
+            #if len(self.OCR.get_detections) == 1:
+                #QTimer.singleShot(5, lambda: self.say_content(det_text_content))
+
+            return window
 
     def read_screen_regional(self):
         """
@@ -112,14 +109,7 @@ class ReadingEngine:
         The RegionMode object will read the content of the delimited region after its drawn.
         """
 
-        # open region canvas for drawing
-        self.drawing_canvas = Window()
-        region_window = RegionMode(reading_engine=self)
-        self.drawing_canvas.setCentralWidget(region_window)
-        self.drawing_canvas.set_window_opacity(0.35)
-        # NOTE: The use of drawing canvas + region window pops up warning message
-        self.drawing_canvas.show()
-        self.app.exec_()
+        
 
     def read_screen_small_n_quick(self):
         """
