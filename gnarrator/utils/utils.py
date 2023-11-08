@@ -1,7 +1,20 @@
 import ctypes
 import pyautogui
 import numpy as np
+from PyQt5.QtGui import QColor
 
+def map_rgb_string_to_qcolor(rgb_string):
+    """
+    Get a QColor object from a rgb string
+    """
+
+    # Extract the RGB values from the string
+    rgb_values = [int(x) for x in rgb_string.strip("rgb()").split(",")]
+
+    # Create a QColor object
+    qcolor = QColor(*rgb_values)
+
+    return qcolor
 
 def get_detection_coords(detection : list):
     """

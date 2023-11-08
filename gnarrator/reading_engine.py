@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QTimer
 import sys
 from gnarrator.utils.utils import get_mouse_pos, create_arb_reg, get_detection_coords
-from gnarrator.windows import Window, RegionMode
+from gnarrator.windows import Window
 from gnarrator.ocr import OCR
 from gnarrator.TTS import Narrator
 
@@ -24,8 +24,7 @@ class ReadingEngine:
         get_detection_coords(): Returns the coordinates of the bounding box
         say_content(): Call the TTS engine to read the content out loud
         read_screen(): Read the screen content and create buttons for each detection
-        read_screen_regional(): Creates a drawing canvas for selecting a region to be read
-        read_screen_small_n_quick(): Finds the closest detection to the mouse pointer and reads it out loud
+        # FIXME: read_screen_small_n_quick(): Finds the closest detection to the mouse pointer and reads it out loud
     """
 
     def __init__(self, settings=None):
@@ -71,13 +70,25 @@ class ReadingEngine:
         if mode == "full":
             # Take full screen shot
             self.OCR.take_screenshot()
-        elif mode == "regional" or mode == "regional_n_quick":
+            # Read textual elements
+            self.OCR.read()
+        if mode == "regional":
             # Take regional screen shot
             self.OCR.take_screenshot(screen_region=screen_region)
-            
-        # Read textual elements
-        self.OCR.read()
-
+            # Read textual elements
+            self.OCR.read()
+        elif mode == "snq":
+            # 1. Create arbitrary region from mouse point
+            xmouse, ymouse = get_mouse_pos()
+            screen_region = create_arb_reg(cp=(xmouse, ymouse), w=540, h=320)
+            # 2. Take a screenshot of the arbitrary region
+            self.OCR.take_screenshot(screen_region=screen_region)
+            self.OCR.read()
+            # 3. Find the nearest detection
+            self.OCR.find_closest_detection((xmouse, ymouse))
+            self.det_text_content = self.OCR.get_detections[0][1]
+            # 4. Draw the button...
+        
         # Get screenshot results (bounding boxes)
         # Create a button for each bounding box
         if len(self.OCR.get_detections) > 0:
@@ -103,42 +114,6 @@ class ReadingEngine:
 
             return window
 
-    def read_screen_regional(self):
-        """
-        Creates a drawing canvas for selecting a region to be read
-        The RegionMode object will read the content of the delimited region after its drawn.
-        """
-
+    def say_content_immediatly(self):
+        QTimer.singleShot(5, lambda: self.say_content(self.det_text_content))
         
-
-    def read_screen_small_n_quick(self):
-        """
-        Finds the closest detection to the mouse pointer and 
-        reads it out loud
-        """
-
-        self.window = Window()
-        # 1. Create arbitrary region from mouse point
-        xmouse, ymouse = get_mouse_pos()
-        reg = create_arb_reg(cp=(xmouse, ymouse), w=540, h=320)
-        # 2. Take a screenshot of the arbitrary region
-        self.OCR.take_screenshot(screen_region=reg)
-        self.OCR.read()
-        # 3. Find the nearest detection
-        closest_det = self.OCR.find_closest_detection((xmouse, ymouse))
-        # 4. Draw the button
-        det_text_content = closest_det[1]
-        det_coords = get_detection_coords(closest_det)
-
-        button = self.window.create_button(coords=det_coords)
-        button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
-
-        self.window.style_buttons()
-        
-        self.window.set_to_regional(screen_region=reg)
-        self.window.show()
-
-        # 5. Read the button out loud 
-        QTimer.singleShot(5, lambda: self.say_content(det_text_content))
-
-        self.app.exec_()
