@@ -57,10 +57,11 @@ class App:
         with open(self.path / "config" / "apperance.json", encoding="utf-8") as json_file:
             raw = json.load(json_file)
             try:
-                apperance_settings = raw[self.settings["APPERANCE"]]
+                tone_settings = raw[self.settings["APPERANCE"]]
+                oppacity_settings = raw["oppacity"]
+                apperance_settings = {**tone_settings, **oppacity_settings}
             except KeyError:
-                print("WARNING: Apperance setting not found, using light as default")
-                apperance_settings = raw["light"]
+                print("WARNING: Error when loading apperance settings")
 
             self.apperance_settings = apperance_settings
 
@@ -96,7 +97,7 @@ class App:
             self.clear()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.REGION:
-            # Create the paint window (regional mode changes the oppacity in order to see better when drawing)
+            # Create the paint window (mode tunes the oppacity)
             paint_window = Window(settings=self.apperance_settings, mode="regional")
             paint_widget = RegionMode(window=paint_window, reading_engine=self.reading_engine, 
                                       settings=self.apperance_settings)
@@ -111,7 +112,7 @@ class App:
             self.app.exec_()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.SMALL_N_QUICK:
-            window = Window(settings=self.apperance_settings, mode="regional")
+            window = Window(settings=self.apperance_settings, mode="snq")
             self.content = self.reading_engine.read_screen(mode="snq", window=window)
             self.content.show()
             self.reading_engine.say_content_immediatly()

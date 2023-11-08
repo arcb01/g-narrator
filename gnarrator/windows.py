@@ -122,9 +122,11 @@ class Window(QMainWindow):
 
         # Set window opacity 
         if mode == "full":
-            self.window_opacity = 0.70
+            self.window_opacity = settings["op_full_mode"]
         elif mode == "regional":
-            self.window_opacity = 0.35
+            self.window_opacity = settings["op_regional_mode"]
+        elif mode == "snq":
+            self.window_opacity = settings["op_snq_mode"]
 
         self.setWindowOpacity(self.window_opacity)
 
