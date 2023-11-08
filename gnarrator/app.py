@@ -22,6 +22,9 @@ class App:
         path: Path to the application folder
         app_logo: Application logo
         settings: Settings of the application
+        reading_engine: Reading engine
+        apperance_settings: Apperance settings for the GUI
+        app: GUI app
 
     `Methods:`
         check_events(): Checks for keyboard events

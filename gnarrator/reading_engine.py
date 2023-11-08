@@ -18,13 +18,14 @@ class ReadingEngine:
         voice_speed: speed of the TTS voice
         OCR: OCR engine
         TTS: TTS engine
-        app: Window app
 
     `Methods:`
         get_detection_coords(): Returns the coordinates of the bounding box
         say_content(): Call the TTS engine to read the content out loud
-        read_screen(): Read the screen content and create buttons for each detection
-        # FIXME: read_screen_small_n_quick(): Finds the closest detection to the mouse pointer and reads it out loud
+        read_screen(): Process the screen reading action
+        read_full_screen(): Read the full screen
+        read_regional_screen(): Read a region of the screen
+        read_snq_screen(): Read the closest detection to the mouse pointer
     """
 
     def __init__(self, settings=None):
@@ -42,13 +43,13 @@ class ReadingEngine:
             elif self.settings["LANGUAGE"] == "en":
                 VOICE = "en-US-JennyNeural"
 
+        self.screen_region = None
+
         # OCR and TTS engines
         self.OCR = OCR(lang=self.settings["LANGUAGE"], gpu=True)
         self.settings["VOICE"] = VOICE
         self.TTS = Narrator(self.settings)
 
-        # Window app
-        self.app = QApplication(sys.argv)
     
     def say_content(self, content : str):
         """
@@ -58,6 +59,18 @@ class ReadingEngine:
 
         self.TTS.say(content)
 
+    def read_full_screen(self):
+        # Take full screen shot
+        self.OCR.take_screenshot()
+        # Read textual elements
+        self.OCR.read()
+
+    def read_regional_screen(self, screen_region):
+        # Take regional screen shot
+        self.OCR.take_screenshot(screen_region=screen_region)
+        # Read textual elements
+        self.OCR.read()
+
     def read_screen(self, mode, window, screen_region=None):
         """
         Read the screen content and create buttons for each detection
@@ -66,28 +79,14 @@ class ReadingEngine:
         :param screen_region: (x,y,w,h) coordinates of the region to be captured
                         if None, the whole screen will be captured
         """
-
+        
         if mode == "full":
-            # Take full screen shot
-            self.OCR.take_screenshot()
-            # Read textual elements
-            self.OCR.read()
+            self.read_full_screen()
         if mode == "regional":
-            # Take regional screen shot
-            self.OCR.take_screenshot(screen_region=screen_region)
-            # Read textual elements
-            self.OCR.read()
+            self.screen_region = screen_region
+            self.read_regional_screen(self.screen_region)
         elif mode == "snq":
-            # 1. Create arbitrary region from mouse point
-            xmouse, ymouse = get_mouse_pos()
-            screen_region = create_arb_reg(cp=(xmouse, ymouse), w=540, h=320)
-            # 2. Take a screenshot of the arbitrary region
-            self.OCR.take_screenshot(screen_region=screen_region)
-            self.OCR.read()
-            # 3. Find the nearest detection
-            self.OCR.find_closest_detection((xmouse, ymouse))
-            self.det_text_content = self.OCR.get_detections[0][1]
-            # 4. Draw the button...
+            self.read_snq_screen()
         
         # Get screenshot results (bounding boxes)
         # Create a button for each bounding box
@@ -104,15 +103,36 @@ class ReadingEngine:
             window.style_buttons()
 
             # Launch window 
-            if screen_region:
+            if self.screen_region:
                 # NOTE: This can be changed to be all screen if needed (using map_coordinates function)
-                window.set_to_regional(screen_region=screen_region)
+                window.set_to_regional(screen_region=self.screen_region)
 
             # if only 1 detection was found, read it directly
             #if len(self.OCR.get_detections) == 1:
                 #QTimer.singleShot(5, lambda: self.say_content(det_text_content))
 
             return window
+
+    def read_snq_screen(self):
+        """
+        Finds the closest detection to the mouse pointer and 
+        reads it out loud
+        :param screen_region: (x,y,w,h) coordinates of the region to be captured
+                        if None, the whole screen will be captured
+        """
+
+        # 1. Create arbitrary region from mouse point
+        xmouse, ymouse = get_mouse_pos()
+        screen_region = create_arb_reg(cp=(xmouse, ymouse), w=540, h=320)
+        self.screen_region = screen_region
+        # 2. Take a screenshot of the arbitrary region
+        self.OCR.take_screenshot(screen_region=screen_region)
+        self.OCR.read()
+        # 3. Find the nearest detection
+        self.OCR.find_closest_detection((xmouse, ymouse))
+        self.det_text_content = self.OCR.get_detections[0][1]
+        # 4. Draw the button...
+        return screen_region
 
     def say_content_immediatly(self):
         QTimer.singleShot(5, lambda: self.say_content(self.det_text_content))
