@@ -7,6 +7,10 @@ from gnarrator.utils.utils import map_rgb_string_to_qcolor
 
 
 class RegionMode(QWidget):
+    """
+    Class for the drawing of the region to be captured
+    """
+
     def __init__(self, window, reading_engine, settings):
         super().__init__()
         self.rectangles = []
@@ -89,6 +93,7 @@ class RegionMode(QWidget):
         self.update()
         # NOTE: When a rectangled region is defined, then the reading process starts here
         self.start_reading()
+
 
 class Window(QMainWindow):
 
