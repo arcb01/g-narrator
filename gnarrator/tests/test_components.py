@@ -6,7 +6,8 @@ from gnarrator.reading_engine import ReadingEngine
 SAMPLE_SETTINGS = {"LANGUAGE": "en", 
             "VOICE_RATE": "+5%",
             "VOICE_VOLUME": "+0%",
-            "GENDER": "male"}
+            "GENDER": "male",
+            "APPERANCE": "light"}
 
 def test_ocr():
     """
