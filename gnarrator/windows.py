@@ -7,16 +7,19 @@ from PyQt5.QtGui import QPalette, QColor
 
 
 class RegionMode(QWidget):
-    def __init__(self, reading_engine):
+    def __init__(self, window, reading_engine):
         super().__init__()
         self.rectangles = []
         self.drawing = False
         self.start_point = None
         self.end_point = None
         self.reading_engine = reading_engine
-        
+    
+        # FIXME
         self.border_color = QColor(21, 93, 39)
         self.fill_color = QColor(146, 230, 167)
+
+        self.window = window
 
     def paintEvent(self, event):
         qp = QPainter(self)
@@ -57,10 +60,12 @@ class RegionMode(QWidget):
             self.update()
 
     def read_region(self):
+        # Get rectangle region
         drawn_rect = self.rectangles.pop()
         rect_region = drawn_rect.getRect()
         try:
-            self.reading_engine.read_screen(screen_region=rect_region)
+            # Read region
+            self.reading_engine.read_screen(mode="regional", window=self.window, screen_region=rect_region)
         except cv2.error as e:
             print("WARNING: Trying to capture a region that is too small!")
 
@@ -74,10 +79,8 @@ class RegionMode(QWidget):
         rect = QRect(left, top, right - left, bottom - top)
         self.rectangles.append(rect)
         self.update()
-        # NOTE: Here starts the reading process
+        # NOTE: When a rectangled region is defined, then the reading process starts
         self.read_region()
-
-
 
 class Window(QMainWindow):
 
@@ -95,7 +98,7 @@ class Window(QMainWindow):
         border_radius: radius of the detection boxes border
     """
 
-    def __init__(self, mode="dark"):
+    def __init__(self, settings, mode):
         QMainWindow.__init__(self)
         self.setWindowFlags(
             Qt.WindowStaysOnTopHint |
@@ -109,25 +112,16 @@ class Window(QMainWindow):
         self.setGeometry(screen_geometry)
 
         # Set window opacity 
-        self.window_opacity = 0.70
-        self.setWindowOpacity(self.window_opacity)
+        if mode == "full":
+            self.window_opacity = 0.70
+        elif mode == "regional":
+            self.window_opacity = 0.35
 
-        # load color styling configuration
-        # FIXME: add path
-        # FIXME: appearance mode loads partially (region mode?)
-        # FIXME: change file colors.json to apperance.json
-        self.apperance = mode
-        with open("gnarrator/config/colors.json", "r") as f:
-            raw = json.load(f)
-            try:
-                colors = raw[self.apperance]
-            except KeyError:
-                print(f"WARNING: Color mode {self.apperance} not found. Using dark mode instead.")
-                colors = raw["dark"]
+        self.setWindowOpacity(self.window_opacity)
 
         # Create a semi-transparent overlay for the whole screen
         self.overlay = QWidget(self)
-        self.ov_bck_color = colors["ov_bck_color"]
+        self.ov_bck_color = settings["ov_bck_color"]
         self.overlay.setGeometry(screen_geometry)
         self.overlay.setAutoFillBackground(True)
         self.overlay.setStyleSheet(f"background-color: {self.ov_bck_color};")
@@ -135,10 +129,10 @@ class Window(QMainWindow):
 
         # Styling settings
         self.buttons = [] 
-        self.bbox_color = colors["bbox_color"]
-        self.hover_color = colors["hover_color"]
+        self.bbox_color = settings["bbox_color"]
+        self.hover_color = settings["hover_color"]
         self.border_width = 1.5
-        self.border_color = colors["border_color"]
+        self.border_color = settings["border_color"]
         self.border_radius = 3
 
     def set_window_opacity(self, opacity):

@@ -7,7 +7,9 @@ environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 from gnarrator.utils.utils import app_print
 from gnarrator.reading_engine import ReadingEngine
-
+from gnarrator.windows import Window, RegionMode
+import sys
+from PyQt5.QtWidgets import QApplication
 
 
 class App:
@@ -32,10 +34,28 @@ class App:
         self.path = Path("./gnarrator/")
         self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
         self.clock = pygame.time.Clock()
+        self.settings = settings
         self.set_keys()
         pygame.init()
 
-        self.reading_engine = ReadingEngine(settings)
+        # Load settings
+        self.settings = settings
+        self.load_apperance_settings()
+
+        self.reading_engine = ReadingEngine(settings=self.settings)
+        self.app = QApplication(sys.argv)
+
+    def load_apperance_settings(self):
+        # FIXME
+        with open(self.path / "config" / "apperance.json", encoding="utf-8") as json_file:
+            raw = json.load(json_file)
+            try:
+                apperance_settings = raw[self.settings["APPERANCE"]]
+            except KeyError:
+                print("WARNING: Apperance setting not found, using light as default")
+                apperance_settings = raw["light"]
+
+            self.apperance_settings = apperance_settings
 
     def set_keys(self):
         """
@@ -53,7 +73,7 @@ class App:
     def clear(self):
         try:
             # Clear screen
-            self.reading_engine.window.clear_screen()
+            self.content.clear_screen()
         except:
             # if window is not yet loaded, ignore
             pass  
@@ -69,13 +89,21 @@ class App:
             self.clear()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.REGION:
-            self.reading_engine.read_screen_regional()
+            paint_window = Window(settings=self.apperance_settings, mode="regional")
+            paint_widget = RegionMode(paint_window, self.reading_engine)
+            paint_window.setCentralWidget(paint_widget)
+            paint_window.show()
+            self.app.exec_()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.FULL_SCREEN:
-            self.reading_engine.read_screen()
+            window = Window(settings=self.apperance_settings, mode="full")
+            self.content = self.reading_engine.read_screen(mode="full", window=window)
+            self.content.show()
+            self.app.exec_()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.SMALL_N_QUICK:
             # NOTE: This mode is usually used for small regions
+            # FIXME:
             self.reading_engine.read_screen_small_n_quick()
 
     def run(self):
