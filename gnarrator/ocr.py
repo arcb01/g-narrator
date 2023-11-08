@@ -97,6 +97,7 @@ class OCR:
         """
         Given a mouse position, this function returns the nearest detection
         :param mouse_pos: (x,y) coordinate of the mouse position
+        :return # NOTE: Updates the list of detections
         """
 
         # NOTE: Map mouse position to local coordinates
@@ -105,7 +106,7 @@ class OCR:
         closest_element = min(self.detections, key=lambda element: min(np.linalg.norm(np.array(point) - np.array(mouse_position)) 
                             for point in element[0]))
         
-        return closest_element
+        self.detections = [closest_element]
 
     def empty_detections(self):
         """

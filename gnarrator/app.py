@@ -21,12 +21,14 @@ class App:
         app_name: Name of the application
         path: Path to the application folder
         app_logo: Application logo
+        settings: Settings of the application
 
     `Methods:`
         check_events(): Checks for keyboard events
         clear(): Clears the screen and deletes all screenshots taken
         run(): Main loop of the application
         set_keys(): Sets key bindings
+        load_apperance_settings(): Loads apperance settings
     """
 
     def __init__(self, settings):
@@ -34,7 +36,6 @@ class App:
         self.path = Path("./gnarrator/")
         self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
         self.clock = pygame.time.Clock()
-        self.settings = settings
         self.set_keys()
         pygame.init()
 
@@ -42,11 +43,17 @@ class App:
         self.settings = settings
         self.load_apperance_settings()
 
+        # Load reading engine
         self.reading_engine = ReadingEngine(settings=self.settings)
+
+        # GUI app
         self.app = QApplication(sys.argv)
 
     def load_apperance_settings(self):
-        # FIXME
+        """
+        Load apperance settings for the GUI
+        """
+
         with open(self.path / "config" / "apperance.json", encoding="utf-8") as json_file:
             raw = json.load(json_file)
             try:
@@ -89,8 +96,10 @@ class App:
             self.clear()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.REGION:
+            # Create the paint window (regional mode changes the oppacity in order to see better when drawing)
             paint_window = Window(settings=self.apperance_settings, mode="regional")
-            paint_widget = RegionMode(paint_window, self.reading_engine)
+            paint_widget = RegionMode(window=paint_window, reading_engine=self.reading_engine, 
+                                      settings=self.apperance_settings)
             paint_window.setCentralWidget(paint_widget)
             paint_window.show()
             self.app.exec_()
@@ -102,9 +111,11 @@ class App:
             self.app.exec_()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.SMALL_N_QUICK:
-            # NOTE: This mode is usually used for small regions
-            # FIXME:
-            self.reading_engine.read_screen_small_n_quick()
+            window = Window(settings=self.apperance_settings, mode="regional")
+            self.content = self.reading_engine.read_screen(mode="snq", window=window)
+            self.content.show()
+            self.reading_engine.say_content_immediatly()
+            self.app.exec_()
 
     def run(self):
         """

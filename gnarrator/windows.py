@@ -1,13 +1,13 @@
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QPainter, QColor, QPen, QBrush
+from PyQt5.QtGui import QPainter, QPen, QBrush
 from PyQt5.QtCore import Qt, QRect
-import cv2, json
+import cv2
 from PyQt5.QtWidgets import (QMainWindow, QPushButton, QWidget, qApp)
-from PyQt5.QtGui import QPalette, QColor
+from gnarrator.utils.utils import map_rgb_string_to_qcolor
 
 
 class RegionMode(QWidget):
-    def __init__(self, window, reading_engine):
+    def __init__(self, window, reading_engine, settings):
         super().__init__()
         self.rectangles = []
         self.drawing = False
@@ -15,9 +15,12 @@ class RegionMode(QWidget):
         self.end_point = None
         self.reading_engine = reading_engine
     
-        # FIXME
-        self.border_color = QColor(21, 93, 39)
-        self.fill_color = QColor(146, 230, 167)
+        # Load settings
+        try:
+            self.border_color = map_rgb_string_to_qcolor(settings["rect_reg_border_color"])
+            self.fill_color = map_rgb_string_to_qcolor(settings["rect_reg_fill_color"])
+        except:
+            print("WARNING: Regional rectangle colors MUST be in rgb(r,g,b) format!")
 
         self.window = window
 
@@ -59,18 +62,23 @@ class RegionMode(QWidget):
             self.end_point = event.pos()
             self.update()
 
-    def read_region(self):
+    def start_reading(self):
+        """
+        When a rectangle is drawn, send the region to the reading engine
+        """
+
         # Get rectangle region
         drawn_rect = self.rectangles.pop()
         rect_region = drawn_rect.getRect()
         try:
             # Read region
-            self.reading_engine.read_screen(mode="regional", window=self.window, screen_region=rect_region)
+            self.reading_engine.read_screen(mode="regional", window=self.window, 
+                                            screen_region=rect_region)
         except cv2.error as e:
             print("WARNING: Trying to capture a region that is too small!")
 
     def draw_rectangle(self, rect):
-        # Ensure left < right and top < bottom
+        # Ensure multidirectional drawing
         left = min(rect.left(), rect.right())
         top = min(rect.top(), rect.bottom())
         right = max(rect.left(), rect.right())
@@ -79,8 +87,8 @@ class RegionMode(QWidget):
         rect = QRect(left, top, right - left, bottom - top)
         self.rectangles.append(rect)
         self.update()
-        # NOTE: When a rectangled region is defined, then the reading process starts
-        self.read_region()
+        # NOTE: When a rectangled region is defined, then the reading process starts here
+        self.start_reading()
 
 class Window(QMainWindow):
 
@@ -90,6 +98,7 @@ class Window(QMainWindow):
 
     `Attributes:`	
         overlay: semi-transparent overlay for the whole screen
+        ov_bck_color: color of the overlay
         buttons: list of buttons
         bbox_color: color of the detection boxes
         hover_color: color of the detection boxes when hovered
