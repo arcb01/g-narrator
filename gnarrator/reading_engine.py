@@ -81,6 +81,7 @@ class ReadingEngine:
         """
         
         if mode == "full":
+            self.screen_region = None
             self.read_full_screen()
         if mode == "regional":
             self.screen_region = screen_region
