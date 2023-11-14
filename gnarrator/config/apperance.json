@@ -4,8 +4,8 @@
         "bbox_color": "#2dc653",
         "hover_color": "#b7efc5",
         "border_color": "#000000",
-        "rect_reg_fill_color": "(146, 230, 167)",
-        "rect_reg_border_color": "(21, 93, 39)"
+        "rect_reg_fill_color": "(27,122,51)",
+        "rect_reg_border_color": "(241,252,243)"
     },
     "dark": {
         "ov_bck_color": "#020617",
