@@ -17,12 +17,13 @@ class RegionMode(QWidget):
         self.drawing = False
         self.start_point = None
         self.end_point = None
+        self.settings = settings
         self.reading_engine = reading_engine
     
         # Load settings
         try:
-            self.border_color = map_rgb_string_to_qcolor(settings["rect_reg_border_color"])
-            self.fill_color = map_rgb_string_to_qcolor(settings["rect_reg_fill_color"])
+            self.border_color = map_rgb_string_to_qcolor(self.settings["rect_reg_border_color"])
+            self.fill_color = map_rgb_string_to_qcolor(self.settings["rect_reg_fill_color"])
         except:
             print("WARNING: Regional rectangle colors MUST be in rgb(r,g,b) format!")
 
@@ -124,6 +125,7 @@ class Window(QMainWindow):
 
         screen_geometry = qApp.desktop().availableGeometry()
         self.setGeometry(screen_geometry)
+        self.settings = settings
 
         # Set window opacity 
         if mode == "full":
@@ -153,6 +155,10 @@ class Window(QMainWindow):
 
     def set_window_opacity(self, opacity):
         self.setWindowOpacity(opacity)
+
+    def reset_opacity(self):
+        # Set window opacity back to normal
+        self.setWindowOpacity(self.settings["op_full_mode"])
 
     def set_to_regional(self, screen_region=None):
         """
