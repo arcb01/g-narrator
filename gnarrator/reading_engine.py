@@ -107,6 +107,7 @@ class ReadingEngine:
             if self.screen_region:
                 # NOTE: This can be changed to be all screen if needed (using map_coordinates function)
                 window.set_to_regional(screen_region=self.screen_region)
+                window.reset_opacity()
 
             # if only 1 detection was found, read it directly
             #if len(self.OCR.get_detections) == 1:
