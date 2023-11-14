@@ -8,12 +8,12 @@
         "rect_reg_border_color": "(21, 93, 39)"
     },
     "dark": {
-        "ov_bck_color": "#0d14cc",
-        "bbox_color": "#f19336",
-        "hover_color": "#080c7f",
-        "border_color": "#000000",
-        "rect_reg_fill_color": "(146, 230, 167)",
-        "rect_reg_border_color": "(21, 93, 39)"
+        "ov_bck_color": "#020617",
+        "bbox_color": "#334155",
+        "hover_color": "#94a3b8",
+        "border_color": "#334155",
+        "rect_reg_fill_color": "(51,65,85)",
+        "rect_reg_border_color": "(148,163,184)"
     },
     "oppacity": {
         "op_regional_mode": 0.30,
