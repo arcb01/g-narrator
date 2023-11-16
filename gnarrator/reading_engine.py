@@ -1,8 +1,5 @@
-from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QTimer
-import sys
 from gnarrator.utils.utils import get_mouse_pos, create_arb_reg, get_detection_coords
-from gnarrator.windows import Window
 from gnarrator.ocr import OCR
 from gnarrator.TTS import Narrator
 
