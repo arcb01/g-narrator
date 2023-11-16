@@ -30,7 +30,6 @@ Run the `installation.bat` and let the installation follow.
 
 **Bug list**
 - [ ] Region mode + Full screen mode combination crashes (viceversa aswell?)
-- [ ] TTS does not shut up after pressing esc while reading a long phrase
 - [ ] In some games, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
   
 ## Future work
