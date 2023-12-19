@@ -8,6 +8,8 @@
 *Ranked by 3 tiers of importance (High, Medium, Low)*
 ## High
 - [ ] Logging
+- [ ] Type safety
+- [ ] Documentation (self)
 ## Medium
 - [ ] Key binder
   - [ ] Support for mouse bindings
