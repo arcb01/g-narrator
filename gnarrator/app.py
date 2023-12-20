@@ -53,10 +53,6 @@ class App:
         self.app = QApplication(sys.argv)
 
     def load_apperance_settings(self):
-        """
-        Load apperance settings for the GUI
-        """
-
         with open(self.path / "config" / "apperance.json", encoding="utf-8") as json_file:
             raw = json.load(json_file)
             try:
@@ -69,10 +65,6 @@ class App:
             self.apperance_settings = apperance_settings
 
     def set_keys(self):
-        """
-        Set key bindings
-        """
-
         # Read json file containing key bindings
         with open(self.path / "config" / "keys.json", encoding="utf-8") as json_file:
             k = json.load(json_file)

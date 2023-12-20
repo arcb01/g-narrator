@@ -185,9 +185,6 @@ class Window(QMainWindow):
         return button
 
     def style_buttons(self):
-        """
-        Styles the buttons with color and border
-        """
 
         for button in self.buttons:
             button.setStyleSheet(
@@ -207,10 +204,6 @@ class Window(QMainWindow):
             self.close()
 
     def clear_screen(self):
-        """
-        Clears the screen
-        """
-
         self.close()
 
     def mousePressEvent(self, event):

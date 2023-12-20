@@ -9,9 +9,6 @@ import click
 @click.option('--gender', default="male", help="Voice gender setting")
 @click.option('--apperance', default="light", help="Apperance setting")
 def _main(language="en", voice_rate="+0%", voice_volume="+0%", gender="male", apperance="light"):
-    """
-    Main function
-    """
     
     settings = {
                 "LANGUAGE": language,

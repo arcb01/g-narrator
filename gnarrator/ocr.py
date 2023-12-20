@@ -32,7 +32,6 @@ class OCR:
         
     def take_screenshot(self, screen_region=None):
         """
-        Function that takes a screenshot and save it in imgs_dir
         :param screen_region: (x,y,w,h) coordinates of the region to be captured
                         if None, the whole screen will be captured
         """
@@ -109,8 +108,4 @@ class OCR:
         self.detections = [closest_element]
 
     def empty_detections(self):
-        """
-        Empty the list of detections
-        """
-
         self.detections = []
