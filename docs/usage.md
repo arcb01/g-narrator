@@ -14,11 +14,10 @@
 Run the `installation.bat` and let the installation follow.
 
 ## How to use?
-First and foremost, watch the demo video on the README to get an introduction on how the app works.
-The app has 2 modes, regional or SnQ:
+First and foremost, watch the demo video on the README to get an introduction on how the app works. Once watched you would've noticed that the app has 2 modes, regional and SnQ:
 
 1. Regional: By using the mouse, define a region of the screen to be scanned. Once scanned, you can interact with the detected regions and choose one to be read out loud.
-2. S&Q: When triggered, reads the clossest text element from the mouse point.  
+2. SnQ (Small and Quick): When triggered, reads the clossest text element from the mouse point.  
 
 Before running the application, set your prefered key bindings by editing `/config/keys.json/` file.
 
