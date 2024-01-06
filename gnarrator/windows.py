@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QPainter, QPen, QBrush
 from PyQt5.QtCore import Qt, QRect
-import cv2
+import cv2, math
 from PyQt5.QtWidgets import (QMainWindow, QPushButton, QWidget, qApp)
 from gnarrator.utils.utils import map_rgb_string_to_qcolor
 
@@ -149,6 +149,26 @@ class Window(QMainWindow):
         self.border_width = 1.5
         self.border_color = settings["border_color"]
         self.border_radius = 3
+        self.original_border_widths = {}
+            
+        self.original_style_sheet = (
+                                f"QPushButton {{"
+                                f"background-color: {self.bbox_color};"
+                                f"border: {self.border_width}px solid {self.border_color};"
+                                f"border-radius: {self.border_radius}px;"
+                                f"}}"
+                                f"QPushButton:hover {{"
+                                f"background-color: {self.hover_color};"
+                                f"}}"
+                            )
+        
+        self.magnified_style_sheet = self.original_style_sheet.replace(
+            f'border: {self.border_width}px',
+            f'border: {math.ceil(self.border_width * 3.5)}px'
+        ).replace(
+            f'border-radius: {self.border_radius}px',
+            f'border-radius: {math.ceil(self.border_radius * 2)}px'
+        )
 
     def set_window_opacity(self, opacity):
         self.setWindowOpacity(opacity)
@@ -184,22 +204,26 @@ class Window(QMainWindow):
 
     def style_buttons(self):
 
-        # if theres only one button (small_n_quick mode):
+        # if theres only one button (small_n_quick mode) then set the propper style
         if len(self.buttons) == 1:
-            self.bbox_color = self.hover_color
-            
-        for button in self.buttons:
-            button.setStyleSheet(
-                f"QPushButton {{"
-                f"background-color: {self.bbox_color};"
-                f"border: {self.border_width}px solid {self.border_color};"
-                f"border-radius: {self.border_radius}px;"
-                f"}}"
-                f"QPushButton:hover {{"
-                f"background-color: {self.hover_color};"
-                f"}}"
-            )
+            # TODO: add hover color activated
+            self.buttons.pop().setStyleSheet(self.magnified_style_sheet)
+        else:
+            for button in self.buttons:
+                button.setStyleSheet(self.original_style_sheet)
+                
+                # Store the original border width for each button
+                self.original_border_widths[button] = button.styleSheet()
 
+                # Connect hover events to the slot functions
+                button.enterEvent = lambda event, btn=button: self.onHoverEnter(btn)
+                button.leaveEvent = lambda event, btn=button: self.onHoverLeave(btn)
+
+    def onHoverEnter(self, button):
+        button.setStyleSheet(self.magnified_style_sheet)
+
+    def onHoverLeave(self, button):
+        button.setStyleSheet(self.original_border_widths[button])
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
