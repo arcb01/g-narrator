@@ -4,11 +4,9 @@
 # Other TODOs
 *Ranked by 3 tiers of importance (High, Medium, Low)*
 ## High
-- [ ] Switch detections based on CircularDoublyLinkedList
-- [ ] Dynamicness (usability)
-  - [ ] Improve current GUI manouvering
-- [ ] Improve key bindings
+- [ ] Improve key bindings (same key mode switch)
   - [ ] Support for mouse bindings
+- [ ] Creating new screenshot while screenshot issue
 
 ## Medium
 - [ ] BETA: AI features
