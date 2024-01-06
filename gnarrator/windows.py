@@ -206,6 +206,7 @@ class Window(QMainWindow):
 
         # if theres only one button (small_n_quick mode) then set the propper style
         if len(self.buttons) == 1:
+            # TODO: add hover color activated
             self.buttons.pop().setStyleSheet(self.magnified_style_sheet)
         else:
             for button in self.buttons:
