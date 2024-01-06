@@ -16,8 +16,8 @@
         "rect_reg_border_color": "(148,163,184)"
     },
     "oppacity": {
+        "op_default": 0.7,
         "op_regional_mode": 0.30,
-        "op_full_mode": 0.8,
         "op_snq_mode": 0.8
     }
 }

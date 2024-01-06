@@ -68,7 +68,6 @@ class App:
         # Read json file containing key bindings
         with open(self.path / "config" / "keys.json", encoding="utf-8") as json_file:
             k = json.load(json_file)
-            self.FULL_SCREEN = k["FULL_SCREEN"]
             self.REGION = k["REGION"]
             self.CLEAR_KEY = k["CLEAR"]
             self.SMALL_N_QUICK = k["SMALL_N_QUICK"]
@@ -98,12 +97,6 @@ class App:
                                       settings=self.apperance_settings)
             paint_window.setCentralWidget(paint_widget)
             paint_window.show()
-            self.app.exec_()
-
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.FULL_SCREEN:
-            window = Window(settings=self.apperance_settings, mode="full")
-            self.content = self.reading_engine.read_screen(mode="full", window=window)
-            self.content.show()
             self.app.exec_()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.SMALL_N_QUICK:

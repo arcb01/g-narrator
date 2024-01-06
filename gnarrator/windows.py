@@ -127,9 +127,7 @@ class Window(QMainWindow):
         self.settings = settings
 
         # Set window opacity 
-        if mode == "full":
-            self.window_opacity = settings["op_full_mode"]
-        elif mode == "regional":
+        if mode == "regional":
             self.window_opacity = settings["op_regional_mode"]
         elif mode == "snq":
             self.window_opacity = settings["op_snq_mode"]
@@ -157,7 +155,7 @@ class Window(QMainWindow):
 
     def reset_opacity(self):
         # Set window opacity back to normal
-        self.setWindowOpacity(self.settings["op_full_mode"])
+        self.setWindowOpacity(self.settings["op_default"])
 
     def set_to_regional(self, screen_region=None):
         """
