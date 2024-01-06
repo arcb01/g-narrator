@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QTimer
+from deprecated import deprecated
 from gnarrator.utils.utils import get_mouse_pos, create_arb_reg, get_detection_coords
 from gnarrator.ocr import OCR
 from gnarrator.TTS import Narrator
@@ -56,6 +57,7 @@ class ReadingEngine:
 
         self.TTS.say(content)
 
+    @deprecated(reason="No longer used")
     def read_full_screen(self):
         # Take full screen shot
         self.OCR.take_screenshot()
@@ -77,9 +79,6 @@ class ReadingEngine:
                         if None, the whole screen will be captured
         """
         
-        if mode == "full":
-            self.screen_region = None
-            self.read_full_screen()
         if mode == "regional":
             self.screen_region = screen_region
             self.read_regional_screen(self.screen_region)
