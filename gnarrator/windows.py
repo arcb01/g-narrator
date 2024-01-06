@@ -184,6 +184,10 @@ class Window(QMainWindow):
 
     def style_buttons(self):
 
+        # if theres only one button (small_n_quick mode):
+        if len(self.buttons) == 1:
+            self.bbox_color = self.hover_color
+            
         for button in self.buttons:
             button.setStyleSheet(
                 f"QPushButton {{"

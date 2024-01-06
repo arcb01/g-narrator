@@ -16,6 +16,9 @@ class ReadingEngine:
         voice_speed: speed of the TTS voice
         OCR: OCR engine
         TTS: TTS engine
+        screen_region: (x,y,w,h) coordinates of the region to be captured
+                        if None, the whole screen will be captured
+        window: Window where the buttons will be displayed
 
     `Methods:`
         get_detection_coords(): Returns the coordinates of the bounding box
@@ -47,7 +50,7 @@ class ReadingEngine:
         self.OCR = OCR(lang=self.settings["LANGUAGE"], gpu=True)
         self.settings["VOICE"] = VOICE
         self.TTS = Narrator(self.settings)
-
+        self.window = None
     
     def say_content(self, content : str):
         """
@@ -79,6 +82,8 @@ class ReadingEngine:
                         if None, the whole screen will be captured
         """
         
+        self.window = window
+
         if mode == "regional":
             self.screen_region = screen_region
             self.read_regional_screen(self.screen_region)
@@ -92,24 +97,20 @@ class ReadingEngine:
                 det_text_content = det[1]
                 det_coords = get_detection_coords(det)  # x, y, w, h
                 # draw button on bounding boxes coords
-                button = window.create_button(coords=det_coords)
+                button = self.window.create_button(coords=det_coords)
                 # Associate button with bbox text
                 button.clicked.connect(lambda _, text=det_text_content: self.say_content(text))
 
             # Give buttons style
-            window.style_buttons()
+            self.window.style_buttons()
 
             # Launch window 
             if self.screen_region:
                 # NOTE: This can be changed to be all screen if needed (using map_coordinates function)
-                window.set_to_regional(screen_region=self.screen_region)
-                window.reset_opacity()
+                self.window.set_to_regional(screen_region=self.screen_region)
+                self.window.reset_opacity()
 
-            # if only 1 detection was found, read it directly
-            #if len(self.OCR.get_detections) == 1:
-                #QTimer.singleShot(5, lambda: self.say_content(det_text_content))
-
-            return window
+            return self.window
 
     def read_snq_screen(self):
         """
@@ -133,5 +134,8 @@ class ReadingEngine:
         return screen_region
 
     def say_content_immediatly(self):
-        QTimer.singleShot(5, lambda: self.say_content(self.det_text_content))
+        # Call the TTS engine to read the content out loud
+        QTimer.singleShot(10, lambda: self.say_content(self.det_text_content))
+        # When this the previous statement finishes then the window will be closed
+        QTimer.singleShot(12, lambda: self.window.close())
         
