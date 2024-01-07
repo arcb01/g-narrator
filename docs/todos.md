@@ -6,7 +6,7 @@
 ## High
 - [ ] Improve key bindings (same key mode switch)
   - [ ] Support for mouse bindings
-- [ ] Creating new screenshot while screenshot issue
+- [ ] Minizing dynamicness
 
 ## Medium
 - [ ] BETA: AI features
