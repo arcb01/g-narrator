@@ -12,19 +12,7 @@ python "%pythonScript%"
 
 set "commandFile=.pytorch_cuda_install_command.txt"
 
-if not exist "%commandFile%" (
-    echo Error: Command file "%commandFile%" not found.
-    exit /b 1
-)
-
 set /p command=<"%commandFile%"
-
-if errorlevel 1 (
-    echo Error: Command execution failed.
-    exit /b 1
-)
-
-
 
 rem Install or upgrade dependencies (modify this line as needed)
 python setup.py install
