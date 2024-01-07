@@ -110,6 +110,12 @@ class ReadingEngine:
                 self.window.set_to_regional(screen_region=self.screen_region)
                 self.window.reset_opacity()
 
+            # if only 1 detection was found, read it directly
+            # TODO: Apply reading stylesheet to the button
+            # NOTE: for snq mode can't be done here
+            if len(self.OCR.get_detections) == 1 and mode == "regional":
+                self.say_content_immediatly(det_text_content)
+
             return self.window
 
     def read_snq_screen(self):
@@ -133,9 +139,11 @@ class ReadingEngine:
         # 4. Draw the button...
         return screen_region
 
-    def say_content_immediatly(self):
+    def say_content_immediatly(self, content=None):
+        if not content:
+            content = self.det_text_content
         # Call the TTS engine to read the content out loud
-        QTimer.singleShot(10, lambda: self.say_content(self.det_text_content))
+        QTimer.singleShot(10, lambda: self.say_content(content))
         # When this the previous statement finishes then the window will be closed
         QTimer.singleShot(12, lambda: self.window.close())
         
