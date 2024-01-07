@@ -39,15 +39,21 @@ class App:
         self.path = Path("./gnarrator/")
         self.app_logo = pygame.image.load(self.path / "assets" / "logo.png")
         self.clock = pygame.time.Clock()
-        self.set_keys()
         pygame.init()
 
         # Load settings
+        # TODO: Is there a better way to load settings?
         self.settings = settings
         self.load_apperance_settings()
-
+        self.load_key_settings()
+        self.settings = {"keys" : {"REGION" : self.REGION, 
+                                    "CLEAR" : self.CLEAR_KEY, 
+                                    "SMALL_N_QUICK" : self.SMALL_N_QUICK},
+                        "apperance" : self.apperance_settings,
+                        "capture" : settings}
+        
         # Load reading engine
-        self.reading_engine = ReadingEngine(settings=self.settings)
+        self.reading_engine = ReadingEngine(settings=self.settings["capture"])
 
         # GUI app
         self.app = QApplication(sys.argv)
@@ -64,7 +70,7 @@ class App:
 
             self.apperance_settings = apperance_settings
 
-    def set_keys(self):
+    def load_key_settings(self):
         # Read json file containing key bindings
         with open(self.path / "config" / "keys.json", encoding="utf-8") as json_file:
             k = json.load(json_file)
@@ -92,15 +98,15 @@ class App:
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.REGION:
             # Create the paint window (mode tunes the oppacity)
-            paint_window = Window(settings=self.apperance_settings, mode="regional")
+            paint_window = Window(settings=self.settings, mode="regional")
             paint_widget = RegionMode(window=paint_window, reading_engine=self.reading_engine, 
-                                      settings=self.apperance_settings)
+                                      settings=self.settings)
             paint_window.setCentralWidget(paint_widget)
             paint_window.show()
             self.app.exec_()
 
         if event.event_type == keyboard.KEY_DOWN and event.name == self.SMALL_N_QUICK:
-            window = Window(settings=self.apperance_settings, mode="snq")
+            window = Window(settings=self.settings, mode="snq")
             self.content = self.reading_engine.read_screen(mode="snq", window=window)
             self.content.show()
             self.reading_engine.say_content_immediatly()

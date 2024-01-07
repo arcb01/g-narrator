@@ -3,6 +3,9 @@ from PyQt5.QtCore import Qt, QRect
 import cv2, math
 from PyQt5.QtWidgets import (QMainWindow, QPushButton, QWidget, qApp)
 from gnarrator.utils.utils import map_rgb_string_to_qcolor
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QShortcut
+
 
 
 class RegionMode(QWidget):
@@ -16,13 +19,13 @@ class RegionMode(QWidget):
         self.drawing = False
         self.start_point = None
         self.end_point = None
-        self.settings = settings
+        self.apperance_settings = settings["apperance"]
         self.reading_engine = reading_engine
     
         # Load settings
         try:
-            self.border_color = map_rgb_string_to_qcolor(self.settings["rect_reg_border_color"])
-            self.fill_color = map_rgb_string_to_qcolor(self.settings["rect_reg_fill_color"])
+            self.border_color = map_rgb_string_to_qcolor(self.apperance_settings["rect_reg_border_color"])
+            self.fill_color = map_rgb_string_to_qcolor(self.apperance_settings["rect_reg_fill_color"])
         except:
             print("WARNING: Regional rectangle colors MUST be in rgb(r,g,b) format!")
 
@@ -124,19 +127,20 @@ class Window(QMainWindow):
 
         screen_geometry = qApp.desktop().availableGeometry()
         self.setGeometry(screen_geometry)
-        self.settings = settings
+
+        self.apperance_settings = settings["apperance"]
 
         # Set window opacity 
         if mode == "regional":
-            self.window_opacity = settings["op_regional_mode"]
+            self.window_opacity = self.apperance_settings["op_regional_mode"]
         elif mode == "snq":
-            self.window_opacity = settings["op_snq_mode"]
+            self.window_opacity = self.apperance_settings["op_snq_mode"]
 
         self.setWindowOpacity(self.window_opacity)
 
         # Create a semi-transparent overlay for the whole screen
         self.overlay = QWidget(self)
-        self.ov_bck_color = settings["ov_bck_color"]
+        self.ov_bck_color = self.apperance_settings["ov_bck_color"]
         self.overlay.setGeometry(screen_geometry)
         self.overlay.setAutoFillBackground(True)
         self.overlay.setStyleSheet(f"background-color: {self.ov_bck_color};")
@@ -144,10 +148,10 @@ class Window(QMainWindow):
 
         # Styling settings
         self.buttons = [] 
-        self.bbox_color = settings["bbox_color"]
-        self.hover_color = settings["hover_color"]
+        self.bbox_color = self.apperance_settings["bbox_color"]
+        self.hover_color = self.apperance_settings["hover_color"]
         self.border_width = 1.5
-        self.border_color = settings["border_color"]
+        self.border_color = self.apperance_settings["border_color"]
         self.border_radius = 3
         self.original_border_widths = {}
             
@@ -170,12 +174,19 @@ class Window(QMainWindow):
             f'border-radius: {math.ceil(self.border_radius * 2)}px'
         )
 
+        # Get the capture key
+        self.key = settings["keys"]["REGION"]
+        
+        # Quit if capture key is pressed aswell
+        self.key_quit = QShortcut(QKeySequence(self.key), self)
+        self.key_quit.activated.connect(self.exit)
+
     def set_window_opacity(self, opacity):
         self.setWindowOpacity(opacity)
 
     def reset_opacity(self):
         # Set window opacity back to normal
-        self.setWindowOpacity(self.settings["op_default"])
+        self.setWindowOpacity(self.apperance_settings["op_default"])
 
     def set_to_regional(self, screen_region=None):
         """
@@ -207,7 +218,7 @@ class Window(QMainWindow):
         # if theres only one button (small_n_quick mode) then set the propper style
         if len(self.buttons) == 1:
             # TODO: add hover color activated
-            self.buttons.pop().setStyleSheet(self.magnified_style_sheet)
+            self.buttons[0].setStyleSheet(self.magnified_style_sheet)
         else:
             for button in self.buttons:
                 button.setStyleSheet(self.original_style_sheet)
@@ -237,3 +248,8 @@ class Window(QMainWindow):
 
     def mouseReleaseEvent(self, event):
         pass
+
+    def exit(self):
+        # Used to quit the app when the capture key is pressed
+        if self.buttons:
+            self.close()
