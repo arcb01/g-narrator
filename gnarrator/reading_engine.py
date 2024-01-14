@@ -73,6 +73,9 @@ class ReadingEngine:
         # Read textual elements
         self.OCR.read()
 
+    def detectionsFound(self):
+        return True if len(self.OCR.get_detections) > 0 else False
+    
     def read_screen(self, mode, window, screen_region=None):
         """
         Read the screen content and create buttons for each detection
@@ -80,6 +83,7 @@ class ReadingEngine:
         :param mode: mode of reading (full, regional, small_n_quick)
         :param screen_region: (x,y,w,h) coordinates of the region to be captured
                         if None, the whole screen will be captured
+        :return: Window with the detections
         """
         
         self.window = window
@@ -92,7 +96,7 @@ class ReadingEngine:
         
         # Get screenshot results (bounding boxes)
         # Create a button for each bounding box
-        if len(self.OCR.get_detections) > 0:
+        if self.detectionsFound():
             for det in self.OCR.get_detections:
                 det_text_content = det[1]
                 det_coords = get_detection_coords(det)  # x, y, w, h
@@ -104,16 +108,14 @@ class ReadingEngine:
             # Give buttons style
             self.window.style_buttons()
 
-            # Launch window 
-            if self.screen_region:
-                # NOTE: This can be changed to be all screen if needed (using map_coordinates function)
-                self.window.set_to_regional(screen_region=self.screen_region)
-                self.window.reset_opacity()
+            # NOTE: This can be changed to be all screen if needed (using map_coordinates function)
+            self.window.set_to_regional(screen_region=self.screen_region)
+            self.window.reset_opacity()
 
             # if only 1 detection was found, read it directly
-            # TODO: Apply reading stylesheet to the button
-            # NOTE: for snq mode can't be done here
             if len(self.OCR.get_detections) == 1 and mode == "regional":
+                # TODO: Apply reading stylesheet to the button
+                # NOTE: for snq mode can't be done here
                 self.say_content_immediatly(det_text_content)
 
             return self.window
@@ -134,10 +136,8 @@ class ReadingEngine:
         self.OCR.take_screenshot(screen_region=screen_region)
         self.OCR.read()
         # 3. Find the nearest detection
-        self.OCR.find_closest_detection((xmouse, ymouse))
-        self.det_text_content = self.OCR.get_detections[0][1]
-        # 4. Draw the button...
-        return screen_region
+        nearest_det_txt = self.OCR.find_closest_detection((xmouse, ymouse))
+        self.det_text_content = nearest_det_txt
 
     def say_content_immediatly(self, content=None):
         if not content:

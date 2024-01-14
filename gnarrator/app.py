@@ -108,9 +108,10 @@ class App:
         if event.event_type == keyboard.KEY_DOWN and event.name == self.SMALL_N_QUICK:
             window = Window(settings=self.settings, mode="snq")
             self.content = self.reading_engine.read_screen(mode="snq", window=window)
-            self.content.show()
-            self.reading_engine.say_content_immediatly()
-            self.app.exec_()
+            if self.reading_engine.detectionsFound():
+                self.content.show()
+                self.reading_engine.say_content_immediatly()
+                self.app.exec_()
 
     def run(self):
         """

@@ -95,17 +95,20 @@ class OCR:
     def find_closest_detection(self, mouse_position):
         """
         Given a mouse position, this function returns the nearest detection
+        # NOTE: List of detections is updated
         :param mouse_pos: (x,y) coordinate of the mouse position
-        :return # NOTE: Updates the list of detections
+        :return: text of the nearest detection
         """
 
         # NOTE: Map mouse position to local coordinates
         mouse_position = (mouse_position[0] - self.region[0], mouse_position[1] - self.region[1])
 
-        closest_element = min(self.detections, key=lambda element: min(np.linalg.norm(np.array(point) - np.array(mouse_position)) 
-                            for point in element[0]))
-        
-        self.detections = [closest_element]
+        if self.detections:
+            closest_element = min(self.detections, key=lambda element: min(np.linalg.norm(np.array(point) - np.array(mouse_position)) 
+                                for point in element[0]))
+            self.detections = [closest_element]
+            text = closest_element[1]
+            return text
 
     def empty_detections(self):
         self.detections = []
