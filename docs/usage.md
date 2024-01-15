@@ -5,13 +5,24 @@
 
 - **Suported languages**: English and Spaniash
 
-- **Python version**: 3.9+
+- **Python version**: `3.9.12`
   
-> [!IMPORTANT]
-> GPU is recomended for faster inference times.
+> [!NOTE]
+> a
 
 ### Installation
-Run the `installation.bat` and let the installation follow.
+```python
+# Create new environment
+python -m venv .env
+
+# Activate environment
+.\.env\Scripts\Activate.ps1
+
+# Install setup.py
+python setup.py install
+
+# Install GUI componentes (visit issue for more info)
+python -m pip install PyQt5
 
 ## How to use?
 First and foremost, watch the demo video on the README to get an introduction on how the app works. Once watched you would've noticed that the app has 2 modes, regional and SnQ:
@@ -27,7 +38,10 @@ Before running the application, set your prefered key bindings by editing `/conf
 > [!IMPORTANT]
 > If you plan on using the narrator while playing videogames, make sure that the game is set to borderless window.
 
-Finally, start the app by running the `run.bat` file
+Finally, start the app by running:
+```python
+gnarrator
+```
 
 ## Known issues (Work in progress)
 > [!WARNING]
