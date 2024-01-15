@@ -22,5 +22,7 @@ Additionally, tools like Windows Narrator do not work in these scenarios. This p
 ## Application demo
 In the following video it is shown how the application works:
 
-https://github.com/arcb01/g-narrator/assets/13052324/1c1572b5-9627-44f0-8771-e595c79d1a25
+https://github.com/arcb01/g-narrator/assets/13052324/3f3d3283-b29d-49a4-8216-2b48afc31098
+
+
 
