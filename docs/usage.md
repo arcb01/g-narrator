@@ -45,9 +45,6 @@ gnarrator
 > [!WARNING]
 > App still in development, issues can ocurr frequently  
 > Visit [issues](https://github.com/arcb01/g-narrator/issues) for more information
-
-**Bug list**
-- [ ] When using the app while gaming, it can ocurr that the language from the keybaord changes during execution and therefore keyboard input stops working
   
 ## Future work
 TODOs are defined [here](https://github.com/arcb01/gaming-narrator/blob/main/docs/todos.md)
