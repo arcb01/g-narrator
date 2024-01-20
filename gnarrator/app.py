@@ -51,6 +51,7 @@ class App:
                                     "SMALL_N_QUICK" : self.SMALL_N_QUICK},
                         "apperance" : self.apperance_settings,
                         "capture" : settings}
+        self.k_pressed = False
         
         # Load reading engine
         self.reading_engine = ReadingEngine(settings=self.settings["capture"])
@@ -93,25 +94,33 @@ class App:
 
         event = keyboard.read_event()
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.CLEAR_KEY:
+        if keyboard.is_pressed(self.CLEAR_KEY):
             self.clear()
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.REGION:
+        # if key1 + key2 and... key3 are pressed
+        if keyboard.is_pressed(self.REGION.split("+")[:1]):
+            self.k_pressed = True
+        elif keyboard.is_pressed(self.REGION.split("+")[-1]) and self.k_pressed:
             # Create the paint window (mode tunes the oppacity)
             paint_window = Window(settings=self.settings, mode="regional")
             paint_widget = RegionMode(window=paint_window, reading_engine=self.reading_engine, 
-                                      settings=self.settings)
+                                    settings=self.settings)
             paint_window.setCentralWidget(paint_widget)
             paint_window.show()
             self.app.exec_()
+            self.k_pressed = False
 
-        if event.event_type == keyboard.KEY_DOWN and event.name == self.SMALL_N_QUICK:
+        # if key1 + key2 and... key3 are pressed
+        if keyboard.is_pressed(self.SMALL_N_QUICK.split("+")[:1]):
+            self.k_pressed = True
+        elif keyboard.is_pressed(self.SMALL_N_QUICK.split("+")[-1]) and self.k_pressed:
             window = Window(settings=self.settings, mode="snq")
             self.content = self.reading_engine.read_screen(mode="snq", window=window)
             if self.reading_engine.detectionsFound():
                 self.content.show()
                 self.reading_engine.say_content_immediatly()
                 self.app.exec_()
+                self.k_pressed = False
 
     def run(self):
         """
