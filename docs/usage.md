@@ -39,7 +39,7 @@ Finally, start the app by running:
 gnarrator
 ```
 
-For launching **Region mode**: Press `ALT + A + 1` and then draw a region to scan.
+For launching **Region mode**: Press `ALT + A + 1` and then draw a region to scan.  
 For launching **SnQ mode**: Point the mouse to the closest desired element and then press `ALT + A + 2`
 
 ## Known issues (Work in progress)
