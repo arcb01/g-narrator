@@ -1,5 +1,5 @@
 {
-    "REGION": "f21",
-    "CLEAR": "esc",
-    "SMALL_N_QUICK": "-"
+    "REGION": "alt+a+1",
+    "SMALL_N_QUICK": "alt+a+2",
+    "CLEAR": "esc"
 }
