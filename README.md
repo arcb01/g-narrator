@@ -5,24 +5,38 @@
   src="./gnarrator/assets/logo.png">
     <br/>
     G-Narrator
+    <br/>
+    AI Augmented
+    <br/>
+    (Beta)
 </h1>
- 
-<p align="center">
- <strong>
-  <a href="./docs/usage.md"><b>Getting Started</b></a>
- </strong>
-</p>
 
-This project is proposed as an easy-to-use and functional alternative to the conventional narrator, with the aim of being a useful tool especially for low vision users.
+# Concept
+Exploring the idea of incorporating visual language models to the narrator to enhance its capabilities.
+Below is a conceptual diagram illustrating how this integration might work. 
 
-## Initial motivation
-In many videogames, the use of the mouse for controlling the camera is often used. On the other hand, the magnifier app which makes the elements on the screen appear larger, also makes use of the movement of the mouse to move around the screen. These two behaviors collide between each other if they wanna be performed simultaneously. In other words, while playing a videogame one is not able to use the magnifier app and move the mouse around the screen. 
-Additionally, tools like Windows Narrator do not work in these scenarios. This project was initially posed as a solution to this problem, however in reality this tool can be used in any scenario. 
+The system would use a Visual Question Answering (VQA) approach:
+- Input: A visual question is presented to the system, often related to the contents of an image.
+- Output: The system provides an answer based on the image and the question.
 
-## Application demo
-In the following video it is shown how the application works:
+<h1 align="center">
+ <img
+  width="600"
+  alt="AI Augmented Narrator Diagram"
+  src="./gnarrator/assets/ai-approach.png">
+</h1>
 
-https://github.com/arcb01/g-narrator/assets/13052324/3f3d3283-b29d-49a4-8216-2b48afc31098
+# Current Progress
+- Conducting initial tests and evaluations.
+- Analyzing the advantages, disadvantages, and limitations of this approach.
 
+<h1 align="center">
+ <img
+  width="400"
+  alt="AI Augmented Narrator tests 1"
+  src="./gnarrator/assets/ai-tests-table1.png">
+</h1>
 
+# Future Plans
+Further development and refinement based on test results.
 
